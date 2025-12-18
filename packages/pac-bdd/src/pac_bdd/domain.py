@@ -1,7 +1,5 @@
-from pytest_bdd import scenario, given, when, then
 import pytest
-from pytest_bdd import parsers
-
+from pytest_bdd import given, parsers, scenario, then, when
 
 
 @pytest.fixture
@@ -45,8 +43,17 @@ def invoice_given(invoice, company1, company2): ...
         "je dépose la facture #{invoice} sur #{pa}"
     ),
 )
+@when(
+    parsers.parse("je dépose la facture {invoice}"),
+)
 def submit_invoice():
     ...
+
+
+@when(
+    parsers.parse("je dépose pour contrôle la facture @{invoice}"),
+)
+def control_invoice(): ...
 
 
 @then("j'obtiens un numéro de tâche")
@@ -58,9 +65,18 @@ def job_id():
 def task_status(): ...
 
 
+@when("je définis un contrôle de conformité métier fournisseur")
+def compliance_rule_set(): ...
+
+
+@when(
+    parsers.parse('''l'adresse de contrôle "{url}"'''),
+)
+def compliance_rule_set_url(): ...
+
 
 @then(
     parsers.parse("j'obtiens le statut #{status}"),
 )
 def job_status(status):
-    ...
+    assert False, f"statut {status} expected but not implemented !"

@@ -73,15 +73,15 @@ _Section en cours de définition par la communauté_
 
 Le projet est découpé en 9 briques:
 
-* [01-api-gateway](01-api-gateway/index.md)
-* [02-esb-central](02-esb-central/index.md)
-* [03-controle-formats](03-controle-formats/index.md)
-* [04-validation-metier](04-validation-metier/index.md)
-* [05-conversion-formats](05-conversion-formats/index.md)
-* [06-annuaire-local](06-annuaire-local/index.md)
-* [07-routage](07-routage/index.md)
-* [08-transmission-fiscale](08-transmission-fiscale/index.md)
-* [09-gestion-cycle-vie](09-gestion-cycle-vie/index.md)
+* [01-api-gateway](docs/briques/01-api-gateway/index.md)
+* [02-esb-central](docs/briques/02-esb-central/index.md)
+* [03-controle-formats](docs/briques/03-controle-formats/index.md)
+* [04-validation-metier](docs/briques/04-validation-metier/index.md)
+* [05-conversion-formats](docs/briques/05-conversion-formats/index.md)
+* [06-annuaire-local](docs/briques/06-annuaire-local/index.md)
+* [07-routage](docs/briques/07-routage/index.md)
+* [08-transmission-fiscale](docs/briques/08-transmission-fiscale/index.md)
+* [09-gestion-cycle-vie](docs/briques/09-gestion-cycle-vie/index.md)
 
 Vous trouverez également dans ce dépôt les [normes de référence](norme/README.md).
 

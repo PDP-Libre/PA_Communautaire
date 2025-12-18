@@ -1,9 +1,8 @@
-from pac_bdd.words import *
+from pac_bdd.domain import *
+from pytest_bdd import scenarios
 
 
-@scenario("pa_multiple.feature", "2 PA")
-def test_pa(): ...
-
-
-@scenario("publish_article.feature", "Facture rejetée")
-def test_invoice(): ...
+scenarios("compliance.feature")
+scenarios("format.feature")
+scenarios("pa_multiple.feature")
+scenarios("publish_article.feature")

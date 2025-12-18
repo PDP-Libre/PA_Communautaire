@@ -10,6 +10,8 @@
 * [ ] inclure qq cas d'usage IA (détection fraude, conformité)
 * [ ] inclure cas détaillé de refus affacturage via [Euler Hermes](https://www.allianz-trade.fr/blog/affacturage.html)
 * [ ] inclure cas intégration [coupa](https://www.coupa.com/)
-* [ ] inclure cas d'inétégration [odoo](https://www.odoo.com/)
+* [ ] inclure cas d'intégration [dolibarr](https://www.dolibarr.org/), présence commande fournisseur
+* [ ] inclure cas d'intégration [odoo](https://www.odoo.com/), présence commande fournisseur
+* [ ] inclure cas d'intégration [n8n](https://n8n.io/)
 * [ ] liste d'autres intégrations possibles, se rapprocher du groupe de travail
 * [ ] maquette grossière ESB/API
