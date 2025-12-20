@@ -87,7 +87,15 @@ Vous trouverez également dans ce dépôt les [normes de référence](norme/READ
 
 D'autres liens sont disponibles sur [le projet awesome-facturation-electronique](https://github.com/PDP-Libre/awesome-facturation-electronique)
 
-Le sous-projet projet [packages/pac-bdd](packages/pac-bdd/README.md) permets d'exécuter les tests BDD.
+
+## 🏗️ Sous-projets
+
+Le présent projet est [un monorepo](https://en.wikipedia.org/wiki/Monorepo).
+Les sous-projets sont dans le répertoire `/packages`:
+
+* [packages/pac-bdd](packages/pac-bdd/README.md) permets d'exécuter les tests BDD.
+* [packages/pac0](packages/pac0/README.md) est l'implémentation de référence.
+
 
 ## 🤝 Contribution
 

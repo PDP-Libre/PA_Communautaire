@@ -1,4 +1,4 @@
-# pac-py
+# pac0
 
 Une implémentation de référence des specifications de PA Commmunautaire.
 
