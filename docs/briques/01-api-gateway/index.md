@@ -7,7 +7,16 @@ C'est le document XP_Z12-013.pdf de la norme Afnor qui décrit le plus précisem
 
 L’API publiée par le Fournisseur API doit respecter le SWAGGER décrit dans l’Annexe A de la norme XP_Z12-013.pdf. Un test permets de vérifier ce respect.
 
+Les définitions swagger/OpenAPI sont disponibles via swaggerhub:
+* https://app.swaggerhub.com/apis/Generixgroup8/AFNOR-Flow_Service
+* https://app.swaggerhub.com/apis/Generixgroup8/AFNOR-Directory_Service
 
+
+## Route /api-keys  (GET)
+## Route /api-keys (POST)
+## Route /api-keys/{id} (DELETE)
+## Route /api-keys/{id} (GET)
+## Route /api-keys/{id} (PATCH)
 ## Route /directory-line (POST)
 ## Route /directory-line/code:{id} (GET)
 ## Route /directory-line/id-instance:{id} (DELETE)
@@ -46,3 +55,21 @@ Voici les routes dédiées à la gestion des webhook:
 * GET /webhooks
 * GET /webhook/{id}
 * DELETE /webhook/{id}
+
+## API key 
+
+Respect du [RFC6750](https://datatracker.ietf.org/doc/html/rfc6750) "The OAuth 2.0 Authorization Framework: Bearer Token Usage".
+
+En-tête des requêtes: `Authorization: Bearer <api_key>`
+
+Vérification de la clé API:
+
+![](https://athroniaeth.github.io/fastapi-api-key/schema.svg)
+
+
+Voici les routes dédiées à la gestion des clés API:
+* POST /api-keys : Create a key and return the plaintext secret once.
+* GET /api-keys : List keys with offset/limit pagination.
+* GET /api-keys/{id} : Retrieve a key by identifier.
+* PATCH /api-keys/{id} : Update name, description, or activation flag.
+* DELETE /api-keys/{id} : Remove a key.

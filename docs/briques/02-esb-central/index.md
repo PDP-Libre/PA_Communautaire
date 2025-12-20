@@ -17,6 +17,6 @@ flowchart TD
     09-gestion-cycle-vie <--> 02-esb-central
 ```
 
-Pour pouvoir communiquer chaque brique doit définir au moins canal d'entrée.
+Pour pouvoir communiquer chaque brique doit définir au moins un canal d'entrée.
 Chaque message déposé sur ce canal déclenchera une action.
 Le résultat est déposé sur un autre canal.

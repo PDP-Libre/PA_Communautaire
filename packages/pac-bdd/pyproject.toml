@@ -8,7 +8,14 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+]
+
+[dependency-groups]
+dev = [
+    "nats-server",
+    "pytest>=9.0.2",
     "pytest-bdd>=8.1.0",
+    "pytest-asyncio>=1.3.0",
 ]
 
 [project.scripts]
@@ -17,3 +24,7 @@ pac-bdd = "pac_bdd:main"
 [build-system]
 requires = ["uv_build>=0.9.17,<0.10.0"]
 build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+#asyncio_default_fixture_loop_scope = "function"
+asyncio_mode = "auto"

@@ -16,7 +16,7 @@ async def test_nats():
 
 
 async def test_nats_context_manager():
-    """NATS as contxt manager"""
+    """NATS as context manager"""
     async with await run(port=0) as server:
         assert server.is_running is True
         assert server.port > 0
