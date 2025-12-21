@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "pac0",
 ]
 
 [dependency-groups]
@@ -28,3 +29,14 @@ build-backend = "uv_build"
 [tool.pytest.ini_options]
 #asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
+
+
+[tool.uv.workspace]
+members = [
+    "../pac0",
+]
+
+
+[tool.uv.sources.pac0]
+workspace = true
+
