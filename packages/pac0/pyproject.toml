@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.126.0",
+    "faststream[cli,nats]>=0.6.4",
     "nats-py[nkeys]>=2.12.0",
 ]
 

@@ -13,13 +13,13 @@ uv run fastapi dev src/pac0/service/api_gateway/main.py
 nats-server -V -js
 # lancement service 03 ... (TODO)
 # lancement service 04-validation-metier
-uv run src/pac0/service/validation-metier/main.py
+uv run faststream run src/pac0/service/validation_metier/main:app --reload
 # lancement service 05 ... (TODO)
 # lancement service 06 ... (TODO)
 # lancement service 07 ... (TODO)
 # lancement service 08 ... (TODO)
 # lancement service 09-gestion-cycle-vie
-uv run src/pac0/service/gestion_cycle_vie/main.py
+uv run faststream run src/pac0/service/gestion_cycle_vie/main:app --reload
 ```
 
 ## tests
