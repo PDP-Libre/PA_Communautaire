@@ -3,13 +3,6 @@ from pytest_bdd import given, parsers, scenario, then, when
 
 
 @given(
-    parsers.parse("la PA #{pa}"),
-)
-def pa_given(pa):
-    raise NotImplementedError()
-
-
-@given(
     parsers.parse("l'entreprise #{company} enregistrée sur la PA #{pa}"),
 )
 def company_given(company, pa):
@@ -71,44 +64,37 @@ def job_status(status):
     raise NotImplementedError()
 
 
-@pytest.fixture
-async def pac():
-    # async with await nats.server.run(port=0) as server:
-    #    assert server.is_running is True
-    #    assert server.port > 0
-    #    yield server
-    ...
-
-
-@pytest.fixture
-def auth():
-    return {}
-
-
-@pytest.fixture
-def author():
-    return "bob"
-
-
-# Etant un utilisateur
-@given("un utilisateur")
-def author_user(auth, author, pac):
-    auth["user"] = author
-    assert pac.is_running is True
-
-
 # Quand j'appele l'API GET /healthcheck
 @when(
     parsers.parse("j'appele l'API {verb} {path}"),
 )
 def api_call(verb, path):
-    # raise NotImplementedError()
-    ...
+    raise NotImplementedError()
 
 
 # Alors j'obtiens le code de retour 200
 @then(parsers.parse("j'obtiens le code de retour {code}"))
 def api_return_code(code):
-    print("xxxxx a")
-    # raise NotImplementedError()
-    ...
+    raise NotImplementedError()
+
+
+# Qnand j'écoute le canal 'pong'
+@when(
+    parsers.parse("j'écoute le canal '{canal}'"),
+)
+def esb_pub(canal):
+    raise NotImplementedError()
+
+
+# Quand je publie le message 'hello' sur le canal 'ping'
+@when(
+    parsers.parse("je publie le message '{msg}' sur le canal '{canal}'"),
+)
+def esb_pub_msg(msg, canal):
+    raise NotImplementedError()
+
+
+# Alors j'obtiens sur le message 'hello' sur le canal 'pong'
+@then(parsers.parse("""j'obtiens sur le message '{msg}' sur le canal '{canal}'"""))
+def esb_sub_msg(msg, canal):
+    raise NotImplementedError()
