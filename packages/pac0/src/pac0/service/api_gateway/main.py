@@ -10,8 +10,6 @@ app = FastAPI()
 router = NatsRouter("nats://localhost:4222")
 app.include_router(router)
 
-# publisher = broker.publisher("test")
-
 
 class Incoming(BaseModel):
     m: dict
@@ -55,8 +53,9 @@ async def flows_get():
 @app.get("/healthcheck")
 async def healthcheck():
     # await publisher.publish("Hi!", correlation_id=message.correlation_id)
+    # TODO: see https://faststream.ag2.ai/latest/getting-started/observability/healthcheks/
     await router.broker.publish("Hello, NATS!", "test")
-    await publisher_pong.publish("Hi!", correlation_id=message.correlation_id)
+    await router.broker.publish("Hi!", correlation_id=message.correlation_id)
 
     return {"status": "OK"}
 
