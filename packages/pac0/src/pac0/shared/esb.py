@@ -3,6 +3,9 @@ from faststream import FastStream, ContextRepo
 from faststream.nats import NatsBroker
 
 
+QUEUE = "q"
+
+
 class SettingsService(BaseSettings):
     # any_flag: bool
     ...

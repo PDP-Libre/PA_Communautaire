@@ -14,5 +14,5 @@ async def base_handler(body: str):
 
 
 @broker.subscriber("test2")
-async def handle(message):
+async def process(message):
     await publisher.publish("Hi!", correlation_id=message.correlation_id)
