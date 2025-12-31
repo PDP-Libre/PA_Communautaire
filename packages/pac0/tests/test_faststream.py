@@ -75,4 +75,27 @@ async def test_sub_embed():
         await br.publish("hello2", subject="test-subject2")
         test_process2.mock.assert_called_once_with("hello2")
 
-    assert False
+
+@pytest.fixture
+async def my_test_nats_broker():
+    async with (
+        TestNatsBroker(app.broker, connect_only=True) as br,
+        # TestApp(app) as test_app,
+    ):
+        yield br
+
+
+@pytest.fixture
+async def my_test_app():
+    async with (
+        # TestNatsBroker(app.broker, connect_only=True) as br,
+        TestApp(app) as test_app,
+    ):
+        yield test_app
+
+
+@pytest.mark.asyncio
+async def test_sub_embed_fixture(my_test_nats_broker, my_test_app):
+    await my_test_nats_broker.publish("hello2", subject="test-subject")
+    test_process.mock.assert_called_once_with("hello2")
+    # TODO: how to check which subject has been called
