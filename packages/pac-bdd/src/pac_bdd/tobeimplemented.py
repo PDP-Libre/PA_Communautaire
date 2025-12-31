@@ -78,23 +78,3 @@ def api_return_code(code):
     raise NotImplementedError()
 
 
-# Qnand j'écoute le canal 'pong'
-@when(
-    parsers.parse("j'écoute le canal '{canal}'"),
-)
-def esb_pub(canal):
-    raise NotImplementedError()
-
-
-# Quand je publie le message 'hello' sur le canal 'ping'
-@when(
-    parsers.parse("je publie le message '{msg}' sur le canal '{canal}'"),
-)
-def esb_pub_msg(msg, canal):
-    raise NotImplementedError()
-
-
-# Alors j'obtiens sur le message 'hello' sur le canal 'pong'
-@then(parsers.parse("""j'obtiens sur le message '{msg}' sur le canal '{canal}'"""))
-def esb_sub_msg(msg, canal):
-    raise NotImplementedError()

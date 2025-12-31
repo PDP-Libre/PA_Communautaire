@@ -7,6 +7,6 @@ Fonctionnalité: ESB
 
         Quand j'écoute le canal 'pong'
         Quand je publie le message 'hello' sur le canal 'ping'
-        Alors j'obtiens sur le message 'hello' sur le canal 'pong'
+        Alors j'obtiens le message 'hello' sur le canal 'pong'
 
 

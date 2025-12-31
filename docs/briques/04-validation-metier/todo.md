@@ -1,5 +1,10 @@
 # TODO
 
+
+* [ ] test fixture world
+* [ ] test fixture user
+* [ ] test simple BDD healthcheck complet
+* [x] maquette grossière ESB/API
 * [x] ajouter une version dezippé des fichiers de la norme pour pouvoir y faire reference plus directement
 * [x] tests BDD ([gherkin/cucumber](https://cucumber.io/) style ?)
 * [ ] récupérer [OpenAPI specs de Peppol](https://peppol.org/documentation/technical-documentation/post-award-documentation/)
@@ -14,4 +19,3 @@
 * [ ] inclure cas d'intégration [odoo](https://www.odoo.com/), présence commande fournisseur
 * [ ] inclure cas d'intégration [n8n](https://n8n.io/)
 * [ ] liste d'autres intégrations possibles, se rapprocher du groupe de travail
-* [ ] maquette grossière ESB/API

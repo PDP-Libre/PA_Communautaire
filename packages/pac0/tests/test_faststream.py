@@ -56,3 +56,23 @@ async def test_connect_only():
     ):
         await br.publish("hello", subject="test-subject")
         test_process.mock.assert_called_once_with("hello")
+
+
+@pytest.mark.asyncio
+async def test_sub_embed():
+    # @broker.subscriber("test-subject2")
+    @broker.subscriber("*")
+    async def test_process2(
+        # body: str,
+    ):
+        # print("test_process2 ...", body)
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<< test_process2 ...")
+
+    async with (
+        TestNatsBroker(app.broker, connect_only=True) as br,
+        TestApp(app) as test_app,
+    ):
+        await br.publish("hello2", subject="test-subject2")
+        test_process2.mock.assert_called_once_with("hello2")
+
+    assert False
