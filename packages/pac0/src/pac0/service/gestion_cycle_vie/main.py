@@ -1,18 +1,5 @@
 from pac0.shared.esb import init_esb_app
-
+from pac0.service.gestion_cycle_vie.lib import router
 
 broker, app = init_esb_app()
-
-publisher = broker.publisher("test")
-
-
-@broker.subscriber("test")
-async def base_handler(body: str):
-    print("xxxxxxxxxxxxxxxxx1")
-    print(body)
-    print("xxxxxxxxxxxxxxxxx2")
-
-
-@broker.subscriber("test2")
-async def process(message):
-    await publisher.publish("Hi!", correlation_id=message.correlation_id)
+broker.include_router(router)

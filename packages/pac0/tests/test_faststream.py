@@ -12,6 +12,7 @@ from faststream import FastStream, TestApp, Context
 from faststream.nats import NatsBroker, TestNatsBroker
 from pydantic import ValidationError
 from pac0.service.validation_metier.main import router as router_validation_metier
+from pac0.service.gestion_cycle_vie.main import router as router_gestion_cycle_vie
 
 
 broker = NatsBroker("nats://localhost:4222")
@@ -162,6 +163,9 @@ async def test_pubsub_nats() -> None:
 
 
 # ===================================================================================
+# a basic fixture with nats server
+
+
 @pytest.fixture
 async def my_broker_fixture():
     async with await run(port=0) as server:
@@ -213,26 +217,27 @@ async def test_pubsub_nats_fixture(my_broker_fixture) -> None:
 
 
 # ===================================================================================
-
-# see https://dummy.faststream.airt.ai/0.5/getting-started/#other-tools-integrations
-
+# a fixture with nats server, 2 faststream services and a util class
+# see https://dummy.faststream.airt.ai/0.5/getting-started/integrations/frameworks/#integrations
 
 class MyBrokerSub:
     def __init__(self, br, subscriber):
-        self.users = []
         self.br = br
         self.subscriber = subscriber
-
-    def add_user(self, name):
-        self.users.append(name)
-        return len(self.users)
-
-    def get_users(self):
-        return self.users
 
 
 @pytest.fixture
 async def my_broker_fixture_class():
+    def _faststream_app_factory(router):
+        app = FastStream(br)
+        br.include_router(router)
+        return app
+
+    routers = [
+        router_validation_metier,
+        router_gestion_cycle_vie,
+    ]
+
     async with await run(port=0) as server:
         assert server.is_running is True
 
@@ -241,7 +246,36 @@ async def my_broker_fixture_class():
         async with broker as br:
             my_world = MyBrokerSub(br, subscriber)
             await br.start()
+
+            # _faststream_app_factory(router_validation_metier)
+            # _faststream_app_factory(router_gestion_cycle_vie)
+            # t0 = asyncio.create_task(app_validation_metier.run())
+            # services_tasks = [
+            #    asyncio.create_task(app_validation_metier.run()),
+            #    asyncio.create_task(app_gestion_cycle_vie.run()),
+            # ]
+
+            services_tasks = [
+                asyncio.create_task(_faststream_app_factory(router).run())
+                for router in routers
+            ]
+
+            # TODO: how to wait for app to be ready
+            await asyncio.sleep(3)
+
             yield my_world
+
+            # Cancel the third task
+            # t0.cancel()
+            for task in services_tasks:
+                task.cancel()
+                # await t0
+            for task in services_tasks:
+                try:
+                    await task
+                except asyncio.CancelledError:
+                    pass
+
     assert server.is_running is False
 
 
@@ -275,26 +309,145 @@ async def test_pubsub_nats_fixture_class(
             if index_message >= len(expected_messages):
                 break
 
-    app_validation_metier = FastStream(br)
-    br.include_router(router_validation_metier)
-    t0 = asyncio.create_task(app_validation_metier.run())
+    # Wait for first two tasks
+    await asyncio.gather(
+        asyncio.create_task(consume()),
+        asyncio.create_task(publish_test_message()),
+        return_exceptions=True,
+    )
 
-    # TODO: how to wait for app to be ready
-    await asyncio.sleep(5)
+    calls = [call(msg) for msg in expected_messages]
+    mock.assert_has_calls(calls=calls)
 
-    t1 = asyncio.create_task(consume())
-    t2 = asyncio.create_task(publish_test_message())
+
+# ===================================================================================
+# a fixture with nats server, 2 faststream services and a util class
+# see https://dummy.faststream.airt.ai/0.5/getting-started/integrations/frameworks/#integrations
+
+
+class PaContext:
+    """
+    See https://medium.com/@hitorunajp/asynchronous-context-managers-f1c33d38c9e3
+    """
+
+    def __init__(self, br, subscriber):
+        self.br = br
+        self.subscriber = subscriber
+        # async with await run(port=0) as server:
+
+    async def __aenter__(self):
+        # await self._pac1.__aenter__()
+        # async with await self.nats as server:
+        self.nats = await run(port=0)
+        await self.nats.__aenter__()
+
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        # await self._pac1.__aexit__(exc_type, exc_val, exc_tb)
+        await self.nats.__aexit__(exc_type, exc_val, exc_tb)
+
+
+class WorldContext:
+    def __init__(self, broker, subscriber):
+        self.broker = broker
+        self.subscriber = subscriber
+
+        self.pac1 = PaContext(broker, subscriber)
+        self.pac2 = PaContext(broker, subscriber)
+        self.pac3 = PaContext(broker, subscriber)
+        self.pac4 = PaContext(broker, subscriber)
+        self.pacs: list[PaContext] = []
+
+    async def __aenter__(self):
+        await self._pac1.__aenter__()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self._pac1.__aexit__(exc_type, exc_val, exc_tb)
+
+
+@pytest.fixture
+async def my_world():
+    def _faststream_app_factory(router):
+        app = FastStream(br)
+        br.include_router(router)
+        return app
+
+    routers = [
+        router_validation_metier,
+        router_gestion_cycle_vie,
+    ]
+
+    async with await run(port=0) as server:
+        assert server.is_running is True
+
+        broker = NatsBroker(f"nats://{server.host}:{server.port}", apply_types=True)
+        subscriber = broker.subscriber("*")
+        my_world = WorldContext(broker, subscriber)
+
+        async with my_world.broker as br:
+            await br.start()
+
+            services_tasks = [
+                asyncio.create_task(_faststream_app_factory(router).run())
+                for router in routers
+            ]
+
+            # TODO: how to wait for app to be ready
+            await asyncio.sleep(3)
+
+            yield my_world
+
+            # stop the services
+            for task in services_tasks:
+                task.cancel()
+            for task in services_tasks:
+                try:
+                    await task
+                except asyncio.CancelledError:
+                    pass
+
+    assert server.is_running is False
+
+
+@pytest.mark.asyncio
+async def test_pubsub_world_fixture(
+    my_world,
+) -> None:
+    """
+    pub/sub on a world fixture with multiple nats/services instances
+    """
+    # br = my_world.br
+    br = my_world.broker
+    subscriber = my_world.subscriber
+
+    mock = MagicMock()
+    queue = "test"
+    expected_messages = ("test_message_1", "test_message_2")
+
+    async def publish_test_message():
+        for msg in expected_messages:
+            await br.publish(msg, queue)
+
+    async def consume():
+        index_message = 0
+        async for msg in subscriber:
+            print(msg.raw_message.subject)
+            result_message = await msg.decode()
+
+            mock(result_message)
+
+            index_message += 1
+            if index_message >= len(expected_messages):
+                break
 
     # Wait for first two tasks
-    try:
-        await asyncio.gather(t1, t2, return_exceptions=True)
-    finally:
-        # Cancel the third task
-        t0.cancel()
-        try:
-            await t0
-        except asyncio.CancelledError:
-            pass
+    await asyncio.gather(
+        asyncio.create_task(consume()),
+        asyncio.create_task(publish_test_message()),
+        return_exceptions=True,
+    )
 
     calls = [call(msg) for msg in expected_messages]
     mock.assert_has_calls(calls=calls)
