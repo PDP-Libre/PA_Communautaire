@@ -6,7 +6,7 @@ def myctx():
     return {}
 
 
-def test_a(myctx):
+def test_dummy_fixture(myctx):
     assert True
 
 
@@ -15,5 +15,5 @@ async def myctx2():
     return {}
 
 
-async def test_b(myctx2):
+async def test_dummy_async_fixture(myctx2):
     assert True    

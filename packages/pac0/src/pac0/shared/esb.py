@@ -12,6 +12,8 @@ class SettingsService(BaseSettings):
 
 
 def init_esb_app():
+    # TODO: use router to allow dynamic router setup
+    # broker.include_router(router)
     # broker = NatsBroker("nats://demo.nats.io:4222")
     broker = NatsBroker("nats://localhost:4222")
     app = FastStream(broker)

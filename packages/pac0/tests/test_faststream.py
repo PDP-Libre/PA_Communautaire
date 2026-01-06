@@ -11,6 +11,8 @@ from faststream.context import ContextRepo
 from faststream import FastStream, TestApp, Context
 from faststream.nats import NatsBroker, TestNatsBroker
 from pydantic import ValidationError
+from pac0.service.validation_metier.main import router as router_validation_metier
+
 
 broker = NatsBroker("nats://localhost:4222")
 app = FastStream(broker, context=ContextRepo({"var1": "my-var1-value"}))
@@ -22,11 +24,11 @@ async def handle():
 
 
 @broker.subscriber("test-subject")
-async def test_process(
+async def process_test_subject(
     body: str,
     var1: Annotated[str, Context()],
 ):
-    print("test_process ...", body)
+    print("process_test_subject ...", body)
     # test some global context var
     assert var1 == "my-var1-value"
 
@@ -38,7 +40,7 @@ async def test_validation_str_ok() -> None:
     """
     async with TestNatsBroker(broker) as br:
         await br.publish("hello", subject="test-subject")
-        test_process.mock.assert_called_once_with("hello")
+        process_test_subject.mock.assert_called_once_with("hello")
 
 
 @pytest.mark.asyncio
@@ -58,7 +60,7 @@ async def test_connect_only():
         TestApp(app) as test_app,
     ):
         await br.publish("hello", subject="test-subject")
-        test_process.mock.assert_called_once_with("hello")
+        process_test_subject.mock.assert_called_once_with("hello")
 
 
 @pytest.mark.asyncio
@@ -100,10 +102,11 @@ async def my_test_app():
 @pytest.mark.asyncio
 async def test_sub_embed_fixture(my_test_nats_broker, my_test_app):
     await my_test_nats_broker.publish("hello2", subject="test-subject")
-    test_process.mock.assert_called_once_with("hello2")
+    process_test_subject.mock.assert_called_once_with("hello2")
     # TODO: how to check which subject has been called
 
 
+# ===================================================================================
 @pytest.mark.asyncio
 async def test_pubsub_nats() -> None:
     """
@@ -114,7 +117,6 @@ async def test_pubsub_nats() -> None:
     queue = "q1"
     expected_messages = ("test_message_1", "test_message_2")
 
-    print("xxxxxx1")
     async with await run(port=0) as server:
         # broker must be started !!!!
         assert server.is_running is True
@@ -157,3 +159,142 @@ async def test_pubsub_nats() -> None:
 
     # Server should be shutdown after context exit
     assert server.is_running is False
+
+
+# ===================================================================================
+@pytest.fixture
+async def my_broker_fixture():
+    async with await run(port=0) as server:
+        assert server.is_running is True
+        broker = NatsBroker(f"nats://{server.host}:{server.port}", apply_types=True)
+        subscriber = broker.subscriber("*")
+        async with broker as br:
+            await br.start()
+            yield br, subscriber
+    assert server.is_running is False
+
+
+@pytest.mark.asyncio
+async def test_pubsub_nats_fixture(my_broker_fixture) -> None:
+    """
+    pub/sub on a test nats instance via basic fixture
+    """
+    br, subscriber = my_broker_fixture
+    mock = MagicMock()
+    queue = "q1"
+    expected_messages = ("test_message_1", "test_message_2")
+
+    async def publish_test_message():
+        for msg in expected_messages:
+            await br.publish(msg, queue)
+
+    async def consume():
+        index_message = 0
+        async for msg in subscriber:
+            print(msg.raw_message.subject)
+            result_message = await msg.decode()
+
+            mock(result_message)
+
+            index_message += 1
+            if index_message >= len(expected_messages):
+                break
+
+    await asyncio.wait(
+        (
+            asyncio.create_task(consume()),
+            asyncio.create_task(publish_test_message()),
+        ),
+        timeout=TIMEOUT,
+    )
+
+    calls = [call(msg) for msg in expected_messages]
+    mock.assert_has_calls(calls=calls)
+
+
+# ===================================================================================
+
+# see https://dummy.faststream.airt.ai/0.5/getting-started/#other-tools-integrations
+
+
+class MyBrokerSub:
+    def __init__(self, br, subscriber):
+        self.users = []
+        self.br = br
+        self.subscriber = subscriber
+
+    def add_user(self, name):
+        self.users.append(name)
+        return len(self.users)
+
+    def get_users(self):
+        return self.users
+
+
+@pytest.fixture
+async def my_broker_fixture_class():
+    async with await run(port=0) as server:
+        assert server.is_running is True
+
+        broker = NatsBroker(f"nats://{server.host}:{server.port}", apply_types=True)
+        subscriber = broker.subscriber("*")
+        async with broker as br:
+            my_world = MyBrokerSub(br, subscriber)
+            await br.start()
+            yield my_world
+    assert server.is_running is False
+
+
+@pytest.mark.asyncio
+async def test_pubsub_nats_fixture_class(
+    my_broker_fixture_class,
+) -> None:
+    """
+    pub/sub on a test nats instance via a Class
+    """
+    br = my_broker_fixture_class.br
+    subscriber = my_broker_fixture_class.subscriber
+
+    mock = MagicMock()
+    queue = "test"
+    expected_messages = ("test_message_1", "test_message_2")
+
+    async def publish_test_message():
+        for msg in expected_messages:
+            await br.publish(msg, queue)
+
+    async def consume():
+        index_message = 0
+        async for msg in subscriber:
+            print(msg.raw_message.subject)
+            result_message = await msg.decode()
+
+            mock(result_message)
+
+            index_message += 1
+            if index_message >= len(expected_messages):
+                break
+
+    app_validation_metier = FastStream(br)
+    br.include_router(router_validation_metier)
+    t0 = asyncio.create_task(app_validation_metier.run())
+
+    # TODO: how to wait for app to be ready
+    await asyncio.sleep(5)
+
+    t1 = asyncio.create_task(consume())
+    t2 = asyncio.create_task(publish_test_message())
+
+    # Wait for first two tasks
+    try:
+        await asyncio.gather(t1, t2, return_exceptions=True)
+    finally:
+        # Cancel the third task
+        t0.cancel()
+        try:
+            await t0
+        except asyncio.CancelledError:
+            pass
+
+    calls = [call(msg) for msg in expected_messages]
+    mock.assert_has_calls(calls=calls)
