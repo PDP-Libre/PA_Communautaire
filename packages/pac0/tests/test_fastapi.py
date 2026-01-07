@@ -108,10 +108,12 @@ async def test_00130():
 # ===================================================================================
 # a fixture with fastapi server
 
+
 def _faststream_app_factory(br, router):
     app = FastStream(br)
     br.include_router(router)
     return app
+
 
 routers = [
     router_validation_metier,
@@ -124,9 +126,14 @@ class PaContext:
     See https://medium.com/@hitorunajp/asynchronous-context-managers-f1c33d38c9e3
     """
 
-    def __init__(self, br, subscriber, api_app):
-        self.br = br
-        self.subscriber = subscriber
+    def __init__(
+        self,
+        # br,
+        # subscriber,
+        api_app,
+    ):
+        self.br = None
+        self.subscriber = None
         self.api_app = api_app
         self.api_base_url = None
         self._uvicorn_api = None
@@ -137,6 +144,12 @@ class PaContext:
         # start the nats service context
         self.nats = await run(port=0)
         await self.nats.__aenter__()
+        broker = NatsBroker(
+            f"nats://{self.nats.host}:{self.nats.port}", apply_types=True
+        )
+        self.br = broker
+        self.subscriber = broker.subscriber("*")
+
         # start the api service context
         self._uvicorn_api = uvicorn_context(self.api_app, port=0)
         self.uvicorn_api = await self._uvicorn_api.__aenter__()
@@ -148,7 +161,6 @@ class PaContext:
         await self.br.__aenter__()
         await self.br.start()
 
-
         # start the services (faststream apps)
         self.services_tasks = [
             asyncio.create_task(_faststream_app_factory(self.br, router).run())
@@ -158,9 +170,8 @@ class PaContext:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-
         # stop the services
-        print("Stopping the services ...")
+        # print("Stopping the services ...")
         for task in self.services_tasks:
             try:
                 task.cancel()
@@ -171,8 +182,7 @@ class PaContext:
                 await task
             except asyncio.CancelledError:
                 pass
-        print("Services stopped")
-
+        # print("Services stopped")
 
         # close the broker client
         await self.br.__aexit__(exc_type, exc_val, exc_tb)
@@ -181,74 +191,74 @@ class PaContext:
         # close the nats service context
         await self.nats.__aexit__(exc_type, exc_val, exc_tb)
 
+    def HttpxAsyncClient(self):
+        return httpx.AsyncClient(base_url=self.api_base_url)
+
 
 class WorldContext:
-    def __init__(self, broker, subscriber, app_api_gateway, pac_pool: int):
-        self.broker = broker
-        self.subscriber = subscriber
+    def __init__(
+        self,
+        # broker,
+        # subscriber,
+        # app_api_gateway,
+        pac_pool: int,
+    ):
+        # self.broker = broker
+        # self.subscriber = subscriber
+        self.pacs: list[PaContext] = []
 
         assert 0 <= pac_pool <= 4
 
-        pacs = []
+        # create pac instance
         if pac_pool >= 1:
-            self.pac1 = PaContext(broker, subscriber, app_api_gateway)
-            pacs.append(self.pac1)
+            self.pac1 = PaContext(app_api_gateway)
+            self.pacs.append(self.pac1)
         if pac_pool >= 2:
-            self.pac2 = PaContext(broker, subscriber, app_api_gateway)
-            pacs.append(self.pac2)
+            self.pac2 = PaContext(app_api_gateway)
+            self.pacs.append(self.pac2)
         if pac_pool >= 3:
-            self.pac3 = PaContext(broker, subscriber, app_api_gateway)
-            pacs.append(self.pac3)
+            self.pac3 = PaContext(app_api_gateway)
+            self.pacs.append(self.pac3)
         if pac_pool >= 4:
-            self.pac4 = PaContext(broker, subscriber, app_api_gateway)
-            pacs.append(self.pac4)
-        self.pacs: list[PaContext] = pacs
+            self.pac4 = PaContext(app_api_gateway)
+            self.pacs.append(self.pac4)
 
     async def __aenter__(self):
-        await self.pac1.__aenter__()
+        # enter async context manager for all pac
+        for pac in self.pacs:
+            await pac.__aenter__()
+        # TODO: how to wait for services to be ready
+        await asyncio.sleep(3)
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.pac1.__aexit__(exc_type, exc_val, exc_tb)
+        # exit async context manager for all pac
+        for pac in self.pacs:
+            await pac.__aexit__(exc_type, exc_val, exc_tb)
 
 
 @pytest.fixture
 async def my_world():
+    async with WorldContext(pac_pool=1) as my_world:
+        yield my_world
 
-    async with await run(port=0) as server:
-        assert server.is_running is True
 
-        broker = NatsBroker(f"nats://{server.host}:{server.port}", apply_types=True)
-        subscriber = broker.subscriber("*")
+@pytest.fixture
+async def my_world2():
+    async with WorldContext(pac_pool=2) as my_world:
+        yield my_world
 
-        # Find an available port
-        #port = find_available_port(start_port=8000)
-        #my_world = WorldContext(
-        #    broker,
-        #    subscriber,
-        #    app_api_gateway,
-        #    pac_pool=1,
-        #)
 
-        async with WorldContext(
-            broker,
-            subscriber,
-            app_api_gateway,
-            pac_pool=1,
-        ) as my_world:
+@pytest.fixture
+async def my_world3():
+    async with WorldContext(pac_pool=3) as my_world:
+        yield my_world
 
-            # print(f"[Server] Starting FastAPI on port {port}")
-            ## start the api service (fastapi app)
-            # services_tasks.append(
-            #    asyncio.create_task(run_fastapi_server(app_api_gateway, port))
-            # )
 
-            # TODO: how to wait for services to be ready
-            await asyncio.sleep(3)
-
-            yield my_world
-
-    assert server.is_running is False
+@pytest.fixture
+async def my_world4():
+    async with WorldContext(pac_pool=4) as my_world:
+        yield my_world
 
 
 @pytest.mark.asyncio
@@ -259,16 +269,34 @@ async def test_api_world_fixture(
     API call on a world fixture with multiple nats/services instances
     see https://fastapi.tiangolo.com/advanced/async-tests/
     """
-    # base_url = f"http://0.0.0.0:{my_world.port}"
-    # base_url = "http://0.0.0.0:8543"
-
-    async with httpx.AsyncClient() as client:
-        base_url = my_world.pac1.api_base_url
-        print(f"{base_url=}")
-        response = await client.get(f"{base_url}/")
+    async with my_world.pac1.HttpxAsyncClient() as client:
+        response = await client.get("/")
         assert response.status_code == 200
         assert response.json() == {"Hello": "World"}
 
-        # response = await client.get(f"{base_url}/healthcheck")
-        # assert response.status_code == 200
-        # assert response.json() == {"status": "OK"}
+        response = await client.get("/healthcheck")
+        assert response.status_code == 200
+        assert response.json() == {"status": "OK"}
+
+
+@pytest.mark.asyncio
+async def test_api_world4_fixture(
+    my_world4,
+) -> None:
+    """
+    API call on a 4 pac instances world
+    """
+    print("xxxxxxxxxxxxx")
+    for pac in my_world4.pacs:
+        print(f"testing pac {pac} ...")
+
+        async with pac.HttpxAsyncClient() as client:
+            print(f"testing pac {pac} ...")
+
+            response = await client.get("/")
+            assert response.status_code == 200
+            assert response.json() == {"Hello": "World"}
+
+            response = await client.get("/healthcheck")
+            assert response.status_code == 200
+            assert response.json() == {"status": "OK"}
