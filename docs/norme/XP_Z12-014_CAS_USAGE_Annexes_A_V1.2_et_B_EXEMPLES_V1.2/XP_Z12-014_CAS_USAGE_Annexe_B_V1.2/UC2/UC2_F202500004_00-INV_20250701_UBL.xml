@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+    xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+    xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
+    <cbc:ProfileID>S1</cbc:ProfileID>
+    <cbc:ID>F202500004</cbc:ID>
+    <cbc:IssueDate>2025-07-01</cbc:IssueDate>
+    <cbc:DueDate>2025-07-31</cbc:DueDate>
+    <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+    <cbc:Note>#REG#VENDEUR SARL au capital de 50 000 EUR</cbc:Note>
+    <cbc:Note>#ABL#RCS MAVILLE 100 000 009</cbc:Note>
+    <cbc:Note>#AAI#35 ma rue a moi,75018 PARIS, FR – contact@vendeur.fr - www.levendeur.fr  – N° TVA : FR88 100 000 009</cbc:Note>
+    <cbc:Note>#PMD#Tout retard de paiement engendre une pénalité exigible à compter de la date d'échéance, calculée sur la base de trois fois le taux d'intérêt légal.</cbc:Note>
+    <cbc:Note>#PMT#Indemnité forfaitaire pour frais de recouvrement en cas de retard de paiement : 40 €.</cbc:Note>
+    <cbc:Note>#AAB#Les réglements reçus avant la date d'échéance ne donneront pas lieu à escompte.</cbc:Note>
+    <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+    <cbc:AccountingCost>REF COMPTABLE ACHETEUR</cbc:AccountingCost>
+    <cbc:BuyerReference>BU_2516</cbc:BuyerReference>
+    <cac:InvoicePeriod>
+        <cbc:StartDate>2025-06-01</cbc:StartDate>
+        <cbc:EndDate>2025-06-30</cbc:EndDate>
+        <cbc:DescriptionCode>432</cbc:DescriptionCode>
+    </cac:InvoicePeriod>
+    <cac:OrderReference>
+        <cbc:ID>PO202525478</cbc:ID>
+        <cbc:SalesOrderID>SO20255874</cbc:SalesOrderID>
+    </cac:OrderReference>
+    <cac:AdditionalDocumentReference>
+        <cbc:ID schemeID="IT">REF_CLIENT2514</cbc:ID>
+        <cbc:DocumentTypeCode>130</cbc:DocumentTypeCode>
+    </cac:AdditionalDocumentReference>
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="0225">100000009_STATUTS</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="0088">587451236587</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>VENDEUR NOM COMMERCIAL</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>35 rue d'ici</cbc:StreetName>
+                <cbc:AdditionalStreetName>ligne 2 vendeur</cbc:AdditionalStreetName>
+                <cbc:CityName>PARIS</cbc:CityName>
+                <cbc:PostalZone>75018</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>FR</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID>FR88100000009</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>LE VENDEUR</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="0002">100000009</cbc:CompanyID>
+                <cbc:CompanyLegalForm>SARL AU CAPITAL DE 50 000 EUROS</cbc:CompanyLegalForm>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:Name>MME CONTACT(DEP ADV)</cbc:Name>
+                <cbc:Telephone>01 02 03 54 87</cbc:Telephone>
+                <cbc:ElectronicMail>contact@vendeur.fr</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="0225">200000008</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="0088">3654789851</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PostalAddress>
+                <cbc:StreetName>55 avenue de là-bas</cbc:StreetName>
+                <cbc:AdditionalStreetName>acheteur ligne 2</cbc:AdditionalStreetName>
+                <cbc:CityName>MA VILLE</cbc:CityName>
+                <cbc:PostalZone>06000</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>FR</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cbc:CompanyID>FR37200000008</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>LE CLIENT</cbc:RegistrationName>
+                <cbc:CompanyID schemeID="0002">200000008</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:Name>Contact ACHETEUR(DEP COMPTAFOUR)</cbc:Name>
+                <cbc:Telephone>01 01 25 45 87</cbc:Telephone>
+                <cbc:ElectronicMail>contact@acheteur.fr</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+        <cac:DeliveryLocation>
+            <cac:Address>
+                <cbc:StreetName>12 impasse plus loin</cbc:StreetName>
+                <cbc:AdditionalStreetName>livré à ligne 2</cbc:AdditionalStreetName>
+                <cbc:CityName>MA VILLE</cbc:CityName>
+                <cbc:PostalZone>06000</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>FR</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+        <cac:DeliveryParty>
+            <cac:PartyName>
+                <cbc:Name>NOUS AUSSI</cbc:Name>
+            </cac:PartyName>
+        </cac:DeliveryParty>
+    </cac:Delivery>
+    <cac:PaymentMeans>
+        <cbc:PaymentMeansCode name="Virement">30</cbc:PaymentMeansCode>
+        <cbc:PaymentID>F202500004_200000008</cbc:PaymentID>
+        <cac:PayeeFinancialAccount>
+            <cbc:ID>FR20 1254 2547 2569 8542 5874 698</cbc:ID>
+            <cbc:Name>MON COMPTE BANCAIRE</cbc:Name>
+            <cac:FinancialInstitutionBranch>
+                <cbc:ID>BIC_MONCOMPTE</cbc:ID>
+            </cac:FinancialInstitutionBranch>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:PaymentTerms>
+        <cbc:Note>PAIEMENT 30 JOURS NET</cbc:Note>
+    </cac:PaymentTerms>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="EUR">2000.00</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="EUR">10000.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="EUR">2000.00</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Percent>20.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="EUR">10000.00</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="EUR">10000.00</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="EUR">12000.00</cbc:TaxInclusiveAmount>
+        <cbc:AllowanceTotalAmount currencyID="EUR">0.00</cbc:AllowanceTotalAmount>
+        <cbc:ChargeTotalAmount currencyID="EUR">0.00</cbc:ChargeTotalAmount>
+        <cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+        <cbc:PayableAmount currencyID="EUR">12000.00</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="HUR">200.0000</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="EUR">8000.00</cbc:LineExtensionAmount>
+        <cac:Item>
+            <cbc:Description>Description</cbc:Description>
+            <cbc:Name>SERVICE_FOURNI1</cbc:Name>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Percent>20.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="EUR">40.0000</cbc:PriceAmount>
+            <cbc:BaseQuantity unitCode="HUR">1.0000</cbc:BaseQuantity>
+            <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="EUR">0</cbc:Amount>
+                <cbc:BaseAmount currencyID="EUR">40.0000</cbc:BaseAmount>
+            </cac:AllowanceCharge>
+        </cac:Price>
+    </cac:InvoiceLine>
+    <cac:InvoiceLine>
+        <cbc:ID>2</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="DAY">5.0000</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="EUR">2000.00</cbc:LineExtensionAmount>
+        <cac:Item>
+            <cbc:Description>Description</cbc:Description>
+            <cbc:Name>SERVICE_FOURNI2</cbc:Name>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Percent>20.00</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="EUR">400.0000</cbc:PriceAmount>
+            <cbc:BaseQuantity unitCode="DAY">1.0000</cbc:BaseQuantity>
+            <cac:AllowanceCharge>
+                <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+                <cbc:Amount currencyID="EUR">0</cbc:Amount>
+                <cbc:BaseAmount currencyID="EUR">400.0000</cbc:BaseAmount>
+            </cac:AllowanceCharge>
+        </cac:Price>
+    </cac:InvoiceLine>
+</Invoice>
