@@ -10,3 +10,6 @@ La brique de routage est responsable du routage des factures entre les PA.
 * [ ] test interaction avec plateforme tiers SuperPDP,
 voir [ce script](https://www.superpdp.tech/quick_start.js)
 * [ ] interactions avec les [autres plateformes PDP/PA](https://forum.pdplibre.org/t/mini-auto-benchmark-des-pdp/511)
+
+
+* PPF / PEPPOL, quel API appeler ?

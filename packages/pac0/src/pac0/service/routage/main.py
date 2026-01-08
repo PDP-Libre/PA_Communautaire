@@ -15,3 +15,8 @@ async def process(message):
     #TODO: appel API au PA distant
     await publisher_out.publish(message, correlation_id=message.correlation_id)
     # await publisher_err.publish(message, correlation_id=message.correlation_id)
+
+"""
+destinatire facture chez nous ou pas
+sinon on passe par peppol
+"""

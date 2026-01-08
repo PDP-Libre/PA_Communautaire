@@ -13,3 +13,6 @@ Fonctionnalité: Conformité métier
 
         Quand je dépose la facture /data/FA-3648.pdf
         Alors j'obtiens le statut #accepted
+
+        Quand je dépose la facture /data/FA-3649.pdf
+        Alors j'obtiens le statut #rejected

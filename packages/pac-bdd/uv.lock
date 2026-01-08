@@ -545,6 +545,7 @@ dev = [
     { name = "nats-server" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
+    { name = "pytest-bdd" },
 ]
 
 [package.metadata]
@@ -559,6 +560,7 @@ dev = [
     { name = "nats-server", git = "https://github.com/nats-io/nats.py?subdirectory=nats-server" },
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "pytest-asyncio", specifier = ">=1.3.0" },
+    { name = "pytest-bdd", specifier = ">=8.1.0" },
 ]
 
 [[package]]

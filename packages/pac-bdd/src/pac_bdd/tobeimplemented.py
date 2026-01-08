@@ -24,6 +24,7 @@ def invoice_given(invoice, company1, company2):
     parsers.parse("je dépose la facture {invoice}"),
 )
 def submit_invoice():
+    # POST /
     raise NotImplementedError()
 
 
