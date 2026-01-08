@@ -1,8 +1,10 @@
 # TODO
 
 
-* [ ] test fixture world
-* [ ] test fixture user
+* [ ] pytest reports
+* [x] collecte info sur PEPPOL pour service routage
+* [x] test fixture world
+* [x] test fixture user
 * [ ] test simple BDD healthcheck complet
 * [x] maquette grossière ESB/API
 * [x] ajouter une version dezippé des fichiers de la norme pour pouvoir y faire reference plus directement

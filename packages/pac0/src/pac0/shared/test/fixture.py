@@ -22,6 +22,7 @@ from httpx import ASGITransport, AsyncClient
 from nats.server import run
 from pac0.service.api_gateway.lib import router as router_api_gateway
 from pac0.service.gestion_cycle_vie.lib import router as router_gestion_cycle_vie
+from pac0.service.routage.lib import router as router_routage
 from pac0.service.validation_metier.lib import router as router_validation_metier
 from pac0.shared.tools.api import find_available_port, uvicorn_context
 from pydantic import ValidationError
@@ -31,6 +32,7 @@ routers = [
     # TODO: add all faststream routers
     router_validation_metier,
     router_gestion_cycle_vie,
+    router_routage,
 ]
 
 
@@ -38,7 +40,6 @@ def _faststream_app_factory(br, router):
     app = FastStream(br)
     br.include_router(router)
     return app
-
 
 
 class PaContext:

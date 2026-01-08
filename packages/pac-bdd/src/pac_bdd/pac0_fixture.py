@@ -130,14 +130,10 @@ def user():
 # TODO: clean mess
 
 
-class TestContext(BaseModel):
-    ...
+class TestContext(BaseModel): ...
 
-@given(
-    parsers.parse("la PA #{pa}"),
-)
-def pa_given(pa):
-    raise NotImplementedError()
+
+# Note: "la PA #{pa_id}" is now defined in peppol.py as pa_defined
 
 
 @pytest.fixture

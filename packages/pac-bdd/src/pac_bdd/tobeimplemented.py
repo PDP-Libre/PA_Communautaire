@@ -2,28 +2,19 @@ import pytest
 from pytest_bdd import given, parsers, scenario, then, when
 
 
-@given(
-    parsers.parse("l'entreprise #{company} enregistrée sur la PA #{pa}"),
-)
-def company_given(company, pa):
-    raise NotImplementedError()
-
-
-@given(
-    parsers.parse("la facture #{invoice} de #{company1} à #{company2}"),
-)
-def invoice_given(invoice, company1, company2):
-    raise NotImplementedError()
+# Note: "l'entreprise #{enterprise_id} enregistrée sur la PA #{pa_id}" is now defined in peppol.py
+# Note: "la facture #{invoice_id} de #{sender_id} à #{recipient_id}" is now defined in peppol.py
+# Note: "je dépose la facture #{invoice_id}" is now defined in peppol.py
 
 
 @when("je dépose une facture")
-@when(
-    parsers.parse("je dépose la facture #{invoice} sur #{pa}"),
-)
-@when(
-    parsers.parse("je dépose la facture {invoice}"),
-)
-def submit_invoice():
+def submit_invoice_simple():
+    # POST /
+    raise NotImplementedError()
+
+
+@when(parsers.parse("je dépose la facture #{invoice} sur #{pa}"))
+def submit_invoice_on_pa(invoice, pa):
     # POST /
     raise NotImplementedError()
 
@@ -63,4 +54,3 @@ def compliance_rule_set_url():
 def job_status(status):
     # assert False, f"statut {status} expected but not implemented !"
     raise NotImplementedError()
-

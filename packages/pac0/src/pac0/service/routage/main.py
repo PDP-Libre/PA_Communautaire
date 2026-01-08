@@ -1,22 +1,23 @@
-from pac0.shared.esb import init_esb_app, QUEUE
+"""
+Service de routage - Point d'entrée.
+
+Ce service est responsable du routage des factures vers les PA distantes
+via le réseau PEPPOL ou vers le PPF en fallback.
+"""
+
+from pac0.shared.esb import init_esb_app
+
+from .lib import router
 
 
-SUBJECT_IN = "routage-IN"
-SUBJECT_OUT = "routage-OUT"
-SUBJECT_ERR = "routage-ERR"
-
+# Initialisation de l'application FastStream
 broker, app = init_esb_app()
-publisher_out = broker.publisher(SUBJECT_OUT)
-publisher_err = broker.publisher(SUBJECT_ERR)
+
+# Inclure le router de routage
+broker.include_router(router)
 
 
-@broker.subscriber(SUBJECT_IN, QUEUE)
-async def process(message):
-    #TODO: appel API au PA distant
-    await publisher_out.publish(message, correlation_id=message.correlation_id)
-    # await publisher_err.publish(message, correlation_id=message.correlation_id)
+if __name__ == "__main__":
+    import asyncio
 
-"""
-destinatire facture chez nous ou pas
-sinon on passe par peppol
-"""
+    asyncio.run(app.run())
