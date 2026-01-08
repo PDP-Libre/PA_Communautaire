@@ -160,6 +160,11 @@ def author():
 
 
 # Etant un utilisateur
+@given(parsers.parse("un utilisateur de la PA #{pa}"))
+def author_user_pa(pa): ...
+
+
+# Etant un utilisateur
 @given("un utilisateur")
 def author_user(auth, author, pac):
     auth["user"] = author

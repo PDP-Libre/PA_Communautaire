@@ -5,6 +5,7 @@ from pytest_bdd import given, parsers, then, when
 from .pac0_fixture import WorldContext, handle_all
 
 
+# TODO: move to shared
 def async_to_sync(fn):
     """Convert async function to sync function."""
 

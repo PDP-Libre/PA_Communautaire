@@ -39,5 +39,4 @@ asyncio_mode = "auto"
 filterwarnings = [
     'ignore:websockets.server.WebSocketServerProtocol is deprecated',
     'ignore:websockets.legacy is deprecated',
-
 ]

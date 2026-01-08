@@ -63,18 +63,3 @@ def job_status(status):
     # assert False, f"statut {status} expected but not implemented !"
     raise NotImplementedError()
 
-
-# Quand j'appele l'API GET /healthcheck
-@when(
-    parsers.parse("j'appele l'API {verb} {path}"),
-)
-def api_call(verb, path):
-    raise NotImplementedError()
-
-
-# Alors j'obtiens le code de retour 200
-@then(parsers.parse("j'obtiens le code de retour {code}"))
-def api_return_code(code):
-    raise NotImplementedError()
-
-
