@@ -5,6 +5,9 @@ Fonctionnalité: healthcheck
     permettant au Client API de vérifier si le service API est opérationnel.
 
 
+    Contexte:
+
+    
     Scénario: healthcheck api ok
         Etant un utilisateur
 
