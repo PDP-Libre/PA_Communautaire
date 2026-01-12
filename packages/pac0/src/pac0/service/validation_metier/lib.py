@@ -22,9 +22,7 @@ async def process(message):
 # dummy handler
 @router.subscriber("test")
 async def base_handler(body: str):
-    print("xxxxxxxxxxxxxxxxx1")
     print(body)
-    print("xxxxxxxxxxxxxxxxx2")
 
 
 # dummy handler

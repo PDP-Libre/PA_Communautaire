@@ -14,15 +14,19 @@ import asyncio
 import pytest
 
 
-# Re-export fixtures from service_fixture for easy access
+# Re-export fixtures from the new world module (primary API)
+from pac0.shared.test.world import (
+    nats_service,
+    peppol_service,
+    pa_service,
+    world,
+)
+
+# Re-export fixtures from legacy service_fixture for backward compatibility
 from pac0.shared.test.service_fixture import (
     nats_server,
     broker_context,
-    pa_service,
-    world_service_1pa,
-    world_service_2pa,
-    world_service_3pa,
-    world_service_4pa,
+    pa_service as pa_service_legacy,
 )
 
 

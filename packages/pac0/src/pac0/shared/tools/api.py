@@ -9,7 +9,7 @@ import uvicorn
 
 def find_available_port(
     start_port: int = 8200,
-    max_attempts: int = 100,
+    max_attempts: int = 200,
 ) -> int:
     """
     Find an available port starting from a random port within a range.

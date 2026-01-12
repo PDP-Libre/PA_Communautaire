@@ -55,7 +55,7 @@ async def healthcheck(
     # TODO: see https://faststream.ag2.ai/latest/getting-started/observability/healthcheks/
     # await router.broker.publish("Hello, NATS!", "test")
     # await router.broker.publish("Hi!", correlation_id=message.correlation_id)
-    await request.app.state.broker.publish("Hello, NATS!", "test")
+    # await request.app.state.broker.publish("Hello, NATS!", "test")
 
     return {
         "status": "OK",

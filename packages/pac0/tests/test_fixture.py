@@ -1,37 +1,42 @@
 import pytest
 
-from pac0.shared.test.fixture import world1pac, world4pac
+from pac0.shared.test.world import world, WorldContext
 
-@pytest.mark.asyncio
+
 async def test_world1pac(
-    world1pac,
+    world,
 ) -> None:
     """
     world1pac fixture
     """
-    async with world1pac.pac1.HttpxAsyncClient() as client:
+    await world.pa_new()
+    async with world.pas[0].api_gateway.get_client_async() as client:
         response = await client.get("/")
         assert response.status_code == 200
         assert response.json() == {"Hello": "World"}
 
         response = await client.get("/healthcheck")
         assert response.status_code == 200
-        assert response.json() == {"status": "OK", "rank": "test"}
+        assert response.json() == {"status": "OK", "rank": "dev"}
 
 
 @pytest.mark.asyncio
 async def test_world4pac(
-    world4pac,
+    world,
 ) -> None:
     """
     world4pac fixture
     """
-    for pac in world4pac.pacs:
-        print(f"testing pac {pac} ...")
+    await world.pa_new(4)
+    # async with world.pas[0].api_gateway.get_client_async() as client:
 
-        async with pac.HttpxAsyncClient() as client:
-            print(f"testing pac {pac} ...")
-            print(pac.info())
+    for pa in world.pas:
+        print(f"testing pac {pa} ...")
+
+        # async with pa.HttpxAsyncClient() as client:
+        async with pa.api_gateway.get_client_async() as client:
+            print(f"testing pac {pa} ...")
+            # print(pa.info())
 
             response = await client.get("/")
             assert response.status_code == 200
@@ -39,4 +44,4 @@ async def test_world4pac(
 
             response = await client.get("/healthcheck")
             assert response.status_code == 200
-            assert response.json() == {"status": "OK", "rank": "test"}
+            assert response.json() == {"status": "OK", "rank": "dev"}

@@ -1,243 +1,188 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="34" skipped="3" tests="43" time="0.206" timestamp="2026-01-08T22:35:03.986942+01:00" hostname="gpd"><testcase classname="tests.test_asyncio" name="test_0010" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_asyncio" name="test_0020" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_asyncio" name="test_0030" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_fastapi" name="test_00100" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_fastapi" name="test_00110" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_fastapi" name="test_00120" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_fastapi" name="test_00130" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_fastapi" name="test_api_world_fixture" time="0.001"><failure message="AttributeError: 'async_generator' object has no attribute 'pac1'">my_world = &lt;async_generator object my_world at 0x709972eff300&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="5" failures="14" skipped="4" tests="86" time="32.212" timestamp="2026-01-12T16:22:44.602863+01:00" hostname="gpd"><testcase classname="tests.test_asyncio" name="test_0010" time="3.004" /><testcase classname="tests.test_asyncio" name="test_0020" time="2.005" /><testcase classname="tests.test_asyncio" name="test_0030" time="1.003" /><testcase classname="tests.test_fastapi" name="test_00100" time="0.368" /><testcase classname="tests.test_fastapi" name="test_00110" time="0.346" /><testcase classname="tests.test_fastapi" name="test_00120" time="0.343" /><testcase classname="tests.test_fastapi" name="test_00130" time="0.346" /><testcase classname="tests.test_fastapi" name="test_api_world_fixture" time="3.299" /><testcase classname="tests.test_fastapi" name="test_api_world4_fixture" time="4.340" /><testcase classname="tests.test_faststream" name="test_validation_str_ok" time="0.018" /><testcase classname="tests.test_faststream" name="test_validation_str_err" time="0.010" /><testcase classname="tests.test_faststream" name="test_connect_only" time="0.004" /><testcase classname="tests.test_faststream" name="test_sub_embed" time="0.005" /><testcase classname="tests.test_faststream" name="test_sub_embed_fixture" time="0.005" /><testcase classname="tests.test_faststream" name="test_pubsub_nats" time="0.015" /><testcase classname="tests.test_faststream" name="test_pubsub_nats_fixture" time="0.012" /><testcase classname="tests.test_faststream" name="test_pubsub_nats_fixture_class" time="0.000"><skipped type="pytest.skip" message="fail when running all tests">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_faststream.py:280: fail when running all tests</skipped></testcase><testcase classname="tests.test_faststream" name="test_pubsub_world_fixture" time="0.000"><skipped type="pytest.skip" message="fail when running all tests">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_faststream.py:470: fail when running all tests</skipped></testcase><testcase classname="tests.test_faststream" name="test_api_world_fixture" time="0.000"><skipped type="pytest.skip" message="fail when running all tests">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_faststream.py:513: fail when running all tests</skipped></testcase><testcase classname="tests.test_fixture" name="test_world1pac" time="1.577" /><testcase classname="tests.test_fixture" name="test_world4pac" time="2.994" /><testcase classname="tests.test_nats" name="test_nats" time="0.015" /><testcase classname="tests.test_nats" name="test_nats_context_manager" time="0.009" /><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_01_nats_server_manual_lifecycle" time="0.010" /><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_02_nats_server_context_manager" time="0.011" /><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_02b_nats_server_context_wrapper" time="0.009" /><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_03_broker_connection" time="0.011" /><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_03b_broker_context_wrapper" time="0.011" /><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_04_broker_pubsub_basic" time="0.027" /><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_04b_broker_pubsub_wildcard" time="0.012" /><testcase classname="tests.test_service_lifecycle.TestFastStreamServices" name="test_05_single_service_with_readiness" time="0.518" /><testcase classname="tests.test_service_lifecycle.TestFastStreamServices" name="test_05b_service_readiness_timeout" time="0.120" /><testcase classname="tests.test_service_lifecycle.TestFastStreamServices" name="test_06_multiple_services_pool" time="0.019" /><testcase classname="tests.test_service_lifecycle.TestFastStreamServices" name="test_06b_real_services_pool" time="0.044" /><testcase classname="tests.test_service_lifecycle.TestFullIntegration" name="test_07_fastapi_with_services" time="0.425" /><testcase classname="tests.test_service_lifecycle.TestFullIntegration" name="test_07b_healthcheck_with_services" time="0.326" /><testcase classname="tests.test_service_lifecycle.TestFullIntegration" name="test_08_full_pa_context" time="0.456" /><testcase classname="tests.test_service_lifecycle.TestFullIntegration" name="test_08b_pa_context_isolation" time="0.632" /><testcase classname="tests.test_service_lifecycle.TestMultiPaPool" name="test_09_multi_pa_pool_2pa" time="0.001"><error message="failed on setup with &quot;file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py, line 364&#10;      async def test_09_multi_pa_pool_2pa(self, world_service_2pa):&#10;          &quot;&quot;&quot;&#10;          Level 9: World with 2 PA instances.&#10;          &quot;&quot;&quot;&#10;          assert len(world_service_2pa.pacs) == 2&#10;          assert world_service_2pa.pac1 is not None&#10;          assert world_service_2pa.pac2 is not None&#10;&#10;          # Verify isolation&#10;          assert world_service_2pa.pac1.nats.port != world_service_2pa.pac2.nats.port&#10;&#10;          # Verify both are functional&#10;          for pac in world_service_2pa.pacs:&#10;              async with pac.http_client() as client:&#10;                  response = await client.get(&quot;/healthcheck&quot;)&#10;                  assert response.status_code == 200&#10;E       fixture 'world_service_2pa' not found&#10;&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:364&quot;">file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py, line 364
+      async def test_09_multi_pa_pool_2pa(self, world_service_2pa):
+          """
+          Level 9: World with 2 PA instances.
+          """
+          assert len(world_service_2pa.pacs) == 2
+          assert world_service_2pa.pac1 is not None
+          assert world_service_2pa.pac2 is not None
 
-    @pytest.mark.asyncio
-    async def test_api_world_fixture(
-        my_world,
-    ) -&gt; None:
-        """
-        API call on a world fixture with multiple nats/services instances
-        see https://fastapi.tiangolo.com/advanced/async-tests/
-        """
-&gt;       async with my_world.pac1.HttpxAsyncClient() as client:
-                   ^^^^^^^^^^^^^
-E       AttributeError: 'async_generator' object has no attribute 'pac1'
+          # Verify isolation
+          assert world_service_2pa.pac1.nats.port != world_service_2pa.pac2.nats.port
 
-tests/test_fastapi.py:286: AttributeError</failure></testcase><testcase classname="tests.test_fastapi" name="test_api_world4_fixture" time="0.001"><failure message="AttributeError: 'async_generator' object has no attribute 'pacs'">my_world4 = &lt;async_generator object my_world4 at 0x709972eff760&gt;
+          # Verify both are functional
+          for pac in world_service_2pa.pacs:
+              async with pac.http_client() as client:
+                  response = await client.get("/healthcheck")
+                  assert response.status_code == 200
+E       fixture 'world_service_2pa' not found
+&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
 
-    @pytest.mark.asyncio
-    async def test_api_world4_fixture(
-        my_world4,
-    ) -&gt; None:
-        """
-        API call on a 4 pac instances world
-        """
-&gt;       for pac in my_world4.pacs:
-                   ^^^^^^^^^^^^^^
-E       AttributeError: 'async_generator' object has no attribute 'pacs'
+/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:364</error></testcase><testcase classname="tests.test_service_lifecycle.TestMultiPaPool" name="test_09b_multi_pa_pool_4pa" time="0.399" /><testcase classname="tests.test_service_lifecycle.TestMultiPaPool" name="test_10_cross_pa_info" time="0.000"><error message="failed on setup with &quot;file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py, line 394&#10;      async def test_10_cross_pa_info(self, world_service_2pa):&#10;          &quot;&quot;&quot;&#10;          Level 10: Verify PA instances have independent info.&#10;&#10;          Note: Cross-PA message routing would require additional&#10;          infrastructure (central directory, federation) not yet implemented.&#10;          &quot;&quot;&quot;&#10;          info1 = world_service_2pa.pac1.info()&#10;          info2 = world_service_2pa.pac2.info()&#10;&#10;          # Print for debugging&#10;          print(f&quot;PA1: {info1}&quot;)&#10;          print(f&quot;PA2: {info2}&quot;)&#10;&#10;          # Verify independence&#10;          assert info1[&quot;nats_port&quot;] != info2[&quot;nats_port&quot;]&#10;          assert info1[&quot;api_port&quot;] != info2[&quot;api_port&quot;]&#10;          assert info1[&quot;nats_url&quot;] != info2[&quot;nats_url&quot;]&#10;E       fixture 'world_service_2pa' not found&#10;&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:394&quot;">file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py, line 394
+      async def test_10_cross_pa_info(self, world_service_2pa):
+          """
+          Level 10: Verify PA instances have independent info.
 
-tests/test_fastapi.py:303: AttributeError</failure></testcase><testcase classname="tests.test_faststream" name="test_validation_str_ok" time="0.008" /><testcase classname="tests.test_faststream" name="test_validation_str_err" time="0.005" /><testcase classname="tests.test_faststream" name="test_connect_only" time="0.002" /><testcase classname="tests.test_faststream" name="test_sub_embed" time="0.002" /><testcase classname="tests.test_faststream" name="test_sub_embed_fixture" time="0.001"><failure message="AttributeError: 'async_generator' object has no attribute 'publish'">my_test_nats_broker = &lt;async_generator object my_test_nats_broker at 0x709972d1a260&gt;, my_test_app = &lt;async_generator object my_test_app at 0x709972d1a340&gt;
+          Note: Cross-PA message routing would require additional
+          infrastructure (central directory, federation) not yet implemented.
+          """
+          info1 = world_service_2pa.pac1.info()
+          info2 = world_service_2pa.pac2.info()
 
-    @pytest.mark.filterwarnings("ignore::RuntimeWarning")
-    @pytest.mark.asyncio
-    async def test_sub_embed_fixture(my_test_nats_broker, my_test_app):
-&gt;       await my_test_nats_broker.publish("hello2", subject="test-subject")
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       AttributeError: 'async_generator' object has no attribute 'publish'
+          # Print for debugging
+          print(f"PA1: {info1}")
+          print(f"PA2: {info2}")
 
-tests/test_faststream.py:109: AttributeError</failure></testcase><testcase classname="tests.test_faststream" name="test_pubsub_nats" time="0.010" /><testcase classname="tests.test_faststream" name="test_pubsub_nats_fixture" time="0.001"><failure message="TypeError: cannot unpack non-iterable async_generator object">my_broker_fixture = &lt;async_generator object my_broker_fixture at 0x709972ba50e0&gt;
+          # Verify independence
+          assert info1["nats_port"] != info2["nats_port"]
+          assert info1["api_port"] != info2["api_port"]
+          assert info1["nats_url"] != info2["nats_url"]
+E       fixture 'world_service_2pa' not found
+&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
 
-    @pytest.mark.filterwarnings("ignore::RuntimeWarning")
-    @pytest.mark.asyncio
-    async def test_pubsub_nats_fixture(my_broker_fixture) -&gt; None:
-        """
-        pub/sub on a test nats instance via basic fixture
-        """
-&gt;       br, subscriber = my_broker_fixture
-        ^^^^^^^^^^^^^^
-E       TypeError: cannot unpack non-iterable async_generator object
+/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:394</error></testcase><testcase classname="tests.test_test" name="test_dummy_async" time="0.001" /><testcase classname="tests.test_test" name="test_dummy" time="0.000" /><testcase classname="tests.test_world" name="test_world_default_0pa" time="0.004" /><testcase classname="tests.test_world" name="test_world_with_1pa" time="2.914" /><testcase classname="tests.test_world" name="test_world_with_4pa" time="3.020" /><testcase classname="tests.test_world_old.TestServiceProtocol" name="test_nats_service_is_protocol" time="0.002" /><testcase classname="tests.test_world_old.TestServiceProtocol" name="test_peppol_service_is_protocol" time="0.000" /><testcase classname="tests.test_world_old.TestServiceProtocol" name="test_pa_service_is_protocol" time="0.000" /><testcase classname="tests.test_world_old.TestServiceProtocol" name="test_protocol_properties_exist" time="0.000" /><testcase classname="tests.test_world_old.TestNatsServiceLifecycle" name="test_embedded_nats_default" time="0.010" /><testcase classname="tests.test_world_old.TestNatsServiceLifecycle" name="test_remote_nats_endpoint" time="0.010" /><testcase classname="tests.test_world_old.TestNatsServiceLifecycle" name="test_nats_service_properties" time="0.009" /><testcase classname="tests.test_world_old.TestNatsServiceLifecycle" name="test_nats_wait_ready_timeout" time="0.001"><skipped type="pytest.skip" message="Timeout test skipped for CI performance">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py:114: Timeout test skipped for CI performance</skipped></testcase><testcase classname="tests.test_world_old.TestPeppolServiceLifecycle" name="test_peppol_mock_default" time="0.001" /><testcase classname="tests.test_world_old.TestPeppolServiceLifecycle" name="test_peppol_mock_responses" time="0.001" /><testcase classname="tests.test_world_old.TestPeppolServiceLifecycle" name="test_peppol_mock_not_found" time="0.275" /><testcase classname="tests.test_world_old.TestPeppolServiceLifecycle" name="test_peppol_clear_mock_responses" time="0.131" /><testcase classname="tests.test_world_old.TestPaServiceLifecycle" name="test_pa_service_default" time="0.394" /><testcase classname="tests.test_world_old.TestPaServiceLifecycle" name="test_pa_service_healthcheck" time="0.325" /><testcase classname="tests.test_world_old.TestPaServiceLifecycle" name="test_pa_service_root_endpoint" time="0.378" /><testcase classname="tests.test_world_old.TestPaServiceLifecycle" name="test_pa_service_info" time="0.384" /><testcase classname="tests.test_world_old.TestPaServiceLifecycle" name="test_pa_service_shared_nats" time="0.326" /><testcase classname="tests.test_world_old.TestPaServiceLifecycle" name="test_pa_service_external_nats_endpoint" time="0.329" /><testcase classname="tests.test_world_old.TestWorldContextBasic" name="test_world_default_1pa" time="0.007"><failure message="assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x746322a92690&gt;, pas=[]).pas">self = &lt;test_world_old.TestWorldContextBasic object at 0x7463238d25d0&gt;
 
-tests/test_faststream.py:192: TypeError</failure></testcase><testcase classname="tests.test_faststream" name="test_pubsub_nats_fixture_class" time="0.000"><skipped type="pytest.skip" message="fail when running all tests">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_faststream.py:280: fail when running all tests</skipped></testcase><testcase classname="tests.test_faststream" name="test_pubsub_world_fixture" time="0.000"><skipped type="pytest.skip" message="fail when running all tests">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_faststream.py:470: fail when running all tests</skipped></testcase><testcase classname="tests.test_faststream" name="test_api_world_fixture" time="0.000"><skipped type="pytest.skip" message="fail when running all tests">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_faststream.py:513: fail when running all tests</skipped></testcase><testcase classname="tests.test_fixture" name="test_world1pac" time="0.001"><failure message="AttributeError: 'async_generator' object has no attribute 'pac1'">world1pac = &lt;async_generator object world1pac at 0x709972bd5ee0&gt;
+    async def test_world_default_1pa(self):
+        """Default WorldContext has 1 PA."""
+        async with WorldContext() as world:
+&gt;           assert len(world.pas) == 1
+E           assert 0 == 1
+E            +  where 0 = len([])
+E            +    where [] = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x746322a92690&gt;, pas=[]).pas
 
-    @pytest.mark.asyncio
-    async def test_world1pac(
-        world1pac,
-    ) -&gt; None:
-        """
-        world1pac fixture
-        """
-&gt;       async with world1pac.pac1.HttpxAsyncClient() as client:
-                   ^^^^^^^^^^^^^^
-E       AttributeError: 'async_generator' object has no attribute 'pac1'
+tests/test_world_old.py:260: AssertionError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextBasic" name="test_world_with_2pa" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextBasic object at 0x7463238d2710&gt;
 
-tests/test_fixture.py:12: AttributeError</failure></testcase><testcase classname="tests.test_fixture" name="test_world4pac" time="0.000"><failure message="AttributeError: 'async_generator' object has no attribute 'pacs'">world4pac = &lt;async_generator object world4pac at 0x709972bd6f80&gt;
+    async def test_world_with_2pa(self):
+        """WorldContext with 2 PA instances."""
+&gt;       async with WorldContext(pa_count=2) as world:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
 
-    @pytest.mark.asyncio
-    async def test_world4pac(
-        world4pac,
-    ) -&gt; None:
-        """
-        world4pac fixture
-        """
-&gt;       for pac in world4pac.pacs:
-                   ^^^^^^^^^^^^^^
-E       AttributeError: 'async_generator' object has no attribute 'pacs'
+tests/test_world_old.py:266: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextBasic" name="test_world_services_running" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextBasic object at 0x7463238be8b0&gt;
 
-tests/test_fixture.py:29: AttributeError</failure></testcase><testcase classname="tests.test_nats" name="test_nats" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_nats" name="test_nats_context_manager" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_01_nats_server_manual_lifecycle" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_02_nats_server_context_manager" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_02b_nats_server_context_wrapper" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_03_broker_connection" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_03b_broker_context_wrapper" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_04_broker_pubsub_basic" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_04b_broker_pubsub_wildcard" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestFastStreamServices" name="test_05_single_service_with_readiness" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestFastStreamServices" name="test_05b_service_readiness_timeout" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestFastStreamServices" name="test_06_multiple_services_pool" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestFastStreamServices" name="test_06b_real_services_pool" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestFullIntegration" name="test_07_fastapi_with_services" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestFullIntegration" name="test_07b_healthcheck_with_services" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestFullIntegration" name="test_08_full_pa_context" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestFullIntegration" name="test_08b_pa_context_isolation" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestMultiPaPool" name="test_09_multi_pa_pool_2pa" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestMultiPaPool" name="test_09b_multi_pa_pool_4pa" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_service_lifecycle.TestMultiPaPool" name="test_10_cross_pa_info" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_test" name="test_dummy_async" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
-You need to install a suitable plugin for your async framework, for example:
-  - anyio
-  - pytest-asyncio
-  - pytest-tornasync
-  - pytest-trio
-  - pytest-twisted</failure></testcase><testcase classname="tests.test_test" name="test_dummy" time="0.000" /></testsuite></testsuites>
+    async def test_world_services_running(self):
+        """WorldContext has all services running."""
+&gt;       async with WorldContext(pa_count=2) as world:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:274: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextBasic" name="test_world_shared_nats" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextBasic object at 0x7463238be9e0&gt;
+
+    async def test_world_shared_nats(self):
+        """All PAs share the same NATS service."""
+&gt;       async with WorldContext(pa_count=2) as world:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:282: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextBasic" name="test_world_info" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextBasic object at 0x74632375d130&gt;
+
+    async def test_world_info(self):
+        """WorldContext provides info dict."""
+&gt;       async with WorldContext(pa_count=2) as world:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:289: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextMultiPA" name="test_world_pa_isolation_ports" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextMultiPA object at 0x7463238d2850&gt;
+
+    async def test_world_pa_isolation_ports(self):
+        """Each PA has different ports."""
+&gt;       async with WorldContext(pa_count=3) as world:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:309: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextMultiPA" name="test_world_each_pa_functional" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextMultiPA object at 0x7463238d2990&gt;
+
+    async def test_world_each_pa_functional(self):
+        """Each PA responds to requests."""
+&gt;       async with WorldContext(pa_count=3) as world:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:316: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextMultiPA" name="test_world_max_pa_count" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextMultiPA object at 0x7463238beb10&gt;
+
+    async def test_world_max_pa_count(self):
+        """WorldContext supports up to 10 PAs."""
+&gt;       async with WorldContext(pa_count=4) as world:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:324: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextMultiPA" name="test_world_pa_count_validation" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextMultiPA object at 0x7463238bec40&gt;
+
+    async def test_world_pa_count_validation(self):
+        """WorldContext validates pa_count bounds."""
+        with pytest.raises(AssertionError):
+&gt;           WorldContext(pa_count=0)
+E           TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:331: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextConfiguration" name="test_world_custom_nats_service" time="0.011"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'nats_service'">self = &lt;test_world_old.TestWorldContextConfiguration object at 0x7463238d2ad0&gt;
+
+    async def test_world_custom_nats_service(self):
+        """WorldContext accepts pre-configured NATS service."""
+        nats = NatsService()
+        async with nats:
+&gt;           async with WorldContext(nats_service=nats, pa_count=1) as world:
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: WorldContext.__init__() got an unexpected keyword argument 'nats_service'
+
+tests/test_world_old.py:349: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextConfiguration" name="test_world_custom_peppol_service" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'peppol_service'">self = &lt;test_world_old.TestWorldContextConfiguration object at 0x7463238d2c10&gt;
+
+    async def test_world_custom_peppol_service(self):
+        """WorldContext accepts pre-configured Peppol service."""
+        peppol = PeppolService(mock=True)
+        async with peppol:
+&gt;           async with WorldContext(peppol_service=peppol, pa_count=1) as world:
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: WorldContext.__init__() got an unexpected keyword argument 'peppol_service'
+
+tests/test_world_old.py:356: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextConfiguration" name="test_world_peppol_mock_mode" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextConfiguration object at 0x7463238bed70&gt;
+
+    async def test_world_peppol_mock_mode(self):
+        """WorldContext uses mock Peppol by default."""
+&gt;       async with WorldContext(pa_count=1) as world:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:361: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldContextConfiguration" name="test_world_services_stop_on_exit" time="0.001"><failure message="TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'">self = &lt;test_world_old.TestWorldContextConfiguration object at 0x7463238beea0&gt;
+
+    async def test_world_services_stop_on_exit(self):
+        """WorldContext properly stops all services on exit."""
+&gt;       world = WorldContext(pa_count=2)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: WorldContext.__init__() got an unexpected keyword argument 'pa_count'
+
+tests/test_world_old.py:366: TypeError</failure></testcase><testcase classname="tests.test_world_old.TestWorldFixtures" name="test_world_fixture" time="0.006"><failure message="assert 0 == 1&#10; +  where 0 = len([])&#10; +    where [] = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x746322a918c0&gt;, pas=[]).pas">self = &lt;test_world_old.TestWorldFixtures object at 0x7463238d2d50&gt;, world = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x746322a918c0&gt;, pas=[])
+
+    async def test_world_fixture(self, world):
+        """world fixture provides 1 PA."""
+&gt;       assert len(world.pas) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x746322a918c0&gt;, pas=[]).pas
+
+tests/test_world_old.py:397: AssertionError</failure></testcase><testcase classname="tests.test_world_old.TestWorldFixtures" name="test_world1pa_fixture" time="0.000"><error message="failed on setup with &quot;file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py, line 400&#10;      async def test_world1pa_fixture(self, world1pa):&#10;          &quot;&quot;&quot;world1pa fixture provides 1 PA.&quot;&quot;&quot;&#10;          assert len(world1pa.pas) == 1&#10;E       fixture 'world1pa' not found&#10;&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py:400&quot;">file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py, line 400
+      async def test_world1pa_fixture(self, world1pa):
+          """world1pa fixture provides 1 PA."""
+          assert len(world1pa.pas) == 1
+E       fixture 'world1pa' not found
+&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py:400</error></testcase><testcase classname="tests.test_world_old.TestWorldFixtures" name="test_world2pa_fixture" time="0.000"><error message="failed on setup with &quot;file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py, line 404&#10;      async def test_world2pa_fixture(self, world2pa):&#10;          &quot;&quot;&quot;world2pa fixture provides 2 PAs.&quot;&quot;&quot;&#10;          assert len(world2pa.pas) == 2&#10;E       fixture 'world2pa' not found&#10;&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py:404&quot;">file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py, line 404
+      async def test_world2pa_fixture(self, world2pa):
+          """world2pa fixture provides 2 PAs."""
+          assert len(world2pa.pas) == 2
+E       fixture 'world2pa' not found
+&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py:404</error></testcase><testcase classname="tests.test_world_old.TestWorldFixtures" name="test_world4pa_fixture" time="0.000"><error message="failed on setup with &quot;file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py, line 408&#10;      async def test_world4pa_fixture(self, world4pa):&#10;          &quot;&quot;&quot;world4pa fixture provides 4 PAs.&quot;&quot;&quot;&#10;          assert len(world4pa.pas) == 4&#10;E       fixture 'world4pa' not found&#10;&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py:408&quot;">file /home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py, line 408
+      async def test_world4pa_fixture(self, world4pa):
+          """world4pa fixture provides 4 PAs."""
+          assert len(world4pa.pas) == 4
+E       fixture 'world4pa' not found
+&gt;       available fixtures: _class_scoped_runner, _function_scoped_runner, _module_scoped_runner, _package_scoped_runner, _pytest_bdd_example, _session_scoped_runner, anyio_backend, anyio_backend_name, anyio_backend_options, broker_context, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, event_loop_policy, extra, extras, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, include_metadata_in_junit_xml, metadata, monkeypatch, nats_server, nats_service, pa_service, pa_service_legacy, peppol_service, pytestbdd_stepdef_given_trace, pytestbdd_stepdef_then_trace, pytestbdd_stepdef_when_trace, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory, world
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_world_old.py:408</error></testcase><testcase classname="tests.test_world_old.TestWorldFixtures" name="test_nats_service_fixture" time="0.010" /><testcase classname="tests.test_world_old.TestWorldFixtures" name="test_peppol_service_fixture" time="0.001" /><testcase classname="tests.test_world_old.TestWorldFixtures" name="test_pa_service_fixture" time="0.320" /><testcase classname="tests.test_world_old.TestServiceRunner" name="test_service_runner_readiness" time="0.019" /><testcase classname="tests.test_world_old.TestServiceRunner" name="test_service_runner_timeout" time="0.117" /></testsuite></testsuites>

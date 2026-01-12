@@ -2,7 +2,7 @@ import asyncio
 import functools
 import pytest
 from pytest_bdd import given, parsers, then, when
-from .pac0_fixture import WorldContext, handle_all
+from .pac0_fixture import WorldContextOld, handle_all
 
 
 # TODO: move to shared
@@ -24,7 +24,7 @@ handle_GLOBAL = None
 )
 @async_to_sync
 async def esb_sub(
-    world: WorldContext,
+    world: WorldContextOld,
     canal: str,
 ):
     global handle_GLOBAL
@@ -46,7 +46,7 @@ async def esb_sub(
 )
 @async_to_sync
 async def esb_pub_msg(
-    world: WorldContext,
+    world: WorldContextOld,
     msg,
     canal: str,
 ):
@@ -59,7 +59,7 @@ async def esb_pub_msg(
 @then(parsers.parse("""j'obtiens sur le canal 'healthcheck_resp' le message 'toto'"""))
 @async_to_sync
 async def esb_sub_msg(
-    world: WorldContext,
+    world: WorldContextOld,
 ):
     #raise NotImplementedError()
     print("recieving message static ...")
@@ -76,7 +76,7 @@ async def esb_sub_msg(
 @then(parsers.parse("""j'obtiens sur le canal '{canal}' un message"""))
 @async_to_sync
 async def esb_sub_msg1(
-    world: WorldContext,
+    world: WorldContextOld,
     canal: str,
 ):
     print('recieving message1 ...')

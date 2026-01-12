@@ -74,7 +74,7 @@ class PaContext(BaseModel):
         print("vvvvv dbg aexit 20")
 
 
-class WorldContext(BaseModel):
+class WorldContextOld(BaseModel):
     # esb: None = None
     _pac: PaContext
     _pacs: list[PaContext]
@@ -107,13 +107,13 @@ app = FastStream(broker, context=ContextRepo({"var1": "my-var1-value"}))
 
 # @pytest.fixture
 @pytest_asyncio.fixture
-async def world() -> WorldContext:
+async def world() -> WorldContextOld:
     print("vvvvv world fixture starts .......")
 
     async with (
         # TestNatsBroker(app.broker, connect_only=True) as br,
         # TestApp(app) as test_app,
-        WorldContext() as w,
+        WorldContextOld() as w,
     ):
         print("vvvvv dbg async with 10")
         yield w

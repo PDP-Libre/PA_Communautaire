@@ -35,10 +35,9 @@ dev = [
 [tool.uv.sources]
 nats-server = { git = "https://github.com/nats-io/nats.py", subdirectory = "nats-server" }
 
-#[tool.pytest.ini_options]
-[tool.pytest]
-#asyncio_default_fixture_loop_scope = "function"
+[tool.pytest.ini_options]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 filterwarnings = [
     'ignore:websockets.server.WebSocketServerProtocol is deprecated',
     'ignore:websockets.legacy is deprecated',

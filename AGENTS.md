@@ -69,8 +69,15 @@ uv add --dev <package>
 ### Running Tests
 
 ```bash
+# Run all tests in all packages
+./script/test
+
 # Run all tests in pac0
 cd packages/pac0
+uv run pytest
+
+# Run BDD tests
+cd packages/pac-bdd
 uv run pytest
 
 # Run a single test file
@@ -81,10 +88,6 @@ uv run pytest tests/test_fastapi.py::test_api_world_fixture -v
 
 # Run tests with output
 uv run pytest -v -s
-
-# Run BDD tests
-cd packages/pac-bdd
-uv run pytest
 ```
 
 ### Running Services
@@ -256,3 +259,15 @@ async def process(message):
 - `WorldContext(pac_pool=N)`: Creates N isolated PA instances
 - `PaContext`: Single PA with NATS, API, and services
 - `world1pac`, `world2pac`, etc.: Pre-configured fixtures
+
+- `ServiceContext` : a python protocol that handle start/stop of a service via subprocess.
+
+* an async context manager is provided
+* wait_for_ready() is also provided checking service via TCP calls (HTTP or DNS or ...)
+* get_client() will provide a sync context manager connected to the service
+* get_client_async() will provide an async context manager connected to the service
+* write a sample MyAPIServiceContext that use the ServiceContext protocol and start a very basic fastapi app with `uv fastapi dev app1/main.py` (don't write the app)
+* write a sample MyPeppolServiceContext that use the ServiceContext protocol and start a very basic fastapi app with `uv fastapi dev app2/main.py` (don't write the app)
+* write pytest fixtures for MyAPIServiceContext and MyPeppolServiceContext
+* write a pytest suite that test MyAPIServiceContext and MyPeppolServiceContext separatly and together
+Give only the recommanded approach as commented python code
