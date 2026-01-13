@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import pytest
 from pytest_bdd import given, parsers, scenario, then, when
 

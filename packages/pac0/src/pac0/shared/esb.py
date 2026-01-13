@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from pydantic_settings import BaseSettings
 from faststream import FastStream, ContextRepo
 from faststream.nats import NatsBroker

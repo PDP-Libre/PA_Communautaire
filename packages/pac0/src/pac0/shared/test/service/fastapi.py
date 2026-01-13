@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from pac0.shared.test.service.base import BaseServiceContext, ServiceConfig
 
 

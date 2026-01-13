@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from pac_bdd.domain import *
 from pytest_bdd import scenarios
 import glob

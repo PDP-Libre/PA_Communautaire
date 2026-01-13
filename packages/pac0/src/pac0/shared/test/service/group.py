@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from contextlib import asynccontextmanager, contextmanager
 from typing import Any, AsyncGenerator, Generator, Self
 import asyncio

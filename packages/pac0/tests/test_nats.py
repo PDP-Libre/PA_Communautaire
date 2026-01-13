@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import asyncio
 from nats.server import run
 # inspired by  https://github.com/nats-io/nats.py/blob/main/nats-server/tests/test_server.py

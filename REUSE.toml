@@ -1,0 +1,29 @@
+# to check license REUSE compliance:
+# uvx reuse lint
+
+version = 1
+
+# Normes/docs de référence
+[[annotations]]
+path = [
+    ".gitignore",
+    "AGENTS.md",
+    "docs/briques/**",
+    "packages/*/.python-version",
+    "packages/*/pyproject.toml",
+    "packages/*/README.md",
+    "packages/*/uv.lock",
+    "README.md",
+    "report/pac-bdd/**",
+    "report/pac0/**",
+]
+SPDX-FileCopyrightText = "Philippe ENTZMANN <philippe@entzmann.name>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+# All external public reference ressources
+[[annotations]]
+path = [
+    "docs/norme/**",
+]
+SPDX-FileCopyrightText = "Various public contributors"
+SPDX-License-Identifier = "any-OSI"

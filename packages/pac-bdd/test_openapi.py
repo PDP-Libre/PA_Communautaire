@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 def _test_swagger(url: str, swagger: str):
     """
         Vérifier si une API respecte une definition Swagger/OpenAPI
