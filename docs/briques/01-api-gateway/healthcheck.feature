@@ -9,16 +9,17 @@ Fonctionnalité: healthcheck
         Soit une pa communautaire
 
     
-    Scénario: healthcheck ok
+    Scénario: healthcheck
+
         Etant un utilisateur
 
         Quand j'appele l'API GET /healthcheck
         Alors j'obtiens le code de retour 200
 
 
-    Scénario: healthcheck full ok
-        Etant un utilisateur
+    Scénario: healthcheck deep
 
-        Quand j'appele l'API GET /healthcheck
+        Quand j'appele l'API GET /healthcheck/deep
         Alors j'obtiens le code de retour 200
+        Et la réponse a une clé "healthcheck_resp" avec 3 éléments
 
