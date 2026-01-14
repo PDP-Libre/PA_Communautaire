@@ -242,6 +242,7 @@ class ServicePoolContext:
             await runner.stop()
 
 
+# TODO: obsolete
 class PaServiceContext:
     """
     Complete PA (Plateforme Agreee) context with all components.
@@ -265,8 +266,8 @@ class PaServiceContext:
 
     # Default routers to load
     DEFAULT_ROUTERS = [
-        (router_validation_metier, "validation-metier"),
-        (router_gestion_cycle_vie, "gestion-cycle-vie"),
+        # (router_validation_metier, "validation-metier"),
+        # (router_gestion_cycle_vie, "gestion-cycle-vie"),
     ]
 
     def __init__(

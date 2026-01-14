@@ -6,7 +6,8 @@ import asyncio
 import functools
 import pytest
 from pytest_bdd import given, parsers, then, when
-from .pac0_fixture import WorldContextOld, handle_all
+from .pac0_fixture import handle_all
+from pac0.shared.test.world import WorldContext, world, world1
 
 
 # TODO: move to shared
@@ -28,14 +29,14 @@ handle_GLOBAL = None
 )
 @async_to_sync
 async def esb_sub(
-    world: WorldContextOld,
+    world1: WorldContext,
     canal: str,
 ):
     global handle_GLOBAL
 
     print(f"esb_sub {canal=}...")
     #raise NotImplementedError()
-    broker = world.pac.broker
+    broker = world1.pa.broker
 
     #@broker.subscriber(canal)
     #async def handle(msg: str) -> None:
@@ -50,41 +51,41 @@ async def esb_sub(
 )
 @async_to_sync
 async def esb_pub_msg(
-    world: WorldContextOld,
+    world1: WorldContext,
     msg,
     canal: str,
 ):
     print(f"esb_pub_msg {msg=} sur le {canal=} ...")
     #await world.pac.broker.publish(msg, subject=canal)
-    await world.pac.test_broker.publish(msg, subject=canal)
-
+    # await world1.pa.test_broker.publish(msg, subject=canal)
+    raise NotImplementedError()
 
 
 @then(parsers.parse("""j'obtiens sur le canal 'healthcheck_resp' le message 'toto'"""))
 @async_to_sync
 async def esb_sub_msg(
-    world: WorldContextOld,
+    world: WorldContext,
 ):
-    #raise NotImplementedError()
     print("recieving message static ...")
+    raise NotImplementedError()
     # await handle.wait_call(timeout=3)
     # handle.mock.assert_called_once_with({"name": "John", "user_id": 1})
     # await handle_GLOBAL.wait_call(timeout=3)
     # handle_GLOBAL.mock.assert_called_once_with({"name": "John", "user_id": 1})
     # await handle_all.wait_call(timeout=3)
-    #handle_all.mock.assert_called_once_with({"name": "John", "user_id": 1})
-    handle_all.mock.assert_called_once_with("toto")
+    # handle_all.mock.assert_called_once_with({"name": "John", "user_id": 1})
+    # handle_all.mock.assert_called_once_with("toto")
 
 
 # Alors j'obtiens sur le message 'hello' sur le canal 'pon'
 @then(parsers.parse("""j'obtiens sur le canal '{canal}' un message"""))
 @async_to_sync
 async def esb_sub_msg1(
-    world: WorldContextOld,
+    world: WorldContext,
     canal: str,
 ):
     print('recieving message1 ...')
-    #raise NotImplementedError()
+    raise NotImplementedError()
 
 
 '''
