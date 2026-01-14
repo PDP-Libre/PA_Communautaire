@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from .api import *
+from .demo import *
 from .esb import *
 from .tobeimplemented import *
 from .pac0_fixture import *

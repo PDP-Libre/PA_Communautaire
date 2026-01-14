@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pac_bdd.domain import *
+from pac_bdd.steps import *
 from pytest_bdd import scenarios
 import glob
 import logging
