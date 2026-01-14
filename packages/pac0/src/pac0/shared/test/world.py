@@ -18,18 +18,14 @@ References:
 """
 
 import asyncio
-from dataclasses import dataclass
 import logging
-from typing import Any, Self, AsyncContextManager
+from dataclasses import dataclass
+from typing import Any, AsyncContextManager, Self
 
 import pytest
-
-from pac0.shared.test.services import (
-    PaService_OLD as PaService,
-)
 from pac0.shared.test.service.dns import DNSServiceContext
-from pac0.shared.test.service.pac import PacServiceContext
 from pac0.shared.test.service.nats import NatsServiceContext
+from pac0.shared.test.service.pac import PacServiceContext
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -107,14 +103,6 @@ async def nats_service():
         yield svc
 
 
-# TODO: deprecate
-@pytest.fixture
-async def pa_service():
-    """Fixture: Single PA service instance."""
-    async with PaService() as svc:
-        yield svc
-
-
 @pytest.fixture
 async def world():
     """Fixture: World"""
@@ -128,3 +116,14 @@ async def world1(world):
     if len(world.pas) == 0:
         await world.pa_new()
     yield world
+
+
+# TODO: usefull for async/sync BDD step ??
+@pytest.fixture(scope="session")
+def event_loop_policy():
+    """
+    Use default event loop policy for the session.
+
+    This ensures consistent behavior across different test scenarios.
+    """
+    return asyncio.DefaultEventLoopPolicy()

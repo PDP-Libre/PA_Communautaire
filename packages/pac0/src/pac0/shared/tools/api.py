@@ -35,13 +35,7 @@ async def find_available_port(
     Returns:
         Available port number
     """
-    # Start from a random port to avoid collisions
-    # port = random.randint(start_port, start_port + max_attempts)
-
-    # for _ in range(max_attempts):
     while len(_ports_to_try) > 0:
-        # if port in _ports_used:
-        #    continue
         port = _ports_to_try.pop()
 
         # Try to bind to the port to check if it's available
@@ -53,12 +47,11 @@ async def find_available_port(
                 async with semaphore_sock_bind:
                     # Try to bind to the port
                     sock.bind(("0.0.0.0", port))
-                    print(f"ppppppp port {port} OK")
                     # Port is available
                     return port
             except OSError as e:
                 # Port is in use
-                print(f"ppppppp port {port} KO", e)
+                pass
 
     raise Exception("no port available")
 

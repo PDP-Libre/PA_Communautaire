@@ -132,7 +132,7 @@ class BaseServiceContext:
     async def __aenter__(self) -> Self:
         """Start the service subprocess."""
         if self.config.port == 0:
-            self.config.port = await find_available_port(start_port=8000)
+            self.config.port = await find_available_port()
         logger.info(
             f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
         )
@@ -144,8 +144,8 @@ class BaseServiceContext:
 
         self._process = subprocess.Popen(
             command,
-            # stdout=subprocess.PIPE,  # self.config.stdout,
-            # stderr=subprocess.PIPE,  # self.config.stderr,
+            stdout=subprocess.PIPE,  # self.config.stdout,
+            stderr=subprocess.PIPE,  # self.config.stderr,
             text=True,
             env=env,
             cwd=PACKAGE_BASE_FOLDER,
