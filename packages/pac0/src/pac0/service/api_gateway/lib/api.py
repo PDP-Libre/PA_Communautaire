@@ -2,17 +2,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from typing import Annotated, Any, Union
+import asyncio
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
-from pydantic import BaseModel
 from faststream.nats import NatsBroker
-
-import asyncio
-
-from pac0.service.api_gateway.lib_common import global_state, broker
 from pac0.service.api_gateway.lib import trace
-
+from pac0.service.api_gateway.lib.common import broker, global_state
 
 router = APIRouter()
 

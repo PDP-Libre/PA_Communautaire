@@ -13,6 +13,8 @@ path = [
     "packages/*/pyproject.toml",
     "packages/*/README.md",
     "packages/*/uv.lock",
+    "packages/pac-bdd/.opencode/opencode.jsonc",
+    "packages/pac-bdd/AGENTS.md",
     "README.md",
     "report/pac-bdd/**",
     "report/pac0/**",
@@ -24,6 +26,7 @@ SPDX-License-Identifier = "GPL-3.0-or-later"
 [[annotations]]
 path = [
     "docs/norme/**",
+    "docs/test/**",
 ]
 SPDX-FileCopyrightText = "Various public contributors"
 SPDX-License-Identifier = "any-OSI"

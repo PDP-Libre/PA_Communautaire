@@ -71,9 +71,9 @@ Fonctionnalité: Requêtes PEPPOL
         Alors j'obtiens "B-d0d6bafc0317e3e8baa9504a9a022f9c.iso6523-actorid-upis.acc.edelivery.tech.ec.europa.eu"
 
 
-        #Soit l'entreprise #e1 avec le SIREN "123456789"
-        #Et l'entreprise #e1 enregistrée sur PEPPOL
-        #Quand j'interroge le SML via DNS
-        #Alors j'obtiens une réponse DNS valide
-        #Et j'obtiens l'URL du SMP "https://smp.pa-distante.fr"
+        # Soit l'entreprise #e1 avec le SIREN "123456789"
+        # Et l'entreprise #e1 enregistrée sur PEPPOL
+        # Quand j'interroge le SML via DNS
+        # Alors j'obtiens une réponse DNS valide
+        # Et j'obtiens l'URL du SMP "https://smp.pa-distante.fr"
 

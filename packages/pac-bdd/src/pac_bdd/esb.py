@@ -46,21 +46,6 @@ def esb_pub_msg(
         assert response.status_code == 200
 
 
-@then(parsers.parse("""j'obtiens sur le canal 'healthcheck_resp' le message 'toto'"""))
-def esb_sub_msg(
-    world: WorldContext,
-):
-    print("recieving message static ...")
-    raise NotImplementedError()
-    # await handle.wait_call(timeout=3)
-    # handle.mock.assert_called_once_with({"name": "John", "user_id": 1})
-    # await handle_GLOBAL.wait_call(timeout=3)
-    # handle_GLOBAL.mock.assert_called_once_with({"name": "John", "user_id": 1})
-    # await handle_all.wait_call(timeout=3)
-    # handle_all.mock.assert_called_once_with({"name": "John", "user_id": 1})
-    # handle_all.mock.assert_called_once_with("toto")
-
-
 # Alors j'obtiens sur le message 'hello' sur le canal 'pon'
 @then(parsers.parse("""j'obtiens sur le canal '{canal}' un message"""))
 def esb_sub_msg1(
@@ -79,14 +64,11 @@ def esb_sub_msg2(
     msg: str,
     canal: str,
 ):
-    # print("recieving message2 ...")
-
     traces = []
     with world1.pa1.api_gateway.get_client() as client:
         response = client.get("/trace")
         assert response.status_code == 200
         traces = response.json()
-    print("bbbbbbbbbbbbbbbb", traces)
 
     for trace in traces:
         print(trace)
@@ -94,5 +76,3 @@ def esb_sub_msg2(
             return
     else:
         raise Exception("message not found !")
-    # print("ddddddddddddddd traces")
-    # print(traces)

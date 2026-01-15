@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from fastapi import FastAPI
-from pac0.service.api_gateway.lib_api import router as router_api
-from pac0.service.api_gateway.lib_bus import router as router_bus
+from pac0.service.api_gateway.lib.api import router as router_api
+from pac0.service.api_gateway.lib.bus import router as router_bus
 
 app = FastAPI()
 
