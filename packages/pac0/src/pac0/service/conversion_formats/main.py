@@ -5,7 +5,7 @@
 from pac0.shared.esb import init_esb_app
 
 
-ctx, broker, app = init_esb_app("validation-metier")
+ctx, broker, app = init_esb_app("conversion-formats")
 
 
 @broker.subscriber(ctx.subject_in, ctx.queue)

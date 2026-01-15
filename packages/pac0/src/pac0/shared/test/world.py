@@ -111,11 +111,16 @@ async def world():
 
 
 @pytest.fixture
-async def world1(world):
+async def world1():
     """Fixture: World"""
-    if len(world.pas) == 0:
-        await world.pa_new()
-    yield world
+    # if len(world.pas) == 0:
+    #    await world.pa_new()
+    # yield world
+
+    async with WorldContext() as world:
+        if len(world.pas) == 0:
+            await world.pa_new()
+        yield world
 
 
 # TODO: usefull for async/sync BDD step ??

@@ -20,8 +20,13 @@ class NatsServiceContext(BaseServiceContext):
             allow_ConnectionRefusedError=True,
             health_check_path=None,
         )
+
         super().__init__(config)
 
     @property
     def url(self) -> str:
         return f"nats://{self.config.host}:{self.config.port}"
+
+    # @property
+    # def client(self) -> str:
+    #    return f"nats://{self.config.host}:{self.config.port}"

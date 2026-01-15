@@ -1,6 +1,6 @@
 # language: fr
 Fonctionnalité: service esb central
-    Le service 01-esb-central.
+    Le service 02-esb-central.
 
 
     Scénario: démarrage/arrêt service esb central

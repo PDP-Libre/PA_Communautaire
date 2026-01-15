@@ -73,8 +73,7 @@ async def test_sub_embed():
     async def test_process2(
         # body: str,
     ):
-        # print("test_process2 ...", body)
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<< test_process2 ...")
+        pass
 
     async with (
         TestNatsBroker(app.broker, connect_only=True) as br,
@@ -127,12 +126,10 @@ async def test_pubsub_nats() -> None:
         assert server.is_running is True
 
         # broker = NatsBroker("nats://localhost:4222", apply_types=True)
-        # broker = NatsBroker(apply_types=True)
         broker = NatsBroker(f"nats://{server.host}:{server.port}", apply_types=True)
         subscriber = broker.subscriber("*")
         # subscriber = broker.subscriber(queue)
 
-        # async with self.patch_broker(broker) as br:
         async with broker as br:
             await br.start()
 

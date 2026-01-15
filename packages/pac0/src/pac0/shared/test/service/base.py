@@ -144,8 +144,9 @@ class BaseServiceContext:
 
         self._process = subprocess.Popen(
             command,
-            stdout=subprocess.PIPE,  # self.config.stdout,
-            stderr=subprocess.PIPE,  # self.config.stderr,
+            # TODO: BUG, break if uncommented !
+            # stdout=subprocess.PIPE,  # self.config.stdout,
+            # stderr=subprocess.PIPE,  # self.config.stderr,
             text=True,
             env=env,
             cwd=PACKAGE_BASE_FOLDER,

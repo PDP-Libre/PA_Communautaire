@@ -21,5 +21,5 @@ Fonctionnalité: healthcheck
 
         Quand j'appele l'API GET /healthcheck/deep
         Alors j'obtiens le code de retour 200
-        Et la réponse a une clé "healthcheck_resp" avec 3 éléments
+        Et la réponse a une clé "healthcheck_resp" avec 7 éléments
 

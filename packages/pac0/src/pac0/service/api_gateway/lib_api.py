@@ -7,13 +7,14 @@ from typing import Annotated, Any, Union
 from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 from faststream.nats import NatsBroker
+
 import asyncio
 
 from pac0.service.api_gateway.lib_common import global_state, broker
+from pac0.service.api_gateway.lib import trace
 
 
 router = APIRouter()
-
 
 
 @router.get("/")
@@ -39,6 +40,20 @@ async def healthcheck(
         "status": "OK",
         "rank": request.app.state.rank,
     }
+
+if trace.TESTING:
+
+    @router.get("/trace")
+    async def trace_get():
+        # return {"stored_msg": stored_msg}
+        return trace.stored_msg
+
+    @router.post("/publish")
+    async def publish_post(
+        broker: Annotated[NatsBroker, Depends(broker)],
+    ):
+        # TODO: pass query args
+        await broker.publish("publishing ...", "xxx")
 
 
 @router.get("/healthcheck/deep")
