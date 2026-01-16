@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
   - deploy_01-api-gateway
+  - deploy_02-esb-central
   - ingress.yaml
   - serviceaccount.yaml

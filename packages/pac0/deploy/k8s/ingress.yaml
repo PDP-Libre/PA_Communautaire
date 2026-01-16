@@ -27,56 +27,19 @@ metadata:
       }
 spec:
   tls:
-    # will be patched by kustomize
     - hosts:      
-      - host: host1.void.local
-    #  - host: prod.paxpar.tech
-    #  - host: uat.paxpar.tech
-    #  - host: dev.paxpar.tech
-    #  - host: paxpar.tech
-      secretName: paxpar-tls
+      - host: pac01.document.legal
+    #  - host: pac01.arundo.tech
+      secretName: pac0-tls
 
   rules:
-    # this rule will be patched by kustomize
-    # and duplicated for each host defined
-    - host: host1.void.local
+    - host: pac01.document.legal
       http:
         paths:
-          - path: /forge
-            pathType: Prefix
-            backend:
-              service:
-                name: pp-forge
-                port:
-                  number: 8885
-          - path: /convert
-            pathType: Prefix
-            backend:
-              service:
-                name: pp-conv
-                port:
-                  number: 3010
-          - path: /ping
-            pathType: Prefix
-            backend:
-              service:
-                name: pp-conv
-                port:
-                  number: 3010
-          #- path: /chat
-          #- path: /chat(/|$)(.*)
-          #  pathType: Prefix
-          #  backend:
-          #    service:
-          #      name: pp-chat
-          #      port:
-          #        number: 8080                  
-          # everything else will go to the API
-          #- path: /api
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: pp-core
+                name: 01-api-gateway
                 port:
-                  number: 8881
+                  number: 8000

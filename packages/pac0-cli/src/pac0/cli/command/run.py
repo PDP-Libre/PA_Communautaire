@@ -1,8 +1,9 @@
 import typer
 import subprocess
-from pathlib import Path
-from typing import Annotated, Optional
-from pac_cli.utils.subprocess_runner import run_command
+import subprocess
+from . import setup
+from .. import utils
+
 
 app = typer.Typer()
 
@@ -20,36 +21,33 @@ services = [
 ]
 
 
-def _get_app_base_folder(check: bool = True) -> Path:
-    # TODO: comment déterminer le répertoire applicatif ?
-    repo_path = Path(".").resolve()
-    # repo_path = Path("PA_Communautaire")
-    # Vérifier que le dépôt est cloné
-    if check and not repo_path.exists():
-        typer.echo(
-            "Erreur: Le dépôt n'est pas cloné. Exécutez 'pac-cli setup source' d'abord."
-        )
-        raise typer.Exit(code=1)
-
-    return repo_path
-
-
 def _run_service(
+    service: str,
+):
+    # TODO: check/install tools
+    setup.tool(install=True)
+    # TODO: get app folder
+    setup.source()
+    # TODO: clone if necessary
+    _call(service)
+
+
+def _call(
     service: str,
     run: bool = True,
     check: bool = False,
 ):
     # service folder: "05-conversion-formats" -> "conversion_formats"
     service_folder = "_".join(service.split("-")[1:])
-    base_folder = _get_app_base_folder()
-
+    base_folder = utils.get_app_base_folder()
+    print(f"{base_folder=}")
     if service == "01-api-gateway":
-        full_path = base_folder / f"src/pac0/service/{service_folder}/main.py"
+        full_path = f"src/pac0/service/{service_folder}/main.py"
         cmd = ["uv", "run", "fastapi", "dev", str(full_path)]
     elif service == "02-esb-central":
         cmd = ["nats-server", "-V", "-js"]
     else:
-        full_path = base_folder / f"src/pac0/service/{service_folder}/main.py"
+        full_path = f"src/pac0/service/{service_folder}/main:app"
         cmd = ["uv", "run", "faststream", "run", str(full_path)]
 
     if service != "02-esb-central":
@@ -57,10 +55,13 @@ def _run_service(
             typer.echo(f"Erreur: Le service {service} n'existe pas ({full_path})")
             raise typer.Exit(code=1)
 
+    pac0_package_base_folder = base_folder / "packages" / "pac0"
     typer.echo(f"Lancement du service {service}...")
     typer.echo(f"Commande: {' '.join(cmd)}")
+    typer.echo(f"pac0_package_base_folder: {pac0_package_base_folder}")
+
     if run:
-        run_command(cmd)
+        subprocess.call(cmd, cwd=pac0_package_base_folder)
 
 
 @app.command(name="1", help="lance le service 01-api-gateway ...")

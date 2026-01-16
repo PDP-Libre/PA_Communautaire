@@ -27,14 +27,14 @@ class ConsoleApp(App):
         "tests": TestsScreen,
     }
 
-    def on_mount(self) -> None:
-        """Initialisation de l'application"""
-        self.switch_screen("services")
+    # def on_mount(self) -> None:
+    #    """Initialisation de l'application"""
+    #    self.switch_screen("services")
 
     def compose(self) -> ComposeResult:
         """Création de l'interface"""
         yield Header()
-        yield Container()
+        # yield Container()
         yield Footer()
 
     def action_toggle_dark(self) -> None:

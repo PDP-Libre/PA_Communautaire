@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 01-api-gateway
+  name: 03-controle-formats
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: 01-api-gateway
+      app.kubernetes.io/name: 03-controle-formats
       app.kubernetes.io/instance: pac0
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: 01-api-gateway
+        app.kubernetes.io/name: 03-controle-formats
         app.kubernetes.io/instance: pac0
     spec:
 
@@ -19,7 +19,7 @@ spec:
         - name: main
           image: astral/uv:python3.12-bookworm-slim
           command: ["uvx"]
-          args: ["pac0-cli@latest", "run", "1"]
+          args: ["pac0-cli@latest", "run", "3"]
           imagePullPolicy: Always
           ports:
             - name: http
@@ -46,7 +46,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: 01-api-gateway
+  name: 03-controle-formats
 spec:
   type: ClusterIP
   ports:
@@ -55,7 +55,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: 01-api-gateway
+    app.kubernetes.io/name: 03-controle-formats
     app.kubernetes.io/instance: pac0
 
 

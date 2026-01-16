@@ -1,5 +1,5 @@
 import typer
-from pac_cli.utils.subprocess_runner import run_command
+import subprocess
 
 app = typer.Typer()
 
@@ -8,5 +8,4 @@ app = typer.Typer()
 def all():
     """Lance tous les tests"""
     typer.echo("Lancement de tous les tests...")
-    run_command(["pytest"])
-
+    subprocess.call(["pytest", "-v"])
