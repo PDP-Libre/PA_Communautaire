@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">report.html</title>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+      </style>
+    
+  </head>
+  <body>
+    <h1 id="title">report.html</h1>
+    <p>Report generated on 15-Jan-2026 at 12:34:54 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.1.1</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</th>
+        </tr>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left"><</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">></div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">21 tests took 00:00:28.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" disabled/>
+            <span class="failed">0 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" />
+            <span class="passed">21 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" />
+            <span class="skipped">5 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled/>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled/>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled/>
+            <span class="error">0 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled/>
+            <span class="rerun">0 Reruns</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  </body>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.13.2&#34;, &#34;Platform&#34;: &#34;Linux-6.8.0-90-generic-x86_64-with-glibc2.39&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.4.2&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;html&#34;: &#34;4.1.1&#34;, &#34;bdd&#34;: &#34;8.1.0&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;, &#34;asyncio&#34;: &#34;1.3.0&#34;, &#34;md-report&#34;: &#34;0.7.0&#34;, &#34;anyio&#34;: &#34;4.12.0&#34;}}, &#34;tests&#34;: {&#34;tests/test_asyncio.py::test_0010&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_asyncio.py::test_0010&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_asyncio.py::test_0010&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n&amp;gt; a\n&amp;lt; a\n&amp;gt; b\n&amp;lt; b\n&amp;gt; c\n&amp;lt; c\n&#34;}], &#34;tests/test_asyncio.py::test_0020&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_asyncio.py::test_0020&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_asyncio.py::test_0020&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n&amp;gt; group 0\n&amp;gt; group 1\n&amp;gt; group 2\n&amp;lt; group 0\n&amp;lt; group 1\n&amp;lt; group 2\n&#34;}], &#34;tests/test_asyncio.py::test_0030&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_asyncio.py::test_0030&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_asyncio.py::test_0030&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n&amp;gt; a\n&amp;gt; b\n&amp;gt; c\n&amp;lt; a\n&amp;lt; b\nFirst two results: [&amp;#x27;a&amp;#x27;, &amp;#x27;b&amp;#x27;]\n&#34;}], &#34;tests/test_faststream.py::test_validation_str_ok&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_faststream.py::test_validation_str_ok&#34;, &#34;duration&#34;: &#34;14 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_faststream.py::test_validation_str_ok&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;14 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\nprocess_test_subject ... hello\n&#34;}], &#34;tests/test_faststream.py::test_validation_str_err&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_faststream.py::test_validation_str_err&#34;, &#34;duration&#34;: &#34;9 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_faststream.py::test_validation_str_err&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;9 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nERROR    asyncio:base_events.py:1871 Future exception was never retrieved\nfuture: &amp;lt;Future finished exception=1 validation error for process_test_subject\nbody\n  Input should be a valid string [type=string_type, input_value={&amp;#x27;name&amp;#x27;: &amp;#x27;John&amp;#x27;, &amp;#x27;user_id&amp;#x27;: 1}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/string_type&amp;gt;\nTraceback (most recent call last):\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_faststream.py&amp;quot;, line 56, in test_validation_str_err\n    await br.publish({&amp;quot;name&amp;quot;: &amp;quot;John&amp;quot;, &amp;quot;user_id&amp;quot;: 1}, subject=&amp;quot;test-subject&amp;quot;)\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/nats/broker/broker.py&amp;quot;, line 603, in publish\n    result = await super()._basic_publish(cmd, producer=self.config.producer)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/_internal/broker/pub_base.py&amp;quot;, line 51, in _basic_publish\n    return await publish(cmd)\n           ^^^^^^^^^^^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/nats/testing.py&amp;quot;, line 129, in publish\n    await self._execute_handler(msg, cmd.destination, handler)\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/nats/testing.py&amp;quot;, line 164, in _execute_handler\n    result = await handler.process_message(msg)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/_internal/endpoint/subscriber/usecase.py&amp;quot;, line 328, in process_message\n    async with AsyncExitStack() as stack:\n               ~~~~~~~~~~~~~~^^\n  File &amp;quot;/home/philippe/.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/contextlib.py&amp;quot;, line 768, in __aexit__\n    raise exc\n  File &amp;quot;/home/philippe/.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/contextlib.py&amp;quot;, line 749, in __aexit__\n    cb_suppress = cb(*exc_details)\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/_internal/utils/functions.py&amp;quot;, line 85, in __exit__\n    raise exc_val\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/_internal/endpoint/subscriber/usecase.py&amp;quot;, line 364, in process_message\n    await h.call(\n    ^^^^^^^^^^^^^\n    ...&amp;lt;5 lines&amp;gt;...\n    ),\n    ^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/_internal/endpoint/subscriber/call_item.py&amp;quot;, line 146, in call\n    result = await call(message)\n             ^^^^^^^^^^^^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/middlewares/acknowledgement/middleware.py&amp;quot;, line 77, in consume_scope\n    return await call_next(msg)\n           ^^^^^^^^^^^^^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/middlewares/logging.py&amp;quot;, line 63, in consume_scope\n    return await call_next(msg)\n           ^^^^^^^^^^^^^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/_internal/endpoint/call_wrapper.py&amp;quot;, line 90, in call_wrapped\n    return await self._wrapped_call(message)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/faststream/_internal/di/config.py&amp;quot;, line 135, in decode_wrapper\n    return await func(msg)\n           ^^^^^^^^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/fast_depends/use.py&amp;quot;, line 170, in injected_wrapper\n    return await real_model.asolve(  # type: ignore[no-any-return]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...&amp;lt;5 lines&amp;gt;...\n    )\n    ^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/fast_depends/core/model.py&amp;quot;, line 329, in asolve\n    final_args, final_kwargs = cast_gen.send(kwargs)\n                               ~~~~~~~~~~~~~^^^^^^^^\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/fast_depends/core/model.py&amp;quot;, line 167, in _solve\n    casted_options = self.serializer(solved_kw)\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/fast_depends/pydantic/serializer.py&amp;quot;, line 117, in __call__\n    casted_model = self.model(**call_kwargs)\n  File &amp;quot;/home/philippe/src/PA_Communautaire/packages/pac0/.venv/lib/python3.13/site-packages/pydantic/main.py&amp;quot;, line 250, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\npydantic_core._pydantic_core.ValidationError: 1 validation error for process_test_subject\nbody\n  Input should be a valid string [type=string_type, input_value={&amp;#x27;name&amp;#x27;: &amp;#x27;John&amp;#x27;, &amp;#x27;user_id&amp;#x27;: 1}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/string_type\n\n&#34;}], &#34;tests/test_faststream.py::test_connect_only&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_faststream.py::test_connect_only&#34;, &#34;duration&#34;: &#34;4 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_faststream.py::test_connect_only&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;4 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\nCalls in tests too!\nprocess_test_subject ... hello\n&#34;}], &#34;tests/test_faststream.py::test_sub_embed&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_faststream.py::test_sub_embed&#34;, &#34;duration&#34;: &#34;9 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_faststream.py::test_sub_embed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;9 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\nCalls in tests too!\n&#34;}], &#34;tests/test_faststream.py::test_sub_embed_fixture&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_faststream.py::test_sub_embed_fixture&#34;, &#34;duration&#34;: &#34;5 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_faststream.py::test_sub_embed_fixture&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;5 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;---------------------------- Captured stdout setup -----------------------------\nCalls in tests too!\n\n----------------------------- Captured stdout call -----------------------------\nprocess_test_subject ... hello2\n&#34;}], &#34;tests/test_faststream.py::test_pubsub_nats&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_faststream.py::test_pubsub_nats&#34;, &#34;duration&#34;: &#34;14 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_faststream.py::test_pubsub_nats&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;14 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n2026-01-15 12:34:32,415 INFO     - *            |            - `Subscriber` waiting for messages\n&#34;}], &#34;tests/test_faststream.py::test_pubsub_nats_fixture&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_faststream.py::test_pubsub_nats_fixture&#34;, &#34;duration&#34;: &#34;15 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_faststream.py::test_pubsub_nats_fixture&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;15 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;---------------------------- Captured stdout setup -----------------------------\n2026-01-15 12:34:32,430 INFO     - *            |            - `Subscriber` waiting for messages\n\n----------------------------- Captured stdout call -----------------------------\nq1\nq1\n&#34;}], &#34;tests/test_fixture.py::test_world1pac&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_fixture.py::test_world1pac&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_fixture.py::test_world1pac&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     pac0.shared.test.world:world.py:83 WorldContext: enter context ...\n\n----------------------------- Captured stdout call -----------------------------\n_check_http_health http://localhost:8829/healthcheck\ncccccc All connection attempts failed\nConnecting to NATS nats://localhost:8878 ...\n2026-01-15 12:34:33,039 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\nConnecting to NATS nats://localhost:8878 ...\n2026-01-15 12:34:33,039 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:33,039 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:33,039 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8878 ...\n2026-01-15 12:34:33,040 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:33,041 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8878 ...\n2026-01-15 12:34:33,052 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:33,053 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8878 ...\n2026-01-15 12:34:33,055 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:33,056 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:33,056 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:33,057 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:33,057 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:33,057 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:33,058 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:33,058 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:33,059 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:33,059 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:33,059 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:33,060 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:33,060 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:33,060 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:33,061 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8878 ...\n2026-01-15 12:34:33,064 INFO     - q | routage-IN  |            - `Process` waiting for messages\n2026-01-15 12:34:33,064 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \nConnecting to NATS nats://localhost:8878 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:8829\n    server   Documentation at http://0.0.0.0:8829/docs\n \n             Logs:\n \n2026-01-15 12:34:33,234 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:33,235 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:33,236 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:33,237 INFO     - *                | 9d01f6fe-7 - Received\n2026-01-15 12:34:33,240 INFO     - *                | 9d01f6fe-7 - Processed\n_check_http_health http://localhost:8829/healthcheck\n      INFO   127.0.0.1:36356 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:36368 - &amp;quot;GET / HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:36368 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n\n----------------------------- Captured stderr call -----------------------------\n[18597] 2026/01/15 12:34:32.445445 [INF] Starting nats-server\n[18597] 2026/01/15 12:34:32.445534 [INF]   Version:  2.12.3\n[18597] 2026/01/15 12:34:32.445540 [INF]   Git:      [450a519]\n[18597] 2026/01/15 12:34:32.445544 [INF]   Name:     NAAABE72QJGGMNLEIC7IGLNVG3WEBFXGZ3Z6MSN5GWQPUULBVUT4OT25\n[18597] 2026/01/15 12:34:32.445554 [INF]   ID:       NAAABE72QJGGMNLEIC7IGLNVG3WEBFXGZ3Z6MSN5GWQPUULBVUT4OT25\n[18597] 2026/01/15 12:34:32.446375 [INF] Listening for client connections on 0.0.0.0:8878\n[18597] 2026/01/15 12:34:32.446872 [INF] Server is ready\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:33,035 INFO     - FastStream app starting...\n2026-01-15 12:34:33,035 INFO     - FastStream app starting...\n2026-01-15 12:34:33,037 INFO     - FastStream app starting...\n2026-01-15 12:34:33,040 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:33,040 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:33,041 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:33,049 INFO     - FastStream app starting...\n2026-01-15 12:34:33,051 INFO     - FastStream app starting...\n2026-01-15 12:34:33,053 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:33,061 INFO     - FastStream app starting...\n2026-01-15 12:34:33,061 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:33,064 INFO     - FastStream app started successfully! To exit, press CTRL+C\n      INFO   Started server process [18612]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8829 (Press CTRL+C to quit)\n--------------------------- Captured stderr teardown ---------------------------\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [18612]\n2026-01-15 12:34:33,838 INFO     - FastStream app shutting down...\n2026-01-15 12:34:33,839 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:34,037 INFO     - FastStream app shutting down...\n2026-01-15 12:34:34,039 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:34,251 INFO     - FastStream app shutting down...\n2026-01-15 12:34:34,252 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:34,465 INFO     - FastStream app shutting down...\n2026-01-15 12:34:34,466 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:34,639 INFO     - FastStream app shutting down...\n2026-01-15 12:34:34,640 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:34,755 INFO     - FastStream app shutting down...\n2026-01-15 12:34:34,757 INFO     - FastStream app shut down gracefully.\n\n---------------------------- Captured log teardown -----------------------------\nINFO     pac0.shared.test.world:world.py:91 WorldContext: exit context ...&#34;}], &#34;tests/test_fixture.py::test_world4pac&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_fixture.py::test_world4pac&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_fixture.py::test_world4pac&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log setup ------------------------------\nINFO     pac0.shared.test.world:world.py:83 WorldContext: enter context ...\n\n----------------------------- Captured stdout call -----------------------------\n_check_http_health http://localhost:8834/healthcheck\n_check_http_health http://localhost:9058/healthcheck\n_check_http_health http://localhost:8577/healthcheck\n_check_http_health http://localhost:8455/healthcheck\ncccccc All connection attempts failed\ncccccc All connection attempts failed\ncccccc All connection attempts failed\ncccccc All connection attempts failed\nConnecting to NATS nats://localhost:9192 ...\n2026-01-15 12:34:35,667 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:35,668 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:9192 ...\n2026-01-15 12:34:35,672 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:35,673 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:9192 ...\n2026-01-15 12:34:35,724 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:35,725 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:9192 ...\n2026-01-15 12:34:35,788 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:35,789 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \nConnecting to NATS nats://localhost:9192 ...\n2026-01-15 12:34:35,893 INFO     - q | routage-IN  |            - `Process` waiting for messages\n             Searching for package file structure from directories with         \n             __init__.py files                                                  \n2026-01-15 12:34:35,897 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8398 ...\n2026-01-15 12:34:35,945 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\nConnecting to NATS nats://localhost:8686 ...\n2026-01-15 12:34:35,951 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:35,952 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:35,952 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8686 ...\n2026-01-15 12:34:35,955 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:35,958 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8398 ...\n2026-01-15 12:34:36,035 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:36,035 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\n_check_http_health http://localhost:8834/healthcheck\nConnecting to NATS nats://localhost:9192 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:8834\n    server   Documentation at http://0.0.0.0:8834/docs\n \n             Logs:\n \nConnecting to NATS nats://localhost:9192 ...\n2026-01-15 12:34:36,110 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:36,116 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:36,117 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,118 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,119 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,119 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,120 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:36,121 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,121 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,126 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:36,126 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:36,127 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,128 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,129 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:36,133 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\n_check_http_health http://localhost:9058/healthcheck\n2026-01-15 12:34:36,156 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:36,164 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:36,165 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:36,170 INFO     - *                | 8e964b1d-0 - Received\n2026-01-15 12:34:36,184 INFO     - *                | 8e964b1d-0 - Processed\n_check_http_health http://localhost:8577/healthcheck\nConnecting to NATS nats://localhost:8686 ...\n2026-01-15 12:34:36,212 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:36,213 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8398 ...\n2026-01-15 12:34:36,214 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:36,214 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8398 ...\n2026-01-15 12:34:36,223 INFO     - q | routage-IN  |            - `Process` waiting for messages\n2026-01-15 12:34:36,224 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8840 ...\n2026-01-15 12:34:36,227 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:36,228 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\n_check_http_health http://localhost:8455/healthcheck\nConnecting to NATS nats://localhost:8686 ...\n2026-01-15 12:34:36,243 INFO     - q | routage-IN  |            - `Process` waiting for messages\n2026-01-15 12:34:36,244 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \ncccccc All connection attempts failed\ncccccc All connection attempts failed\ncccccc All connection attempts failed\n      INFO   127.0.0.1:35556 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\nConnecting to NATS nats://localhost:8686 ...\n2026-01-15 12:34:36,298 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:36,299 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:36,300 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,300 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,301 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,302 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,302 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:36,303 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,304 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,305 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:36,305 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:36,306 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,307 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,307 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:36,308 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8686 ...\n2026-01-15 12:34:36,338 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:36,339 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8398 ...\n2026-01-15 12:34:36,385 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:36,385 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8840 ...\n2026-01-15 12:34:36,407 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:36,408 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:36,409 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,409 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,409 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,410 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,410 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:36,411 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,411 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,411 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:36,412 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:36,412 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,412 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,413 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:36,413 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \nConnecting to NATS nats://localhost:8840 ...\n2026-01-15 12:34:36,428 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\nConnecting to NATS nats://localhost:8686 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n2026-01-15 12:34:36,429 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:9058\n    server   Documentation at http://0.0.0.0:9058/docs\n \n             Logs:\n \nConnecting to NATS nats://localhost:8398 ...\n2026-01-15 12:34:36,440 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:36,441 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:36,441 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,442 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,442 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,442 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,443 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:36,443 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,443 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,444 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:36,444 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:36,445 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,445 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:36,445 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:36,446 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:36,457 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:36,459 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:36,460 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:36,462 INFO     - *                | 72ef444e-f - Received\n2026-01-15 12:34:36,465 INFO     - *                | 72ef444e-f - Processed\nConnecting to NATS nats://localhost:8840 ...\n2026-01-15 12:34:36,476 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:36,476 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \nConnecting to NATS nats://localhost:8840 ...\n2026-01-15 12:34:36,482 INFO     - q | routage-IN  |            - `Process` waiting for messages\nConnecting to NATS nats://localhost:8840 ...\n2026-01-15 12:34:36,482 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:36,483 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:36,483 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8398 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:8577\n    server   Documentation at http://0.0.0.0:8577/docs\n \n             Logs:\n \n2026-01-15 12:34:36,544 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:36,545 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:36,546 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:36,547 INFO     - *                | b077801c-d - Received\n2026-01-15 12:34:36,550 INFO     - *                | b077801c-d - Processed\nConnecting to NATS nats://localhost:8840 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:8455\n    server   Documentation at http://0.0.0.0:8455/docs\n \n             Logs:\n \n2026-01-15 12:34:36,589 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:36,590 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:36,590 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:36,591 INFO     - *                | 4f70e76c-3 - Received\n2026-01-15 12:34:36,594 INFO     - *                | 4f70e76c-3 - Processed\n_check_http_health http://localhost:9058/healthcheck\n_check_http_health http://localhost:8577/healthcheck\n_check_http_health http://localhost:8455/healthcheck\n      INFO   127.0.0.1:46760 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:32780 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:44056 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\ntesting pac PacServiceContext(external_url=None, api_gateway=&amp;lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x74054032cf50&amp;gt;, esb_central=&amp;lt;pac0.shared.test.service.nats.NatsServiceContext object at 0x74054032de50&amp;gt;, controle_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x740540553790&amp;gt;, validation_metier=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa7f450&amp;gt;, conversion_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa7f950&amp;gt;, annuaire_local=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa02c60&amp;gt;, routage=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa02d50&amp;gt;, transmission_fiscale=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fad50f0&amp;gt;, gestion_cycle_vie=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fad51d0&amp;gt;, client_async=&amp;lt;httpx.AsyncClient object at 0x74053fad5630&amp;gt;) ...\ntesting pac PacServiceContext(external_url=None, api_gateway=&amp;lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x74054032cf50&amp;gt;, esb_central=&amp;lt;pac0.shared.test.service.nats.NatsServiceContext object at 0x74054032de50&amp;gt;, controle_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x740540553790&amp;gt;, validation_metier=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa7f450&amp;gt;, conversion_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa7f950&amp;gt;, annuaire_local=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa02c60&amp;gt;, routage=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa02d50&amp;gt;, transmission_fiscale=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fad50f0&amp;gt;, gestion_cycle_vie=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fad51d0&amp;gt;, client_async=&amp;lt;httpx.AsyncClient object at 0x74053fad5630&amp;gt;) ...\n      INFO   127.0.0.1:35570 - &amp;quot;GET / HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:35570 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\ntesting pac PacServiceContext(external_url=None, api_gateway=&amp;lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x74054032c910&amp;gt;, esb_central=&amp;lt;pac0.shared.test.service.nats.NatsServiceContext object at 0x74054032e0d0&amp;gt;, controle_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa0fc0&amp;gt;, validation_metier=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa69c10&amp;gt;, conversion_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa69a90&amp;gt;, annuaire_local=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fadc730&amp;gt;, routage=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fadc890&amp;gt;, transmission_fiscale=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fac8cd0&amp;gt;, gestion_cycle_vie=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fac8ff0&amp;gt;, client_async=&amp;lt;httpx.AsyncClient object at 0x74053fa699d0&amp;gt;) ...\ntesting pac PacServiceContext(external_url=None, api_gateway=&amp;lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x74054032c910&amp;gt;, esb_central=&amp;lt;pac0.shared.test.service.nats.NatsServiceContext object at 0x74054032e0d0&amp;gt;, controle_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa0fc0&amp;gt;, validation_metier=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa69c10&amp;gt;, conversion_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa69a90&amp;gt;, annuaire_local=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fadc730&amp;gt;, routage=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fadc890&amp;gt;, transmission_fiscale=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fac8cd0&amp;gt;, gestion_cycle_vie=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fac8ff0&amp;gt;, client_async=&amp;lt;httpx.AsyncClient object at 0x74053fa699d0&amp;gt;) ...\n      INFO   127.0.0.1:46766 - &amp;quot;GET / HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:46766 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\ntesting pac PacServiceContext(external_url=None, api_gateway=&amp;lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x74053fa2a060&amp;gt;, esb_central=&amp;lt;pac0.shared.test.service.nats.NatsServiceContext object at 0x74053fa2a3f0&amp;gt;, controle_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa52840&amp;gt;, validation_metier=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fac52d0&amp;gt;, conversion_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fac55d0&amp;gt;, annuaire_local=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9160&amp;gt;, routage=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9080&amp;gt;, transmission_fiscale=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9010&amp;gt;, gestion_cycle_vie=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa8fa0&amp;gt;, client_async=&amp;lt;httpx.AsyncClient object at 0x74053fa6a090&amp;gt;) ...\ntesting pac PacServiceContext(external_url=None, api_gateway=&amp;lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x74053fa2a060&amp;gt;, esb_central=&amp;lt;pac0.shared.test.service.nats.NatsServiceContext object at 0x74053fa2a3f0&amp;gt;, controle_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fa52840&amp;gt;, validation_metier=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fac52d0&amp;gt;, conversion_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053fac55d0&amp;gt;, annuaire_local=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9160&amp;gt;, routage=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9080&amp;gt;, transmission_fiscale=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9010&amp;gt;, gestion_cycle_vie=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa8fa0&amp;gt;, client_async=&amp;lt;httpx.AsyncClient object at 0x74053fa6a090&amp;gt;) ...\n      INFO   127.0.0.1:32796 - &amp;quot;GET / HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:32796 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\ntesting pac PacServiceContext(external_url=None, api_gateway=&amp;lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x74053fa2a2c0&amp;gt;, esb_central=&amp;lt;pac0.shared.test.service.nats.NatsServiceContext object at 0x74053fa2a190&amp;gt;, controle_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9630&amp;gt;, validation_metier=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa95c0&amp;gt;, conversion_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9550&amp;gt;, annuaire_local=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa94e0&amp;gt;, routage=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa89f0&amp;gt;, transmission_fiscale=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9be0&amp;gt;, gestion_cycle_vie=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa96a0&amp;gt;, client_async=&amp;lt;httpx.AsyncClient object at 0x74053fa6b1d0&amp;gt;) ...\ntesting pac PacServiceContext(external_url=None, api_gateway=&amp;lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x74053fa2a2c0&amp;gt;, esb_central=&amp;lt;pac0.shared.test.service.nats.NatsServiceContext object at 0x74053fa2a190&amp;gt;, controle_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9630&amp;gt;, validation_metier=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa95c0&amp;gt;, conversion_formats=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9550&amp;gt;, annuaire_local=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa94e0&amp;gt;, routage=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa89f0&amp;gt;, transmission_fiscale=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa9be0&amp;gt;, gestion_cycle_vie=&amp;lt;pac0.shared.test.service.faststream.FastStreamServiceContext object at 0x74053faa96a0&amp;gt;, client_async=&amp;lt;httpx.AsyncClient object at 0x74053fa6b1d0&amp;gt;) ...\n      INFO   127.0.0.1:44066 - &amp;quot;GET / HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:44066 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n\n----------------------------- Captured stderr call -----------------------------\n[18680] 2026/01/15 12:34:34.879958 [INF] Starting nats-server\n[18680] 2026/01/15 12:34:34.880029 [INF]   Version:  2.12.3\n[18680] 2026/01/15 12:34:34.880034 [INF]   Git:      [450a519]\n[18680] 2026/01/15 12:34:34.880038 [INF]   Name:     NCA6EXN2LZ6W3GUAIRF7LVHVIF55XNAREQ2JSMWLJYXIYRNPMBLGMGVX\n[18680] 2026/01/15 12:34:34.880054 [INF]   ID:       NCA6EXN2LZ6W3GUAIRF7LVHVIF55XNAREQ2JSMWLJYXIYRNPMBLGMGVX\n[18681] 2026/01/15 12:34:34.880741 [INF] Starting nats-server\n[18681] 2026/01/15 12:34:34.880794 [INF]   Version:  2.12.3\n[18681] 2026/01/15 12:34:34.880799 [INF]   Git:      [450a519]\n[18681] 2026/01/15 12:34:34.880802 [INF]   Name:     NAQTYVSOGKPC2JFJ544TEANRACOXPS3OBNG2E6ZRQLQ5P6KYTOXYWFUX\n[18681] 2026/01/15 12:34:34.880806 [INF]   ID:       NAQTYVSOGKPC2JFJ544TEANRACOXPS3OBNG2E6ZRQLQ5P6KYTOXYWFUX\n[18680] 2026/01/15 12:34:34.880810 [INF] Listening for client connections on 0.0.0.0:9192\n[18680] 2026/01/15 12:34:34.881344 [INF] Server is ready\n[18685] 2026/01/15 12:34:34.881558 [INF] Starting nats-server\n[18681] 2026/01/15 12:34:34.881594 [INF] Listening for client connections on 0.0.0.0:8686\n[18685] 2026/01/15 12:34:34.881602 [INF]   Version:  2.12.3\n[18685] 2026/01/15 12:34:34.881613 [INF]   Git:      [450a519]\n[18685] 2026/01/15 12:34:34.881617 [INF]   Name:     NCMLLMPCI4DSBPKN6ABR2YIRI77SDJHC5OCJQ2NU3IGGBJHNNVC6GIEH\n[18685] 2026/01/15 12:34:34.881620 [INF]   ID:       NCMLLMPCI4DSBPKN6ABR2YIRI77SDJHC5OCJQ2NU3IGGBJHNNVC6GIEH\n[18681] 2026/01/15 12:34:34.881964 [INF] Server is ready\n[18685] 2026/01/15 12:34:34.882376 [INF] Listening for client connections on 0.0.0.0:8398\n[18685] 2026/01/15 12:34:34.882780 [INF] Server is ready\n[18691] 2026/01/15 12:34:34.882950 [INF] Starting nats-server\n[18691] 2026/01/15 12:34:34.883011 [INF]   Version:  2.12.3\n[18691] 2026/01/15 12:34:34.883015 [INF]   Git:      [450a519]\n[18691] 2026/01/15 12:34:34.883019 [INF]   Name:     ND6P643SGKMHAXTCIFZGDVUYOBDNEW5YOWLPB2UVNVPQWR7OLI46QY5B\n[18691] 2026/01/15 12:34:34.883029 [INF]   ID:       ND6P643SGKMHAXTCIFZGDVUYOBDNEW5YOWLPB2UVNVPQWR7OLI46QY5B\n[18691] 2026/01/15 12:34:34.883617 [INF] Listening for client connections on 0.0.0.0:8840\n[18691] 2026/01/15 12:34:34.883980 [INF] Server is ready\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\n2026-01-15 12:34:35,658 INFO     - FastStream app starting...\n2026-01-15 12:34:35,661 INFO     - FastStream app starting...\n2026-01-15 12:34:35,668 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:35,673 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:35,711 INFO     - FastStream app starting...\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:35,725 INFO     - FastStream app started successfully! To exit, press CTRL+C\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\n2026-01-15 12:34:35,776 INFO     - FastStream app starting...\n2026-01-15 12:34:35,789 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:35,887 INFO     - FastStream app starting...\n2026-01-15 12:34:35,898 INFO     - FastStream app started successfully! To exit, press CTRL+C\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:35,935 INFO     - FastStream app starting...\n2026-01-15 12:34:35,938 INFO     - FastStream app starting...\n2026-01-15 12:34:35,946 INFO     - FastStream app starting...\n2026-01-15 12:34:35,952 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:35,952 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:35,959 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,021 INFO     - FastStream app starting...\n2026-01-15 12:34:36,036 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,088 INFO     - FastStream app starting...\n2026-01-15 12:34:36,133 INFO     - FastStream app started successfully! To exit, press CTRL+C\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\n      INFO   Started server process [18729]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8834 (Press CTRL+C to quit)\n2026-01-15 12:34:36,201 INFO     - FastStream app starting...\n2026-01-15 12:34:36,207 INFO     - FastStream app starting...\n2026-01-15 12:34:36,213 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,215 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,215 INFO     - FastStream app starting...\n2026-01-15 12:34:36,218 INFO     - FastStream app starting...\n2026-01-15 12:34:36,224 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,228 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,237 INFO     - FastStream app starting...\n2026-01-15 12:34:36,244 INFO     - FastStream app started successfully! To exit, press CTRL+C\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:36,289 INFO     - FastStream app starting...\n2026-01-15 12:34:36,308 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,332 INFO     - FastStream app starting...\n2026-01-15 12:34:36,339 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,380 INFO     - FastStream app starting...\n2026-01-15 12:34:36,385 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,404 INFO     - FastStream app starting...\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\n2026-01-15 12:34:36,413 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,425 INFO     - FastStream app starting...\n2026-01-15 12:34:36,429 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,437 INFO     - FastStream app starting...\n2026-01-15 12:34:36,446 INFO     - FastStream app started successfully! To exit, press CTRL+C\n      INFO   Started server process [18826]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:9058 (Press CTRL+C to quit)\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:36,473 INFO     - FastStream app starting...\n2026-01-15 12:34:36,477 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,479 INFO     - FastStream app starting...\n2026-01-15 12:34:36,479 INFO     - FastStream app starting...\n2026-01-15 12:34:36,483 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:36,483 INFO     - FastStream app started successfully! To exit, press CTRL+C\n      INFO   Started server process [18845]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8577 (Press CTRL+C to quit)\n      INFO   Started server process [18850]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8455 (Press CTRL+C to quit)\n--------------------------- Captured stderr teardown ---------------------------\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [18729]\n2026-01-15 12:34:37,827 INFO     - FastStream app shutting down...\n2026-01-15 12:34:37,828 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:37,974 INFO     - FastStream app shutting down...\n2026-01-15 12:34:37,975 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:38,170 INFO     - FastStream app shutting down...\n2026-01-15 12:34:38,172 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:38,296 INFO     - FastStream app shutting down...\n2026-01-15 12:34:38,297 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:38,485 INFO     - FastStream app shutting down...\n2026-01-15 12:34:38,486 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:38,700 INFO     - FastStream app shutting down...\n2026-01-15 12:34:38,701 INFO     - FastStream app shut down gracefully.\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [18826]\n2026-01-15 12:34:39,049 INFO     - FastStream app shutting down...\n2026-01-15 12:34:39,050 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:39,209 INFO     - FastStream app shutting down...\n2026-01-15 12:34:39,210 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:39,357 INFO     - FastStream app shutting down...\n2026-01-15 12:34:39,359 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:39,547 INFO     - FastStream app shutting down...\n2026-01-15 12:34:39,548 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:39,746 INFO     - FastStream app shutting down...\n2026-01-15 12:34:39,747 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:39,897 INFO     - FastStream app shutting down...\n2026-01-15 12:34:39,898 INFO     - FastStream app shut down gracefully.\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [18845]\n2026-01-15 12:34:40,239 INFO     - FastStream app shutting down...\n2026-01-15 12:34:40,240 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:40,351 INFO     - FastStream app shutting down...\n2026-01-15 12:34:40,353 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:40,588 INFO     - FastStream app shutting down...\n2026-01-15 12:34:40,590 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:40,734 INFO     - FastStream app shutting down...\n2026-01-15 12:34:40,735 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:40,923 INFO     - FastStream app shutting down...\n2026-01-15 12:34:40,924 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:41,052 INFO     - FastStream app shutting down...\n2026-01-15 12:34:41,054 INFO     - FastStream app shut down gracefully.\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [18850]\n2026-01-15 12:34:41,388 INFO     - FastStream app shutting down...\n2026-01-15 12:34:41,389 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:41,535 INFO     - FastStream app shutting down...\n2026-01-15 12:34:41,536 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:41,692 INFO     - FastStream app shutting down...\n2026-01-15 12:34:41,693 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:41,892 INFO     - FastStream app shutting down...\n2026-01-15 12:34:41,893 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:42,038 INFO     - FastStream app shutting down...\n2026-01-15 12:34:42,039 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:42,223 INFO     - FastStream app shutting down...\n2026-01-15 12:34:42,224 INFO     - FastStream app shut down gracefully.\n\n---------------------------- Captured log teardown -----------------------------\nINFO     pac0.shared.test.world:world.py:91 WorldContext: exit context ...&#34;}], &#34;tests/test_nats.py::test_nats&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_nats.py::test_nats&#34;, &#34;duration&#34;: &#34;13 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_nats.py::test_nats&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;13 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/test_nats.py::test_nats_context_manager&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_nats.py::test_nats_context_manager&#34;, &#34;duration&#34;: &#34;10 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_nats.py::test_nats_context_manager&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;10 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_01_nats_server_manual_lifecycle&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_01_nats_server_manual_lifecycle&#34;, &#34;duration&#34;: &#34;10 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_01_nats_server_manual_lifecycle&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;10 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_02_nats_server_context_manager&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_02_nats_server_context_manager&#34;, &#34;duration&#34;: &#34;10 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_02_nats_server_context_manager&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;10 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_02b_nats_server_context_wrapper&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_02b_nats_server_context_wrapper::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_service_lifecycle.py::TestNatsServerLifecycle::test_02b_nats_server_context_wrapper::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py&amp;#x27;, 55, &amp;#x27;Skipped: not implemented&amp;#x27;)\n&#34;}], &#34;tests/test_service_lifecycle.py::TestBrokerConnection::test_03_broker_connection&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;tests/test_service_lifecycle.py::TestBrokerConnection::test_03_broker_connection::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_service_lifecycle.py::TestBrokerConnection::test_03_broker_connection::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py&amp;#x27;, 81, &amp;#x27;Skipped: not implemented&amp;#x27;)\n&#34;}], &#34;tests/test_service_lifecycle.py::TestBrokerConnection::test_03b_broker_context_wrapper&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;tests/test_service_lifecycle.py::TestBrokerConnection::test_03b_broker_context_wrapper::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_service_lifecycle.py::TestBrokerConnection::test_03b_broker_context_wrapper::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py&amp;#x27;, 93, &amp;#x27;Skipped: not implemented&amp;#x27;)\n&#34;}], &#34;tests/test_service_lifecycle.py::TestBrokerConnection::test_04_broker_pubsub_basic&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;tests/test_service_lifecycle.py::TestBrokerConnection::test_04_broker_pubsub_basic::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_service_lifecycle.py::TestBrokerConnection::test_04_broker_pubsub_basic::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py&amp;#x27;, 102, &amp;#x27;Skipped: not implemented&amp;#x27;)\n&#34;}], &#34;tests/test_service_lifecycle.py::TestBrokerConnection::test_04b_broker_pubsub_wildcard&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;tests/test_service_lifecycle.py::TestBrokerConnection::test_04b_broker_pubsub_wildcard::setup&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_service_lifecycle.py::TestBrokerConnection::test_04b_broker_pubsub_wildcard::setup&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py&amp;#x27;, 135, &amp;#x27;Skipped: not implemented&amp;#x27;)\n&#34;}], &#34;tests/test_test.py::test_dummy_async&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_test.py::test_dummy_async&#34;, &#34;duration&#34;: &#34;19 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_test.py::test_dummy_async&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;19 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/test_test.py::test_dummy&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_test.py::test_dummy&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_test.py::test_dummy&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;tests/test_world.py::test_world_default_0pa&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_world.py::test_world_default_0pa&#34;, &#34;duration&#34;: &#34;3 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_world.py::test_world_default_0pa&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;3 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;------------------------------ Captured log call -------------------------------\nINFO     pac0.shared.test.world:world.py:83 WorldContext: enter context ...\nINFO     pac0.shared.test.world:world.py:91 WorldContext: exit context ...\n\n&#34;}], &#34;tests/test_world.py::test_world_with_1pa&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_world.py::test_world_with_1pa&#34;, &#34;duration&#34;: &#34;00:00:05&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_world.py::test_world_with_1pa&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:05&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n_check_http_health http://localhost:8310/healthcheck\ncccccc All connection attempts failed\nConnecting to NATS nats://localhost:8824 ...\n2026-01-15 12:34:42,979 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:42,980 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8824 ...\n2026-01-15 12:34:42,998 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:42,999 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8824 ...\n2026-01-15 12:34:43,012 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:43,013 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8824 ...\n2026-01-15 12:34:43,014 INFO     - q | routage-IN  |            - `Process` waiting for messages\n2026-01-15 12:34:43,015 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8824 ...\n2026-01-15 12:34:43,022 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:43,022 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8824 ...\n2026-01-15 12:34:43,039 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:43,040 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:43,040 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:43,041 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:43,041 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:43,041 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:43,042 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:43,042 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:43,043 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:43,043 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:43,043 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:43,044 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:43,044 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:43,044 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:43,045 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \nConnecting to NATS nats://localhost:8824 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:8310\n    server   Documentation at http://0.0.0.0:8310/docs\n \n             Logs:\n \n2026-01-15 12:34:43,214 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:43,215 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:43,216 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:43,217 INFO     - *                | 37410c6e-c - Received\n2026-01-15 12:34:43,220 INFO     - *                | 37410c6e-c - Processed\n_check_http_health http://localhost:8310/healthcheck\n      INFO   127.0.0.1:54942 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n_check_http_health http://localhost:8536/healthcheck\ncccccc All connection attempts failed\nConnecting to NATS nats://localhost:8668 ...\n2026-01-15 12:34:45,274 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:45,274 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8668 ...\n2026-01-15 12:34:45,278 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:45,279 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8668 ...\n2026-01-15 12:34:45,303 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:45,304 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8668 ...\n2026-01-15 12:34:45,308 INFO     - q | routage-IN  |            - `Process` waiting for messages\n2026-01-15 12:34:45,308 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8668 ...\n2026-01-15 12:34:45,315 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:45,315 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8668 ...\n2026-01-15 12:34:45,328 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:45,329 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:45,329 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:45,329 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:45,330 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:45,330 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:45,331 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:45,331 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:45,331 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:45,332 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:45,332 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:45,332 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:45,333 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:45,333 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:45,333 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \nConnecting to NATS nats://localhost:8668 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:8536\n    server   Documentation at http://0.0.0.0:8536/docs\n \n             Logs:\n \n2026-01-15 12:34:45,517 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:45,519 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:45,520 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:45,521 INFO     - *                | 09fe6872-3 - Received\n2026-01-15 12:34:45,524 INFO     - *                | 09fe6872-3 - Processed\n_check_http_health http://localhost:8536/healthcheck\n      INFO   127.0.0.1:36682 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n\n----------------------------- Captured stderr call -----------------------------\n[19058] 2026/01/15 12:34:42.433565 [INF] Starting nats-server\n[19058] 2026/01/15 12:34:42.433645 [INF]   Version:  2.12.3\n[19058] 2026/01/15 12:34:42.433651 [INF]   Git:      [450a519]\n[19058] 2026/01/15 12:34:42.433655 [INF]   Name:     NBDXSQVUVMQWI5LNM3JYGJ3XXZGHTMIYBEZKPAHVZRHIOBF7E4JEKPWE\n[19058] 2026/01/15 12:34:42.433659 [INF]   ID:       NBDXSQVUVMQWI5LNM3JYGJ3XXZGHTMIYBEZKPAHVZRHIOBF7E4JEKPWE\n[19058] 2026/01/15 12:34:42.434324 [INF] Listening for client connections on 0.0.0.0:8824\n[19058] 2026/01/15 12:34:42.434743 [INF] Server is ready\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\n2026-01-15 12:34:42,976 INFO     - FastStream app starting...\n2026-01-15 12:34:42,980 INFO     - FastStream app started successfully! To exit, press CTRL+C\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:42,994 INFO     - FastStream app starting...\n2026-01-15 12:34:42,999 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:43,009 INFO     - FastStream app starting...\n2026-01-15 12:34:43,011 INFO     - FastStream app starting...\n2026-01-15 12:34:43,013 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:43,015 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:43,018 INFO     - FastStream app starting...\n2026-01-15 12:34:43,022 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:43,036 INFO     - FastStream app starting...\n2026-01-15 12:34:43,045 INFO     - FastStream app started successfully! To exit, press CTRL+C\n      INFO   Started server process [19075]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8310 (Press CTRL+C to quit)\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [19075]\n2026-01-15 12:34:43,777 INFO     - FastStream app shutting down...\n2026-01-15 12:34:43,778 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:43,911 INFO     - FastStream app shutting down...\n2026-01-15 12:34:43,913 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:44,097 INFO     - FastStream app shutting down...\n2026-01-15 12:34:44,098 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:44,314 INFO     - FastStream app shutting down...\n2026-01-15 12:34:44,315 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:44,522 INFO     - FastStream app shutting down...\n2026-01-15 12:34:44,524 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:44,639 INFO     - FastStream app shutting down...\n2026-01-15 12:34:44,641 INFO     - FastStream app shut down gracefully.\n[19169] 2026/01/15 12:34:44.738074 [INF] Starting nats-server\n[19169] 2026/01/15 12:34:44.738140 [INF]   Version:  2.12.3\n[19169] 2026/01/15 12:34:44.738146 [INF]   Git:      [450a519]\n[19169] 2026/01/15 12:34:44.738152 [INF]   Name:     NCXY3OC3UPMA2I7OXCSHD7BM3NJJHZY4F7NVKNAGWEYMZQIVEZXZIF3D\n[19169] 2026/01/15 12:34:44.738157 [INF]   ID:       NCXY3OC3UPMA2I7OXCSHD7BM3NJJHZY4F7NVKNAGWEYMZQIVEZXZIF3D\n[19169] 2026/01/15 12:34:44.738803 [INF] Listening for client connections on 0.0.0.0:8668\n[19169] 2026/01/15 12:34:44.739224 [INF] Server is ready\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\n2026-01-15 12:34:45,270 INFO     - FastStream app starting...\n2026-01-15 12:34:45,275 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:45,275 INFO     - FastStream app starting...\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:45,279 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:45,300 INFO     - FastStream app starting...\n2026-01-15 12:34:45,304 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:45,304 INFO     - FastStream app starting...\n2026-01-15 12:34:45,308 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:45,312 INFO     - FastStream app starting...\n2026-01-15 12:34:45,315 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:45,325 INFO     - FastStream app starting...\n2026-01-15 12:34:45,334 INFO     - FastStream app started successfully! To exit, press CTRL+C\n      INFO   Started server process [19183]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8536 (Press CTRL+C to quit)\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [19183]\n2026-01-15 12:34:46,072 INFO     - FastStream app shutting down...\n2026-01-15 12:34:46,073 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:46,277 INFO     - FastStream app shutting down...\n2026-01-15 12:34:46,278 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:46,404 INFO     - FastStream app shutting down...\n2026-01-15 12:34:46,404 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:46,507 INFO     - FastStream app shutting down...\n2026-01-15 12:34:46,508 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:46,714 INFO     - FastStream app shutting down...\n2026-01-15 12:34:46,715 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:46,929 INFO     - FastStream app shutting down...\n2026-01-15 12:34:46,931 INFO     - FastStream app shut down gracefully.\n\n------------------------------ Captured log call -------------------------------\nINFO     pac0.shared.test.world:world.py:83 WorldContext: enter context ...\nINFO     pac0.shared.test.world:world.py:91 WorldContext: exit context ...\nINFO     pac0.shared.test.world:world.py:83 WorldContext: enter context ...\nINFO     pac0.shared.test.world:world.py:91 WorldContext: exit context ...\n\n&#34;}], &#34;tests/test_world.py::test_world_with_4pa&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;tests/test_world.py::test_world_with_4pa&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_world.py::test_world_with_4pa&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n_check_http_health http://localhost:8614/healthcheck\n_check_http_health http://localhost:9084/healthcheck\n_check_http_health http://localhost:8857/healthcheck\n_check_http_health http://localhost:8473/healthcheck\ncccccc All connection attempts failed\ncccccc All connection attempts failed\ncccccc All connection attempts failed\ncccccc All connection attempts failed\nConnecting to NATS nats://localhost:8809 ...\n2026-01-15 12:34:47,921 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:47,925 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8809 ...\n2026-01-15 12:34:47,973 INFO     - q | routage-IN  |            - `Process` waiting for messages\n2026-01-15 12:34:47,974 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8809 ...\n2026-01-15 12:34:47,979 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:47,984 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8809 ...\n2026-01-15 12:34:48,004 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,009 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8809 ...\n2026-01-15 12:34:48,147 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,152 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8508 ...\n2026-01-15 12:34:48,197 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,198 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\n_check_http_health http://localhost:8614/healthcheck\nConnecting to NATS nats://localhost:8809 ...\n2026-01-15 12:34:48,212 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:48,213 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:48,214 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,215 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,216 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,220 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\nConnecting to NATS nats://localhost:8348 ...\n2026-01-15 12:34:48,220 INFO     - q | routage-IN  |            - `Process` waiting for messages\n2026-01-15 12:34:48,221 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:48,222 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,224 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:48,226 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,227 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:48,231 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:48,232 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,233 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,238 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:48,239 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8348 ...\n2026-01-15 12:34:48,255 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,256 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8348 ...\n2026-01-15 12:34:48,263 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,265 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\n_check_http_health http://localhost:9084/healthcheck\n_check_http_health http://localhost:8857/healthcheck\nConnecting to NATS nats://localhost:8348 ...\n2026-01-15 12:34:48,315 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,317 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8348 ...\n2026-01-15 12:34:48,318 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,319 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8348 ...\n2026-01-15 12:34:48,321 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:48,322 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:48,323 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,324 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,325 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,325 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,326 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:48,327 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,327 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,328 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:48,329 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:48,330 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,330 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,331 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:48,331 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\n_check_http_health http://localhost:8473/healthcheck\ncccccc All connection attempts failed\ncccccc All connection attempts failed\ncccccc All connection attempts failed\ncccccc All connection attempts failed\nConnecting to NATS nats://localhost:8508 ...\n2026-01-15 12:34:48,409 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,410 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8508 ...\n2026-01-15 12:34:48,490 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,492 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \nConnecting to NATS nats://localhost:8360 ...\n2026-01-15 12:34:48,613 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\nConnecting to NATS nats://localhost:8360 ...\n2026-01-15 12:34:48,614 INFO     - q | transmission-fiscale-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,614 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:48,615 INFO     -   | healthcheck             |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:48,615 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,616 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,617 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,617 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,618 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:48,619 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,619 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,620 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:48,621 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\n2026-01-15 12:34:48,622 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,623 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,624 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:48,624 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8360 ...\n2026-01-15 12:34:48,629 INFO     - q | validation-metier-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,630 INFO     -   | healthcheck          |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8508 ...\n2026-01-15 12:34:48,634 INFO     - q | routage-OUT              |            - `Process07To08` waiting for messages\n2026-01-15 12:34:48,635 INFO     - q | api-gateway-OUT          |            - `Process01To03` waiting for messages\n2026-01-15 12:34:48,636 INFO     - q | routage-ERR              |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,636 INFO     - q | annuaire-local-ERR       |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,637 INFO     - q | validation-metier-ERR    |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,637 INFO     - q | esb-central-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,638 INFO     - q | annuaire-local-OUT       |            - `Process06To07` waiting for messages\n2026-01-15 12:34:48,639 INFO     - q | transmission-fiscale-ERR |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,639 INFO     - q | conversion-formats-ERR   |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,640 INFO     - q | conversion-formats-OUT   |            - `Process05To06` waiting for messages\n2026-01-15 12:34:48,641 INFO     - q | validation-metier-OUT    |            - `Process04To05` waiting for messages\nConnecting to NATS nats://localhost:8508 ...\n2026-01-15 12:34:48,641 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,642 INFO     - q | api-gateway-ERR          |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,642 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:48,642 INFO     - q | controle-formats-ERR     |            - `ProcessErr` waiting for messages\n2026-01-15 12:34:48,643 INFO     - q | controle-formats-OUT     |            - `Process03To04` waiting for messages\n2026-01-15 12:34:48,643 INFO     -   | healthcheck              |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8360 ...\n2026-01-15 12:34:48,655 INFO     - q | conversion-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,656 INFO     -   | healthcheck           |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8360 ...\n2026-01-15 12:34:48,663 INFO     - q | routage-IN  |            - `Process` waiting for messages\n2026-01-15 12:34:48,663 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8809 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:8614\n    server   Documentation at http://0.0.0.0:8614/docs\n \nConnecting to NATS nats://localhost:8508 ...\n2026-01-15 12:34:48,675 INFO     - q | routage-IN  |            - `Process` waiting for messages\n             Logs:\n \n2026-01-15 12:34:48,676 INFO     -   | healthcheck |            - `HealthcheckSub` waiting for messages\nConnecting to NATS nats://localhost:8360 ...\n2026-01-15 12:34:48,676 INFO     - q | controle-formats-IN |            - `Process` waiting for messages\n2026-01-15 12:34:48,677 INFO     -   | healthcheck         |            - `HealthcheckSub` waiting for messages\n\n   FastAPI   Starting production server \ud83d\ude80\n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \n2026-01-15 12:34:48,702 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:48,704 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:48,704 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:48,706 INFO     - *                | aa04dcb6-2 - Received\n2026-01-15 12:34:48,709 INFO     - *                | aa04dcb6-2 - Processed\nConnecting to NATS nats://localhost:8348 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:9084\n    server   Documentation at http://0.0.0.0:9084/docs\n \n             Logs:\n \n2026-01-15 12:34:48,754 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:48,757 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:48,757 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:48,758 INFO     - *                | 4cf255f4-e - Received\n2026-01-15 12:34:48,761 INFO     - *                | 4cf255f4-e - Processed\nConnecting to NATS nats://localhost:8508 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n\n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n   FastAPI   Starting production server \ud83d\ude80\n    server   Server started at http://0.0.0.0:8857\n    server   Documentation at http://0.0.0.0:8857/docs\n \n             Logs:\n \n \n             Searching for package file structure from directories with         \n             __init__.py files                                                  \n2026-01-15 12:34:48,802 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:48,804 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:48,804 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:48,805 INFO     - *                | 3c8ebc51-e - Received\n2026-01-15 12:34:48,808 INFO     - *                | 3c8ebc51-e - Processed\nConnecting to NATS nats://localhost:8360 ...\n             Importing from                                                     \n             /home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/\n             api_gateway                                                        \n \n    module   \ud83d\udc0d main.py\n \n      code   Importing the FastAPI app object from the module with the following\n             code:                                                              \n \n             from main import app\n \n       app   Using import string: main:app\n \n    server   Server started at http://0.0.0.0:8473\n    server   Documentation at http://0.0.0.0:8473/docs\n \n             Logs:\n \n2026-01-15 12:34:48,889 INFO     - healthcheck      |            - `HealthcheckSub` waiting for messages\n2026-01-15 12:34:48,890 INFO     - *                |            - `AllSub` waiting for messages\n2026-01-15 12:34:48,890 INFO     - healthcheck_resp |            - `HealthcheckRespSub` waiting for messages\n2026-01-15 12:34:48,891 INFO     - *                | 2563f245-c - Received\n2026-01-15 12:34:48,894 INFO     - *                | 2563f245-c - Processed\n_check_http_health http://localhost:8614/healthcheck\n_check_http_health http://localhost:9084/healthcheck\n_check_http_health http://localhost:8857/healthcheck\n_check_http_health http://localhost:8473/healthcheck\n      INFO   127.0.0.1:35292 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:44808 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:38930 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n      INFO   127.0.0.1:55680 - &amp;quot;GET /healthcheck HTTP/1.1&amp;quot; 200\n\n----------------------------- Captured stderr call -----------------------------\n[19304] 2026/01/15 12:34:47.037700 [INF] Starting nats-server\n[19304] 2026/01/15 12:34:47.037782 [INF]   Version:  2.12.3\n[19304] 2026/01/15 12:34:47.037789 [INF]   Git:      [450a519]\n[19304] 2026/01/15 12:34:47.037795 [INF]   Name:     NAXW6HQXFVCHPRSDW2LF5WQOHS2H3NC33OKJPMIYW62JQMZ3K7BUIFKW\n[19304] 2026/01/15 12:34:47.037800 [INF]   ID:       NAXW6HQXFVCHPRSDW2LF5WQOHS2H3NC33OKJPMIYW62JQMZ3K7BUIFKW\n[19304] 2026/01/15 12:34:47.038637 [INF] Listening for client connections on 0.0.0.0:8809\n[19305] 2026/01/15 12:34:47.038934 [INF] Starting nats-server\n[19305] 2026/01/15 12:34:47.039007 [INF]   Version:  2.12.3\n[19305] 2026/01/15 12:34:47.039013 [INF]   Git:      [450a519]\n[19305] 2026/01/15 12:34:47.039018 [INF]   Name:     NCN4PURSSRFP5KCPH7M44HGHV7EHZDVIANZTEMQ7UT23I5BLX7WVVX6O\n[19305] 2026/01/15 12:34:47.039030 [INF]   ID:       NCN4PURSSRFP5KCPH7M44HGHV7EHZDVIANZTEMQ7UT23I5BLX7WVVX6O\n[19304] 2026/01/15 12:34:47.039199 [INF] Server is ready\n[19310] 2026/01/15 12:34:47.039701 [INF] Starting nats-server\n[19310] 2026/01/15 12:34:47.039805 [INF]   Version:  2.12.3\n[19310] 2026/01/15 12:34:47.039815 [INF]   Git:      [450a519]\n[19310] 2026/01/15 12:34:47.039819 [INF]   Name:     NC7XS3BKENAUAOXXWK2QPJC7Y4TTWQSMYMGU76NQOF5C5MI3ACMK5MYR\n[19310] 2026/01/15 12:34:47.039823 [INF]   ID:       NC7XS3BKENAUAOXXWK2QPJC7Y4TTWQSMYMGU76NQOF5C5MI3ACMK5MYR\n[19305] 2026/01/15 12:34:47.039931 [INF] Listening for client connections on 0.0.0.0:8348\n[19305] 2026/01/15 12:34:47.040376 [INF] Server is ready\n[19310] 2026/01/15 12:34:47.040582 [INF] Listening for client connections on 0.0.0.0:8508\n[19315] 2026/01/15 12:34:47.040636 [INF] Starting nats-server\n[19315] 2026/01/15 12:34:47.040700 [INF]   Version:  2.12.3\n[19315] 2026/01/15 12:34:47.040704 [INF]   Git:      [450a519]\n[19315] 2026/01/15 12:34:47.040708 [INF]   Name:     NBSEGWZXKLDIBZC5Z6CNAG4LLROMRNOPVS3R2L6DQE7ZAHKSKBOBQS3I\n[19315] 2026/01/15 12:34:47.040719 [INF]   ID:       NBSEGWZXKLDIBZC5Z6CNAG4LLROMRNOPVS3R2L6DQE7ZAHKSKBOBQS3I\n[19310] 2026/01/15 12:34:47.041079 [INF] Server is ready\n[19315] 2026/01/15 12:34:47.041634 [INF] Listening for client connections on 0.0.0.0:8360\n[19315] 2026/01/15 12:34:47.042047 [INF] Server is ready\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:47,912 INFO     - FastStream app starting...\n2026-01-15 12:34:47,925 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:47,961 INFO     - FastStream app starting...\n2026-01-15 12:34:47,966 INFO     - FastStream app starting...\n2026-01-15 12:34:47,974 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:47,982 INFO     - FastStream app starting...\n2026-01-15 12:34:47,985 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,009 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,137 INFO     - FastStream app starting...\n2026-01-15 12:34:48,152 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,183 INFO     - FastStream app starting...\n2026-01-15 12:34:48,198 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,200 INFO     - FastStream app starting...\n2026-01-15 12:34:48,210 INFO     - FastStream app starting...\n2026-01-15 12:34:48,225 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,231 INFO     - FastStream app starting...\n2026-01-15 12:34:48,239 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,255 INFO     - FastStream app starting...\n2026-01-15 12:34:48,256 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,266 INFO     - FastStream app started successfully! To exit, press CTRL+C\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\n2026-01-15 12:34:48,306 INFO     - FastStream app starting...\n2026-01-15 12:34:48,308 INFO     - FastStream app starting...\n2026-01-15 12:34:48,314 INFO     - FastStream app starting...\n2026-01-15 12:34:48,317 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,319 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,332 INFO     - FastStream app started successfully! To exit, press CTRL+C\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:48,401 INFO     - FastStream app starting...\n2026-01-15 12:34:48,410 INFO     - FastStream app started successfully! To exit, press CTRL+C\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\n2026-01-15 12:34:48,480 INFO     - FastStream app starting...\n2026-01-15 12:34:48,493 INFO     - FastStream app started successfully! To exit, press CTRL+C\n[Errno 2] No such file or directory: &amp;#x27;/home/philippe/src/PA_Communautaire/packages/pac0/src/pac0/service/annuaire_local/main.py&amp;#x27;\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nUsage: faststream run [OPTIONS] APP\nTry &amp;#x27;faststream run --help&amp;#x27; for help.\n\u256d\u2500 Error \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n\u2502 Invalid value: Please, input module like [python_file:docs_object] or        \u2502\n\u2502 [module:attribute]                                                           \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n2026-01-15 12:34:48,607 INFO     - FastStream app starting...\n2026-01-15 12:34:48,609 INFO     - FastStream app starting...\n2026-01-15 12:34:48,615 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,624 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,624 INFO     - FastStream app starting...\n2026-01-15 12:34:48,629 INFO     - FastStream app starting...\n2026-01-15 12:34:48,630 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,637 INFO     - FastStream app starting...\n2026-01-15 12:34:48,642 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,643 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,651 INFO     - FastStream app starting...\n2026-01-15 12:34:48,656 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,659 INFO     - FastStream app starting...\n2026-01-15 12:34:48,664 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,672 INFO     - FastStream app starting...\n2026-01-15 12:34:48,673 INFO     - FastStream app starting...\n2026-01-15 12:34:48,676 INFO     - FastStream app started successfully! To exit, press CTRL+C\n2026-01-15 12:34:48,677 INFO     - FastStream app started successfully! To exit, press CTRL+C\n      INFO   Started server process [19353]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8614 (Press CTRL+C to quit)\n      INFO   Started server process [19451]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:9084 (Press CTRL+C to quit)\n      INFO   Started server process [19470]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8857 (Press CTRL+C to quit)\n      INFO   Started server process [19485]\n      INFO   Waiting for application startup.\n      INFO   Application startup complete.\n      INFO   Uvicorn running on http://0.0.0.0:8473 (Press CTRL+C to quit)\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [19353]\n2026-01-15 12:34:49,844 INFO     - FastStream app shutting down...\n2026-01-15 12:34:49,845 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:50,021 INFO     - FastStream app shutting down...\n2026-01-15 12:34:50,023 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:50,195 INFO     - FastStream app shutting down...\n2026-01-15 12:34:50,196 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:50,379 INFO     - FastStream app shutting down...\n2026-01-15 12:34:50,380 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:50,579 INFO     - FastStream app shutting down...\n2026-01-15 12:34:50,580 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:50,707 INFO     - FastStream app shutting down...\n2026-01-15 12:34:50,708 INFO     - FastStream app shut down gracefully.\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [19451]\n2026-01-15 12:34:51,016 INFO     - FastStream app shutting down...\n2026-01-15 12:34:51,017 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:51,159 INFO     - FastStream app shutting down...\n2026-01-15 12:34:51,161 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:51,314 INFO     - FastStream app shutting down...\n2026-01-15 12:34:51,315 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:51,517 INFO     - FastStream app shutting down...\n2026-01-15 12:34:51,518 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:51,638 INFO     - FastStream app shutting down...\n2026-01-15 12:34:51,639 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:51,823 INFO     - FastStream app shutting down...\n2026-01-15 12:34:51,824 INFO     - FastStream app shut down gracefully.\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [19470]\n2026-01-15 12:34:52,246 INFO     - FastStream app shutting down...\n2026-01-15 12:34:52,247 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:52,391 INFO     - FastStream app shutting down...\n2026-01-15 12:34:52,392 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:52,512 INFO     - FastStream app shutting down...\n2026-01-15 12:34:52,513 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:52,678 INFO     - FastStream app shutting down...\n2026-01-15 12:34:52,679 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:52,792 INFO     - FastStream app shutting down...\n2026-01-15 12:34:52,793 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:52,938 INFO     - FastStream app shutting down...\n2026-01-15 12:34:52,940 INFO     - FastStream app shut down gracefully.\n      INFO   Shutting down\n      INFO   Waiting for application shutdown.\n      INFO   Application shutdown complete.\n      INFO   Finished server process [19485]\n2026-01-15 12:34:53,285 INFO     - FastStream app shutting down...\n2026-01-15 12:34:53,286 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:53,535 INFO     - FastStream app shutting down...\n2026-01-15 12:34:53,536 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:53,664 INFO     - FastStream app shutting down...\n2026-01-15 12:34:53,665 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:53,770 INFO     - FastStream app shutting down...\n2026-01-15 12:34:53,770 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:54,022 INFO     - FastStream app shutting down...\n2026-01-15 12:34:54,023 INFO     - FastStream app shut down gracefully.\n2026-01-15 12:34:54,220 INFO     - FastStream app shutting down...\n2026-01-15 12:34:54,222 INFO     - FastStream app shut down gracefully.\n\n------------------------------ Captured log call -------------------------------\nINFO     pac0.shared.test.world:world.py:83 WorldContext: enter context ...\nINFO     pac0.shared.test.world:world.py:91 WorldContext: exit context ...\n\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;report.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > td')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > td')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+</html>

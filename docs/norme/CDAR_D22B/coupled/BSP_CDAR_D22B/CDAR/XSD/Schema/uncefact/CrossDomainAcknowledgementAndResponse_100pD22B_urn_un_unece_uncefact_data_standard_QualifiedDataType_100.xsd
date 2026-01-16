@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:clm63139ContactTypeCode="urn:un:unece:uncefact:codelist:standard:UNECE:ContactFunctionCode:D22A"
+    xmlns:clm61001="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentNameCode:D22A"
+    xmlns:clm61373="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentStatusCode:D22A"
+    xmlns:clm61225Acknowledgement="urn:un:unece:uncefact:codelist:standard:UNECE:MessageFunctionCode_Acknowledgement:D22A"
+    xmlns:clm63035="urn:un:unece:uncefact:codelist:standard:UNECE:PartyRoleCode:D22A"
+    xmlns:clm61153ReferenceTypeCode="urn:un:unece:uncefact:codelist:standard:UNECE:ReferenceTypeCode:D22A"
+    xmlns:clm64405="urn:un:unece:uncefact:codelist:standard:UNECE:StatusCode:D22A"
+    xmlns:clm62379="urn:un:unece:uncefact:codelist:standard:UNECE:TimePointFormatCode:D21B"
+    xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+    xmlns:ids5ISO6391A2="urn:un:unece:uncefact:identifierlist:standard:ISO:ISOAlpha2LanguageCode:2006-10-27"
+    xmlns:ids5ISO316612A="urn:un:unece:uncefact:identifierlist:standard:ISO:ISOTwo-letterCountryCode:SecondEdition2006"
+    targetNamespace="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+    elementFormDefault="qualified"
+    version="100.D22B">
+  <xsd:import namespace="urn:un:unece:uncefact:codelist:standard:UNECE:ContactFunctionCode:D22A" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_codelist_standard_UNECE_ContactFunctionCode_D22A.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentNameCode:D22A" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_codelist_standard_UNECE_DocumentNameCode_D22A.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentStatusCode:D22A" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_codelist_standard_UNECE_DocumentStatusCode_D22A.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:codelist:standard:UNECE:MessageFunctionCode_Acknowledgement:D22A" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_codelist_standard_UNECE_MessageFunctionCode_Acknowledgement_D22A.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:codelist:standard:UNECE:PartyRoleCode:D22A" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_codelist_standard_UNECE_PartyRoleCode_D22A.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:codelist:standard:UNECE:ReferenceTypeCode:D22A" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_codelist_standard_UNECE_ReferenceTypeCode_D22A.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:codelist:standard:UNECE:StatusCode:D22A" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_codelist_standard_UNECE_StatusCode_D22A.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:codelist:standard:UNECE:TimePointFormatCode:D21B" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_codelist_standard_UNECE_TimePointFormatCode_D21B.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_data_standard_UnqualifiedDataType_100.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:identifierlist:standard:ISO:ISOAlpha2LanguageCode:2006-10-27" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_identifierlist_standard_ISO_ISOAlpha2LanguageCode_2006-10-27.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:identifierlist:standard:ISO:ISOTwo-letterCountryCode:SecondEdition2006" schemaLocation="CrossDomainAcknowledgementAndResponse_100pD22B_urn_un_unece_uncefact_identifierlist_standard_ISO_ISOTwo-letterCountryCode_SecondEdition2006.xsd"/>
+  <xsd:simpleType name="AcknowledgementCodeListAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="AcknowledgementCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="clm61225Acknowledgement:MessageFunctionCodeAcknowledgementContentType">
+        <xsd:attribute name="listAgencyID" type="qdt:AcknowledgementCodeListAgencyIDContentType" fixed="6"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="ContactTypeCodeListAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="ContactTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="clm63139ContactTypeCode:ContactFunctionCodeContentType">
+        <xsd:attribute name="listAgencyID" type="qdt:ContactTypeCodeListAgencyIDContentType" fixed="6"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="CountryIDSchemeAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="5"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="CountryIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="ids5ISO316612A:ISOTwoletterCountryCodeContentType">
+        <xsd:attribute name="schemeAgencyID" type="qdt:CountryIDSchemeAgencyIDContentType"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="DocumentCodeListAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="DocumentCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="clm61001:DocumentNameCodeContentType">
+        <xsd:attribute name="listAgencyID" type="qdt:DocumentCodeListAgencyIDContentType" fixed="6"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="DocumentStatusCodeListAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="DocumentStatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="clm61373:DocumentStatusCodeContentType">
+        <xsd:attribute name="listID" type="xsd:token" fixed="1373"/>
+        <xsd:attribute name="listAgencyID" type="qdt:DocumentStatusCodeListAgencyIDContentType" fixed="6"/>
+        <xsd:attribute name="listVersionID" type="xsd:token" fixed="D22A"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FormattedDateTimeType">
+    <xsd:sequence>
+      <xsd:element name="DateTimeString">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="format" type="clm62379:TimePointFormatCodeContentType"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="LanguageIDSchemeAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="5"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="LanguageIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="ids5ISO6391A2:ISOAlpha2LanguageCodeContentType">
+        <xsd:attribute name="schemeAgencyID" type="qdt:LanguageIDSchemeAgencyIDContentType"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="PartyRoleCodeListAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="PartyRoleCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="clm63035:PartyRoleCodeContentType">
+        <xsd:attribute name="listAgencyID" type="qdt:PartyRoleCodeListAgencyIDContentType" fixed="6"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="ReferenceCodeListAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="ReferenceCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="clm61153ReferenceTypeCode:ReferenceTypeCodeContentType">
+        <xsd:attribute name="listAgencyID" type="qdt:ReferenceCodeListAgencyIDContentType" fixed="6"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="StatusCodeListAgencyIDContentType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="StatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="clm64405:StatusCodeContentType">
+        <xsd:attribute name="listAgencyID" type="qdt:StatusCodeListAgencyIDContentType" fixed="6"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+</xsd:schema>

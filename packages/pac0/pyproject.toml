@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[project]
+name = "pac0"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Philippe ENTZMANN", email = "philippe.entzmann@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.126.0",
+    "faststream[cli,nats]>=0.6.4",
+    "nats-py[nkeys]>=2.12.0",
+]
+
+[project.scripts]
+pac0 = "pac0:main"
+
+[build-system]
+requires = ["uv_build>=0.9.17,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "nats-server",
+    "pytest>=8.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-bdd>=8.1.0",
+    "pytest-html>=4.1.1",
+    "pytest-md-report>=0.7.0",
+]
+
+
+
+[tool.uv.sources]
+nats-server = { git = "https://github.com/nats-io/nats.py", subdirectory = "nats-server" }
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = [
+    'ignore:websockets.server.WebSocketServerProtocol is deprecated',
+    'ignore:websockets.legacy is deprecated',
+]

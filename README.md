@@ -71,7 +71,57 @@ _Section en cours de définition par la communauté_
 
 ## 📚 Documentation
 
-- https://github.com/PDP-Libre/awesome-facturation-electronique
+Le projet est découpé en 9 briques:
+
+* [01-api-gateway](docs/briques/01-api-gateway/index.md)
+* [02-esb-central](docs/briques/02-esb-central/index.md)
+* [03-controle-formats](docs/briques/03-controle-formats/index.md)
+* [04-validation-metier](docs/briques/04-validation-metier/index.md)
+* [05-conversion-formats](docs/briques/05-conversion-formats/index.md)
+* [06-annuaire-local](docs/briques/06-annuaire-local/index.md)
+* [07-routage](docs/briques/07-routage/index.md)
+* [08-transmission-fiscale](docs/briques/08-transmission-fiscale/index.md)
+* [09-gestion-cycle-vie](docs/briques/09-gestion-cycle-vie/index.md)
+
+Vous trouverez également dans ce dépôt les [normes de référence](norme/README.md).
+
+D'autres liens sont disponibles sur [le projet awesome-facturation-electronique](https://github.com/PDP-Libre/awesome-facturation-electronique)
+
+
+## 🏗️ Sous-projets
+
+Le présent projet est [un monorepo](https://en.wikipedia.org/wiki/Monorepo).
+Les sous-projets sont dans le répertoire `/packages`:
+
+* [packages/pac-bdd](packages/pac-bdd/README.md) permets d'exécuter les tests BDD.
+* [packages/pac0](packages/pac0/README.md) est l'implémentation de référence.
+
+
+## 🧪 Exécution des tests
+
+Pour exécuter tous les tests et générer des rapports:
+
+```bash
+./script/test
+```
+
+Cette commande exécute pytest dans les deux packages (`pac0` et `pac-bdd`) et génère des rapports dans le dossier `/report`:
+
+| Package | Rapport MD |Rapport HTML | Rapport JUnit XML |
+|---------|--------------|--------------|-------------------|
+| pac0 | [report.md](report/pac0/report.md) | [report.html](report/pac0/report.html) | [report/pac0/report.xml](report/pac0/report.xml) |
+| pac-bdd | [report.md](report/pac-bdd/report.md)| [report.html](report/pac-bdd/report.html) | [report/pac-bdd/report.xml](report/pac-bdd/report.xml) |
+
+Pour exécuter les tests d'un seul package:
+
+```bash
+# Tests pac0
+cd packages/pac0 && uv run pytest
+
+# Tests pac-bdd
+cd packages/pac-bdd && uv run pytest
+```
+
 
 ## 🤝 Contribution
 

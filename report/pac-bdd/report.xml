@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="37" skipped="0" tests="48" time="25.873" timestamp="2026-01-15T12:34:55.244756+01:00" hostname="gpd"><testcase classname="test_fixture" name="test_dummy_fixture" time="0.001" /><testcase classname="test_fixture" name="test_dummy_async_fixture" time="0.001" /><testcase classname="test_openapi" name="test_swagger_flow_service" time="0.000"><failure message="NotImplementedError: swagger compliance non testé">def test_swagger_flow_service():
+        url = '???'
+&gt;       _test_swagger(
+            url,
+            "docs/norme/XP_Z12-013_SWAGGER_Annexes_A_et_B_V1.2/ANNEXE A - PR XP Z12-013 - AFNOR-Flow_Service-1.1.0-swagger.json",
+        )
+
+test_openapi.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+url = '???', swagger = 'docs/norme/XP_Z12-013_SWAGGER_Annexes_A_et_B_V1.2/ANNEXE A - PR XP Z12-013 - AFNOR-Flow_Service-1.1.0-swagger.json'
+
+    def _test_swagger(url: str, swagger: str):
+        """
+            Vérifier si une API respecte une definition Swagger/OpenAPI
+    
+        Cette API doit respecter le versioning indiqué dans l’URL de la route API du Swagger. Dans un objectif de
+        simplification le versioning des routes n’est pas affiché dans le présent document;
+        Dans cette API publiée par le Fournisseur API ce dernier peut :
+        •Avoir une URL spécifique en amont du versioning
+        •Ajouter des propriétés aux objets dans les requêtes.
+        •Ajouter des paramètres aux routes dans les requêtes.
+        •Ajouter des propriétés aux objets dans les réponses.
+        •Ajouter des codes erreurs dans les réponses.
+        """
+&gt;       raise NotImplementedError("swagger compliance non testé")
+E       NotImplementedError: swagger compliance non testé
+
+test_openapi.py:18: NotImplementedError</failure></testcase><testcase classname="test_openapi" name="test_swagger_directory_service" time="0.000"><failure message="NotImplementedError: swagger compliance non testé">def test_swagger_directory_service():
+        url = "???"
+&gt;       _test_swagger(
+            url,
+            "docs/norme/XP_Z12-013_SWAGGER_Annexes_A_et_B_V1.2/ANNEXE B - PR XP Z12-013 - AFNOR-Directory_Service-1.1.0-swagger.json",
+        )
+
+test_openapi.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+url = '???', swagger = 'docs/norme/XP_Z12-013_SWAGGER_Annexes_A_et_B_V1.2/ANNEXE B - PR XP Z12-013 - AFNOR-Directory_Service-1.1.0-swagger.json'
+
+    def _test_swagger(url: str, swagger: str):
+        """
+            Vérifier si une API respecte une definition Swagger/OpenAPI
+    
+        Cette API doit respecter le versioning indiqué dans l’URL de la route API du Swagger. Dans un objectif de
+        simplification le versioning des routes n’est pas affiché dans le présent document;
+        Dans cette API publiée par le Fournisseur API ce dernier peut :
+        •Avoir une URL spécifique en amont du versioning
+        •Ajouter des propriétés aux objets dans les requêtes.
+        •Ajouter des paramètres aux routes dans les requêtes.
+        •Ajouter des propriétés aux objets dans les réponses.
+        •Ajouter des codes erreurs dans les réponses.
+        """
+&gt;       raise NotImplementedError("swagger compliance non testé")
+E       NotImplementedError: swagger compliance non testé
+
+test_openapi.py:18: NotImplementedError</failure></testcase><testcase classname="test_pac0" name="test_pac0_import_services" time="0.224"><failure message="AttributeError(&quot;'FastAPI' object has no attribute 'run'&quot;) [single exception in ExceptionGroup]">+ Exception Group Traceback (most recent call last):
+  |   File "/home/philippe/src/PA_Communautaire/packages/pac-bdd/test_pac0.py", line 21, in test_pac0_import_services
+  |     async with asyncio.TaskGroup() as tg:
+  |                ~~~~~~~~~~~~~~~~~^^
+  |   File "/home/philippe/.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/asyncio/taskgroups.py", line 71, in __aexit__
+  |     return await self._aexit(et, exc)
+  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "/home/philippe/.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/asyncio/taskgroups.py", line 173, in _aexit
+  |     raise BaseExceptionGroup(
+  |     ...&lt;2 lines&gt;...
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "/home/philippe/src/PA_Communautaire/packages/pac-bdd/test_pac0.py", line 22, in test_pac0_import_services
+    |     task1 = tg.create_task(api_gateway_main.app.run())
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^
+    | AttributeError: 'FastAPI' object has no attribute 'run'
+    +------------------------------------</failure></testcase><testcase classname="test_scenario" name="test_simpliste_avec_commentaire" time="0.003" /><testcase classname="test_scenario" name="test_simpliste" time="0.001"><failure message="AssertionError">fixturefunc = &lt;function _ at 0x7587b989c2c0&gt;, request = &lt;FixtureRequest for &lt;Function test_simpliste&gt;&gt;, kwargs = {'nb': '4'}
+
+    def call_fixture_func(
+        fixturefunc: _FixtureFunc[FixtureValue], request: FixtureRequest, kwargs
+    ) -&gt; FixtureValue:
+        if inspect.isgeneratorfunction(fixturefunc):
+            fixturefunc = cast(Callable[..., Generator[FixtureValue]], fixturefunc)
+            generator = fixturefunc(**kwargs)
+            try:
+                fixture_result = next(generator)
+            except StopIteration:
+                raise ValueError(f"{request.fixturename} did not yield a value") from None
+            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)
+            request.addfinalizer(finalizer)
+        else:
+            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)
+&gt;           fixture_result = fixturefunc(**kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/_pytest/fixtures.py:930: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+nb = '4'
+
+    @then(parsers.parse("""j'ai fait {nb} choses"""))
+    def _(nb):
+        # si le nombre donnée `nb` ne corresponds pas au contexte, on échoue
+&gt;       assert ctx['nb'] == int(nb)
+               ^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+src/pac_bdd/demo.py:31: AssertionError</failure></testcase><testcase classname="test_scenario" name="test_trackingid_fourni" time="2.379"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When &quot;je joins le fichier /data/FA-3647.pdf&quot;. Line 13 in scenario &quot;trackingId fourni&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/01-api-gateway/trackingId.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When "je joins le fichier /data/FA-3647.pdf". Line 13 in scenario "trackingId fourni" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/01-api-gateway/trackingId.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_trackingid_absent" time="2.455"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When &quot;je joins le fichier /data/FA-3647.pdf&quot;. Line 23 in scenario &quot;trackingId absent&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/01-api-gateway/trackingId.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When "je joins le fichier /data/FA-3647.pdf". Line 23 in scenario "trackingId absent" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/01-api-gateway/trackingId.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_trackingid_doublon" time="2.332"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When &quot;je joins le fichier /data/FA-3647.pdf&quot;. Line 32 in scenario &quot;trackingId doublon&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/01-api-gateway/trackingId.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When "je joins le fichier /data/FA-3647.pdf". Line 32 in scenario "trackingId doublon" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/01-api-gateway/trackingId.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_démarragearrêt_service_api_gateway" time="1.251" /><testcase classname="test_scenario" name="test_contrôle_sha256" time="2.437"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When &quot;je joins le fichier /data/FA-3647.pdf&quot;. Line 9 in scenario &quot;Contrôle sha256&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/01-api-gateway/sha256.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When "je joins le fichier /data/FA-3647.pdf". Line 9 in scenario "Contrôle sha256" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/01-api-gateway/sha256.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_healthcheck" time="2.499" /><testcase classname="test_scenario" name="test_healthcheck_deep" time="4.166" /><testcase classname="test_scenario" name="test_démarragearrêt_service_controle_formats" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When &quot;le service &quot;03-controle-formats&quot; n'est pas prêt&quot;. Line 6 in scenario &quot;démarrage/arrêt service controle formats&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/03-controle-formats/service.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: When "le service "03-controle-formats" n'est pas prêt". Line 6 in scenario "démarrage/arrêt service controle formats" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/03-controle-formats/service.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_controle_format_facturx" time="0.002"><failure message="NotImplementedError">fixturefunc = &lt;function control_invoice at 0x7587b970c7c0&gt;, request = &lt;FixtureRequest for &lt;Function test_controle_format_facturx&gt;&gt;, kwargs = {}
+
+    def call_fixture_func(
+        fixturefunc: _FixtureFunc[FixtureValue], request: FixtureRequest, kwargs
+    ) -&gt; FixtureValue:
+        if inspect.isgeneratorfunction(fixturefunc):
+            fixturefunc = cast(Callable[..., Generator[FixtureValue]], fixturefunc)
+            generator = fixturefunc(**kwargs)
+            try:
+                fixture_result = next(generator)
+            except StopIteration:
+                raise ValueError(f"{request.fixturename} did not yield a value") from None
+            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)
+            request.addfinalizer(finalizer)
+        else:
+            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)
+&gt;           fixture_result = fixturefunc(**kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/_pytest/fixtures.py:930: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    @when(
+        parsers.parse("je dépose pour contrôle la facture @{invoice}"),
+    )
+    def control_invoice():
+&gt;       raise NotImplementedError()
+E       NotImplementedError
+
+src/pac_bdd/tobeimplemented.py:30: NotImplementedError</failure></testcase><testcase classname="test_scenario" name="test_démarrage_dun_serveur_nats" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un serveur NATS disponible&quot;. Line 19 in scenario &quot;Démarrage d'un serveur NATS&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/service_lifecycle.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un serveur NATS disponible". Line 19 in scenario "Démarrage d'un serveur NATS" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/service_lifecycle.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_connexion_dun_broker_au_serveur_nats" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un serveur NATS disponible&quot;. Line 23 in scenario &quot;Connexion d'un broker au serveur NATS&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/service_lifecycle.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un serveur NATS disponible". Line 23 in scenario "Connexion d'un broker au serveur NATS" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/service_lifecycle.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_démarrage_de_plusieurs_pa" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;2 PA démarrées&quot;. Line 32 in scenario &quot;Démarrage de plusieurs PA&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/service_lifecycle.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "2 PA démarrées". Line 32 in scenario "Démarrage de plusieurs PA" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/service_lifecycle.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_démarrage_dun_service_nats_local" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un service NATS local&quot;. Line 21 in scenario &quot;Démarrage d'un service NATS local&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un service NATS local". Line 21 in scenario "Démarrage d'un service NATS local" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_connexion_à_un_service_nats_distant" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un service NATS local comme référence&quot;. Line 27 in scenario &quot;Connexion à un service NATS distant&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un service NATS local comme référence". Line 27 in scenario "Connexion à un service NATS distant" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_démarrage_dun_service_peppol_mock" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un service Peppol en mode mock&quot;. Line 33 in scenario &quot;Démarrage d'un service Peppol mock&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un service Peppol en mode mock". Line 33 in scenario "Démarrage d'un service Peppol mock" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_configuration_des_réponses_peppol_mock" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un service Peppol en mode mock&quot;. Line 38 in scenario &quot;Configuration des réponses Peppol mock&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un service Peppol en mode mock". Line 38 in scenario "Configuration des réponses Peppol mock" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_recherche_peppol_dune_entreprise_non_enregistrée" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un service Peppol en mode mock&quot;. Line 45 in scenario &quot;Recherche Peppol d'une entreprise non enregistrée&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un service Peppol en mode mock". Line 45 in scenario "Recherche Peppol d'une entreprise non enregistrée" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_démarrage_dun_service_pa" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un service PA&quot;. Line 51 in scenario &quot;Démarrage d'un service PA&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un service PA". Line 51 in scenario "Démarrage d'un service PA" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_création_dun_monde_avec_1_pa" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 1 PA&quot;. Line 61 in scenario &quot;Création d'un monde avec 1 PA&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 1 PA". Line 61 in scenario "Création d'un monde avec 1 PA" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_création_dun_monde_avec_2_pa" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 2 PA&quot;. Line 68 in scenario &quot;Création d'un monde avec 2 PA&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 2 PA". Line 68 in scenario "Création d'un monde avec 2 PA" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_création_dun_monde_avec_4_pa" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 4 PA&quot;. Line 74 in scenario &quot;Création d'un monde avec 4 PA&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 4 PA". Line 74 in scenario "Création d'un monde avec 4 PA" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_les_pa_partagent_le_même_service_nats" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 2 PA&quot;. Line 82 in scenario &quot;Les PA partagent le même service NATS&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 2 PA". Line 82 in scenario "Les PA partagent le même service NATS" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_les_pa_ont_des_ports_api_distincts" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 3 PA&quot;. Line 87 in scenario &quot;Les PA ont des ports API distincts&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 3 PA". Line 87 in scenario "Les PA ont des ports API distincts" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_toutes_les_pa_répondent_au_healthcheck" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 2 PA&quot;. Line 95 in scenario &quot;Toutes les PA répondent au healthcheck&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 2 PA". Line 95 in scenario "Toutes les PA répondent au healthcheck" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_information_du_monde" time="0.000"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 2 PA&quot;. Line 104 in scenario &quot;Information du monde&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 2 PA". Line 104 in scenario "Information du monde" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_arrêt_propre_du_monde" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 2 PA démarré&quot;. Line 115 in scenario &quot;Arrêt propre du monde&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 2 PA démarré". Line 115 in scenario "Arrêt propre du monde" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_monde_avec_nats_externe" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un service NATS local comme référence&quot;. Line 126 in scenario &quot;Monde avec NATS externe&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un service NATS local comme référence". Line 126 in scenario "Monde avec NATS externe" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_monde_avec_peppol_personnalisé" time="0.000"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un service Peppol en mode mock comme référence&quot;. Line 132 in scenario &quot;Monde avec Peppol personnalisé&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un service Peppol en mode mock comme référence". Line 132 in scenario "Monde avec Peppol personnalisé" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_dépôt_de_facture_entre_2_pa_via_peppol" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;un monde avec 2 PA&quot;. Line 141 in scenario &quot;Dépôt de facture entre 2 PA via Peppol&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "un monde avec 2 PA". Line 141 in scenario "Dépôt de facture entre 2 PA via Peppol" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/02-esb-central/world.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_démarragearrêt_service_esb_central" time="0.005" /><testcase classname="test_scenario" name="test_healthcheck_message" time="2.411"><failure message="Exception: message not found !">fixturefunc = &lt;function _ at 0x7587b989cae0&gt;, request = &lt;FixtureRequest for &lt;Function test_healthcheck_message&gt;&gt;
+kwargs = {'canal': 'healthcheck_resp', 'msg': 'toto', 'world1': WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceCon...tream.FastStreamServiceContext object at 0x7587b8cb9390&gt;, client_async=&lt;httpx.AsyncClient object at 0x7587b8c72150&gt;)])}
+
+    def call_fixture_func(
+        fixturefunc: _FixtureFunc[FixtureValue], request: FixtureRequest, kwargs
+    ) -&gt; FixtureValue:
+        if inspect.isgeneratorfunction(fixturefunc):
+            fixturefunc = cast(Callable[..., Generator[FixtureValue]], fixturefunc)
+            generator = fixturefunc(**kwargs)
+            try:
+                fixture_result = next(generator)
+            except StopIteration:
+                raise ValueError(f"{request.fixturename} did not yield a value") from None
+            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)
+            request.addfinalizer(finalizer)
+        else:
+            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)
+&gt;           fixture_result = fixturefunc(**kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/_pytest/fixtures.py:930: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world1 = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x7587b8efb680&gt;, pas=[PacServiceContext(...stream.FastStreamServiceContext object at 0x7587b8cb9390&gt;, client_async=&lt;httpx.AsyncClient object at 0x7587b8c72150&gt;)])
+msg = 'toto', canal = 'healthcheck_resp'
+
+    @then(parsers.parse("""j'obtiens le message '{msg}' sur le canal '{canal}'"""))
+    def _(
+        world1: WorldContext,
+        msg: str,
+        canal: str,
+    ):
+        traces = []
+        with world1.pa1.api_gateway.get_client() as client:
+            response = client.get("/trace")
+            assert response.status_code == 200
+            traces = response.json()
+    
+        for trace in traces:
+            print(trace)
+            if trace["subject"] == canal and trace["body"] == msg:
+                return
+        else:
+&gt;           raise Exception("message not found !")
+E           Exception: message not found !
+
+src/pac_bdd/esb.py:78: Exception</failure></testcase><testcase classname="test_scenario" name="test_canal_pingpong" time="2.524"><failure message="AttributeError: 'PacServiceContext' object has no attribute 'broker'">fixturefunc = &lt;function _ at 0x7587b989c540&gt;, request = &lt;FixtureRequest for &lt;Function test_canal_pingpong&gt;&gt;
+kwargs = {'canal': 'pong', 'world1': WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x7587b8f822...tream.FastStreamServiceContext object at 0x7587b8cbb700&gt;, client_async=&lt;httpx.AsyncClient object at 0x7587b8c72390&gt;)])}
+
+    def call_fixture_func(
+        fixturefunc: _FixtureFunc[FixtureValue], request: FixtureRequest, kwargs
+    ) -&gt; FixtureValue:
+        if inspect.isgeneratorfunction(fixturefunc):
+            fixturefunc = cast(Callable[..., Generator[FixtureValue]], fixturefunc)
+            generator = fixturefunc(**kwargs)
+            try:
+                fixture_result = next(generator)
+            except StopIteration:
+                raise ValueError(f"{request.fixturename} did not yield a value") from None
+            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)
+            request.addfinalizer(finalizer)
+        else:
+            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)
+&gt;           fixture_result = fixturefunc(**kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/_pytest/fixtures.py:930: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world1 = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x7587b8f82250&gt;, pas=[PacServiceContext(...stream.FastStreamServiceContext object at 0x7587b8cbb700&gt;, client_async=&lt;httpx.AsyncClient object at 0x7587b8c72390&gt;)])
+canal = 'pong'
+
+    @when(
+        parsers.parse("j'écoute le canal '{canal}'"),
+    )
+    def _(
+        world1: WorldContext,
+        canal: str,
+    ):
+        global handle_GLOBAL
+    
+        print(f"esb_sub {canal=}...")
+        #raise NotImplementedError()
+&gt;       broker = world1.pa.broker
+                 ^^^^^^^^^^^^^^^^
+E       AttributeError: 'PacServiceContext' object has no attribute 'broker'
+
+src/pac_bdd/esb.py:25: AttributeError</failure></testcase><testcase classname="test_scenario" name="test_pa" time="0.001"><failure message="pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given &quot;la PA #pa1&quot;. Line 7 in scenario &quot;2 PA&quot; in the feature &quot;/home/philippe/src/PA_Communautaire/docs/briques/07-routage/pa_multiple.feature&quot;">E   pytest_bdd.exceptions.StepDefinitionNotFoundError: Step definition is not found: Given "la PA #pa1". Line 7 in scenario "2 PA" in the feature "/home/philippe/src/PA_Communautaire/docs/briques/07-routage/pa_multiple.feature"
+All traceback entries are hidden. Pass `--full-trace` to see hidden and internal frames.</failure></testcase><testcase classname="test_scenario" name="test_peppol_req" time="0.007" /><testcase classname="test_scenario" name="test_md5" time="0.002"><failure message="AssertionError">fixturefunc = &lt;function _ at 0x7587b98ee160&gt;, request = &lt;FixtureRequest for &lt;Function test_md5&gt;&gt;
+kwargs = {'peppol_context': PeppolContext(sml_zone='acc.edelivery.tech.ec.europa.eu', enterprise_id=None, siren=None, siret=None, result='b881aaeff8eeaed7190491ccdeaa42fc'), 'result': '6c2675d749449f2c8af1216fd866bb54'}
+
+    def call_fixture_func(
+        fixturefunc: _FixtureFunc[FixtureValue], request: FixtureRequest, kwargs
+    ) -&gt; FixtureValue:
+        if inspect.isgeneratorfunction(fixturefunc):
+            fixturefunc = cast(Callable[..., Generator[FixtureValue]], fixturefunc)
+            generator = fixturefunc(**kwargs)
+            try:
+                fixture_result = next(generator)
+            except StopIteration:
+                raise ValueError(f"{request.fixturename} did not yield a value") from None
+            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)
+            request.addfinalizer(finalizer)
+        else:
+            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)
+&gt;           fixture_result = fixturefunc(**kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/_pytest/fixtures.py:930: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+peppol_context = PeppolContext(sml_zone='acc.edelivery.tech.ec.europa.eu', enterprise_id=None, siren=None, siret=None, result='b881aaeff8eeaed7190491ccdeaa42fc'), result = '6c2675d749449f2c8af1216fd866bb54'
+
+    @then(parsers.parse('''j'obtiens "{result}"'''))
+    def _(
+        peppol_context: PeppolContext,
+        result: str,
+    ):
+        """étape générique pour tester tout résultat"""
+        if peppol_context.result != result:
+            print(f"result: {peppol_context.result}")
+            print(f"expecting: {result}")
+&gt;       assert peppol_context.result == result
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+src/pac_bdd/peppol.py:129: AssertionError</failure></testcase><testcase classname="test_scenario" name="test_identification_france" time="0.002" /><testcase classname="test_scenario" name="test_empreinte_participant" time="0.002" /><testcase classname="test_scenario" name="test_hôte_sml" time="0.003" /><testcase classname="test_scenario" name="test_rejet_dolibarr" time="0.001"><failure message="NotImplementedError">fixturefunc = &lt;function compliance_rule_set at 0x7587b970cd60&gt;, request = &lt;FixtureRequest for &lt;Function test_rejet_dolibarr&gt;&gt;, kwargs = {}
+
+    def call_fixture_func(
+        fixturefunc: _FixtureFunc[FixtureValue], request: FixtureRequest, kwargs
+    ) -&gt; FixtureValue:
+        if inspect.isgeneratorfunction(fixturefunc):
+            fixturefunc = cast(Callable[..., Generator[FixtureValue]], fixturefunc)
+            generator = fixturefunc(**kwargs)
+            try:
+                fixture_result = next(generator)
+            except StopIteration:
+                raise ValueError(f"{request.fixturename} did not yield a value") from None
+            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)
+            request.addfinalizer(finalizer)
+        else:
+            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)
+&gt;           fixture_result = fixturefunc(**kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/_pytest/fixtures.py:930: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    @when("je définis un contrôle de conformité métier fournisseur")
+    def compliance_rule_set():
+&gt;       raise NotImplementedError()
+E       NotImplementedError
+
+src/pac_bdd/tobeimplemented.py:45: NotImplementedError</failure></testcase><testcase classname="test_scenario" name="test_cycle_basique" time="2.610"><failure message="Exception: message not found !">fixturefunc = &lt;function _ at 0x7587b989cae0&gt;, request = &lt;FixtureRequest for &lt;Function test_cycle_basique&gt;&gt;
+kwargs = {'canal': 'controle-formats-IN', 'msg': 'hello', 'world1': WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServic...tream.FastStreamServiceContext object at 0x7587b8e3a2e0&gt;, client_async=&lt;httpx.AsyncClient object at 0x7587b8c71cd0&gt;)])}
+
+    def call_fixture_func(
+        fixturefunc: _FixtureFunc[FixtureValue], request: FixtureRequest, kwargs
+    ) -&gt; FixtureValue:
+        if inspect.isgeneratorfunction(fixturefunc):
+            fixturefunc = cast(Callable[..., Generator[FixtureValue]], fixturefunc)
+            generator = fixturefunc(**kwargs)
+            try:
+                fixture_result = next(generator)
+            except StopIteration:
+                raise ValueError(f"{request.fixturename} did not yield a value") from None
+            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)
+            request.addfinalizer(finalizer)
+        else:
+            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)
+&gt;           fixture_result = fixturefunc(**kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/_pytest/fixtures.py:930: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+world1 = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x7587b8ca6750&gt;, pas=[PacServiceContext(...stream.FastStreamServiceContext object at 0x7587b8e3a2e0&gt;, client_async=&lt;httpx.AsyncClient object at 0x7587b8c71cd0&gt;)])
+msg = 'hello', canal = 'controle-formats-IN'
+
+    @then(parsers.parse("""j'obtiens le message '{msg}' sur le canal '{canal}'"""))
+    def _(
+        world1: WorldContext,
+        msg: str,
+        canal: str,
+    ):
+        traces = []
+        with world1.pa1.api_gateway.get_client() as client:
+            response = client.get("/trace")
+            assert response.status_code == 200
+            traces = response.json()
+    
+        for trace in traces:
+            print(trace)
+            if trace["subject"] == canal and trace["body"] == msg:
+                return
+        else:
+&gt;           raise Exception("message not found !")
+E           Exception: message not found !
+
+src/pac_bdd/esb.py:78: Exception</failure></testcase><testcase classname="test_scenario" name="test_facture_rejetée" time="0.001"><failure message="NotImplementedError">fixturefunc = &lt;function submit_invoice_simple at 0x7587b970c400&gt;, request = &lt;FixtureRequest for &lt;Function test_facture_rejetée&gt;&gt;, kwargs = {}
+
+    def call_fixture_func(
+        fixturefunc: _FixtureFunc[FixtureValue], request: FixtureRequest, kwargs
+    ) -&gt; FixtureValue:
+        if inspect.isgeneratorfunction(fixturefunc):
+            fixturefunc = cast(Callable[..., Generator[FixtureValue]], fixturefunc)
+            generator = fixturefunc(**kwargs)
+            try:
+                fixture_result = next(generator)
+            except StopIteration:
+                raise ValueError(f"{request.fixturename} did not yield a value") from None
+            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)
+            request.addfinalizer(finalizer)
+        else:
+            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)
+&gt;           fixture_result = fixturefunc(**kwargs)
+                             ^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/_pytest/fixtures.py:930: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    @when("je dépose une facture")
+    def submit_invoice_simple():
+        # POST /
+&gt;       raise NotImplementedError()
+E       NotImplementedError
+
+src/pac_bdd/tobeimplemented.py:17: NotImplementedError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,158 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.13"
+# dependencies = []
+# ///
+#
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""
+Test runner script for PA Communautaire.
+
+Runs pytest in both packages/pac0/ and packages/pac-bdd/ and generates
+JUnit XML and HTML reports in the /report folder.
+
+Usage:
+    uv run test.py
+"""
+
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+
+def parse_junit_xml(xml_path: Path) -> tuple[int, int]:
+    """Parse JUnit XML report to extract test counts.
+
+    Args:
+        xml_path: Path to the JUnit XML report
+
+    Returns:
+        Tuple of (passed_count, failed_count)
+    """
+    if not xml_path.exists():
+        return 0, 0
+
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+
+    # JUnit XML has testsuite element with tests, failures, errors attributes
+    total_tests = 0
+    total_failures = 0
+    total_errors = 0
+
+    for testsuite in root.iter("testsuite"):
+        total_tests += int(testsuite.get("tests", 0))
+        total_failures += int(testsuite.get("failures", 0))
+        total_errors += int(testsuite.get("errors", 0))
+
+    passed = total_tests - total_failures - total_errors
+    failed = total_failures + total_errors
+    return passed, failed
+
+
+def run_tests(package_name: str, package_path: Path, report_dir: Path) -> tuple[int, int, int]:
+    """Run pytest for a package and generate reports.
+
+    Args:
+        package_name: Name of the package (for display)
+        package_path: Path to the package directory
+        report_dir: Path to the report output directory
+
+    Returns:
+        Tuple of (pytest exit code, passed count, failed count)
+    """
+    report_dir.mkdir(parents=True, exist_ok=True)
+
+    xml_report = report_dir / "report.xml"
+    html_report = report_dir / "report.html"
+    md_report = report_dir / "report.md"
+
+    print(f"\n{'=' * 60}")
+    print(f"Running tests for: {package_name}")
+    print(f"Package path: {package_path}")
+    print(f"Reports: {report_dir}")
+    print(f"{'=' * 60}\n")
+
+    cmd = [
+        "uv",
+        "run",
+        "pytest",
+        "-v",
+        f"--junitxml={xml_report}",
+        f"--html={html_report}",
+        "--self-contained-html",
+        "--md-report",
+        "--md-report-flavor=gfm",
+        '--md-report-exclude-outcomes="passed skipped"',
+        "--md-report-verbose=1",
+        "--md-report-zeros=empty",
+        f"--md-report-output={md_report}",
+    ]
+
+    result = subprocess.run(cmd, cwd=package_path)
+
+    # Parse the XML report to get test counts
+    passed, failed = parse_junit_xml(xml_report)
+
+    return result.returncode, passed, failed
+
+
+def main() -> int:
+    """Main entry point."""
+    root_dir = Path(__file__).parent.parent.resolve()
+    report_base = root_dir / "report"
+
+    packages = [
+        ("pac0", root_dir / "packages" / "pac0"),
+        ("pac-bdd", root_dir / "packages" / "pac-bdd"),
+    ]
+
+    # Track exit codes and test counts
+    results = []  # List of (exit_code, passed, failed)
+
+    for pkg_name, pkg_path in packages:
+        if not pkg_path.exists():
+            print(f"Warning: Package path does not exist: {pkg_path}")
+            results.append((1, 0, 0))
+            continue
+
+        report_dir = report_base / pkg_name
+        exit_code, passed, failed = run_tests(pkg_name, pkg_path, report_dir)
+        results.append((exit_code, passed, failed))
+
+    # Summary
+    print(f"\n{'=' * 60}")
+    print("Test Summary")
+    print(f"{'=' * 60}")
+
+    all_passed = True
+    total_ok = 0
+    total_ko = 0
+
+    for (pkg_name, _), (code, passed, failed) in zip(packages, results):
+        status = "PASSED" if code == 0 else f"FAILED (exit code: {code})"
+        print(f"  {pkg_name}: {status} (OK: {passed}, KO: {failed})")
+        if code != 0:
+            all_passed = False
+        total_ok += passed
+        total_ko += failed
+
+    total = total_ok + total_ko
+    print(f"\nTotal: OK: {total_ok}/{total}, KO: {total_ko}/{total}")
+    print(f"\nReports generated in: {report_base}")
+    print("  - pac0/report.html")
+    print("  - pac0/report.xml")
+    print("  - pac0/report.md")
+    print("  - pac-bdd/report.html")
+    print("  - pac-bdd/report.xml")
+    print("  - pac-bdd/report.md")
+
+    # Return non-zero if any tests failed
+    return 0 if all_passed else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

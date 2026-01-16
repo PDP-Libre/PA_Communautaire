@@ -1,0 +1,3613 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "description" : "\nThe __Directory Service__ API allows you to:\n- View and search for companies (SIREN)\n- View and search for establishments (SIRET)\n- Create, modify, view, and search for routing codes\n- Create, modify, view, search, and delete directory entries\n\n**Authentication :** Each endpoint must be called with an access token (Bearer). This token is retrieved by a call to a token URL.\n\n---\n## Siren\n\nCompany by Siren number\n\n- `POST /siren/search` => Search for companies (legal unit) meeting all the criteria passed as parameters, potentially multiple results returned.\n  - Permissions : _according to your permissions_\n  - **Request Body** : `{ <search criteria in JSON format> }`\n    - filters : the list of filters to apply to the search.\n    - sorting : sorting criteria by field with ascending or descending value.\n    - fields : the list of fields expected in the response.\n    - limit : the maximum number of results to return.\n    - ignore : a number designating the offset to apply to the returned results. Useful for pagination.\n  - Réponse : a paginated list of siren resources (legal unit).\n\n- `GET /siren/code-insee:{siren}` => Consult a siren (legal unit) identified by a siren passed as a parameter.\n  - Permissions : _according to your permissions_\n  - Mandatory parameter: a SIREN number.\n  - Response : the details of a siren resource (legal unit).\n\n- `GET /siren/id-instance:{id-instance}` => Consult a siren (legal unit) identified by an idInstance.\n  - Permissions : _according to your permissions_\n  - Required parameter : id-instance.\n  - Response : the details of a siren resource (legal unit).\n\n### Scenarios\n\nExample scenarios :\n\n1. `POST /siren/search` => Search for companies (legal units) meeting all the criteria passed as parameters, potentially returning multiple results.\n\n2. Get company details using one of the methods :\n    - `GET /siren/code-insee:{siren}`\n\n    - `GET /siren/id-instance:{id-instance}`\n\n---\n## Siret\n\nFacility by SIRET number\n\n- `POST /siret/search` =>  Search for establishments meeting all of the criteria passed as parameters, potentially returning multiple results.\n  - Permissions : _according to your permissions_\n  - **Request body** : `{ <search criteria in JSON format> }`\n    - filters: the list of filters to apply to the search.\n    - sorting: sort criteria by field with ascending or descending value.\n    - fields: the list of fields expected in the response.\n    - include: the list of relationships (siren) to include in the returned results.\n    - limit: the maximum number of results to return.\n    - ignore: A number designating the offset to apply to the returned results. Useful for pagination.\n  - Response : a paginated list of SIRET (facility) resources.\n\n- `GET /siret/code-insee:{siret}` => Get a SIRET (facility) identified by SIRET.\n  - Permissions : _according to your permissions_\n  - Mandatory parameter: a SIRET number.\n  - Response : the details of a SIRET resource (facility).\n  \n- `GET /siret/id-instance:{id-instance}` => Get a SIRET (establishment) identified by idInstance.\n  - Permissions : _according to your permissions_\n  - Mandatory parameter: an instance-id number.\n  - Response : the details of a SIRET resource (facility).\n\n### Scenarios\n\nExample scenarios :\n\n1. `POST /siret/search` => Search for establishments meeting all of the criteria passed as parameters, potentially returning multiple results.\n\n2. Get the facility details using one of the methods :\n    - `GET /siret/code-insee:{siret}`\n\n    - `GET /siret/id-instance:{id-instance}`\n\n---\n## Routing Code\n\n- `POST /routing-code/search` => Search for routing codes that meet all the criteria passed as parameters, potentially returning multiple results.\n  - Permissions : _according to your permissions_\n  - **Request body** : `{ <search criteria in JSON format> }`\n    - filters: the list of filters to apply to the search.\n    - sorting: sort criteria by field with ascending or descending value.\n    - fields: the list of fields expected in the response.\n    - limit: the maximum number of results to return\n    - ignore: A number designating the offset to apply to the returned results. Useful for pagination.\n  - Response : a paginated list of routing code resources.\n\n- `GET /routing-code/siret:{siret}/code:{routing-identifier}` => Consult the routing code identified by the SIRET and a routing identifier.\n  - Permissions : _according to your permissions_\n  - Mandatory parameter: the SIRET number of the routing code for which you wish to obtain details. \n  - Mandatory parameter: the routing identifier for which you want to obtain details.\n  - Response : the detail of a routing code.\n\n- `POST /routing-code` => Create a routing code in the directory.\n  - Permissions : _according to your permissions_\n  - **Request body** : `{ <Données du code routage au format JSON> }`\n\n- `GET /routing-code/id-instance:{id-instance}` => Get a routing code identified by an idInstance.\n  - Permissions : _according to your permissions_\n  - Mandatory parameter: id-instance.\n  - Response : the details of a routing code as defined on a given observation date or as defined on the current date if the observation date is not specified.\n\n- `PATCH /routing-code/id-instance:{id-instance}` => Partially update the routing code using the idInstance passed as a parameter.\n  - Permissions : _according to your permissions_\n  - **Request body** : `{ <Non-exhaustive data of the routing code in JSON format> }`\n  - Response : an HTTP code indicating the success or failure of the processing.\n\n- `PUT /routing-code/id-instance:{id-instance}` => Update a private routing code identified by the idInstance passed as a parameter.\n  - Permissions : _according to your permissions_\n  - **Request body** : `{ <Exhaustive data of the routing code in JSON format> }`\n  - Response : an HTTP code indicating the success or failure of the processing. \n\n### Scenarios\n\nExample scenarios :\n\n1. `POST /routing-code/search` => Search for routing codes that meet all the criteria passed as parameters, potentially returning multiple results.\n\n2. Get the details of a routing code by SIRET and a routing identifier or by the instance-id with one of the methods:\n\n    - `GET /routing-code/siret:{siret}/code:{routing-identifier}`\n\n    - `GET /routing-code/id-instance:{id-instance}`\n\n3. `POST /code-routage` => reate a new routing code.\n\n4. Completely or partially update the routing code by the idInstance with one of the methods :\n\n    - `PATCH /routing-code/id-instance:{id-instance}`\n\n    - `PUT /routing-code/id-instance:{id-instance}`\n\n---\n## Directory Line\n\nThe directory line is the location at which the recipient wishes to receive his invoices (SIREN or SIREN/SIRET or SIREN/SIRET/routingIdentifier). The routing identifier can be a service code, a GLN 0224 code, an ODETTE 0088 code or an internal management code used by the recipient.\n\n- `POST /directory-line/search` => Search for directory lines that meet all the criteria passed as parameters, potentially returning multiple results.\n  - Permissions : _according to your permissions_\n  - **Request body** : `{ <search criteria in JSON format> }`\n    - filters: the list of filters to apply to the search.\n    - sorting: sort criteria by field with ascending or descending value.\n    - fields: the list of fields expected in the response.\n    - limit: the maximum number of results to return\n    - ignore: A number designating the offset to apply to the returned results. Useful for pagination.\n  - Response : a paginated list of directory-line resources\n\n- `GET /directory-line/code:{addressing-identifier}` => Get a line in the directory identified by an address identifier.\n  - Permissions : _according to your permissions_\n  -Mandatory parameter: un identifiant addressage.\n  - Response : the detail of a directory line.\n\n- `POST /directory-line` => Create a line in the directory.\n  - Permissions : _according to your permissions_\n  - **Request body** : `{ <Directory line data in JSON format> }`\n  - Response : an HTTP code indicating the success or failure of the processing.\n\n- `DELETE /directory-line/id-instance:{id-instance}` => Delete a line from the directory identified by the idInstance passed as a parameter.\n  - Permissions : _according to your permissions_\n  - Mandatory parameter: an id-instance number.\n  - Response : an HTTP code indicating the success or failure of the processing.\n\n- `GET /directory-line/id-instance:{id-instance}` => Get a line of the directory identified by the idInstance.\n  - Permissions : _according to your permissions_\n  - Mandatory parameter: an id-instance number.\n  - Response : the detail of a directory line.\n\n- `PATCH /directory-line/id-instance:{id-instance}` => Partially update a line from the directory identified by the idInstance passed as a parameter.\n  - Permissions : _according to your permissions_\n  - Mandatory parameter: an id-instance number.\n  - **Request body** : `{ <Non-exhaustive data of the directory line in JSON format> }`\n  - Response : an HTTP code indicating the success or failure of the processing.\n\n### Scenarios\n\nExample scenarios :\n\n  1. `POST /directory-line/search` => Search for directory lines that meet all the criteria passed as parameters, potentially returning multiple results.\n\n  2. `GET /directory-line/code:{addressing-identifier}` => Get a directory line.\n\n  3. `POST /ligne-annuaire` => Create a new directory line.\n\n  4. `GET /directory-line/id-instance:{id-instance}` => Get a directory line.\n\n  5. `PATCH /directory-line/id-instance:{id-instance}` => Partially update a directory line.\n\n  7. `DELETE /directory-line/id-instance:{id-instance}` => Delete the directory line.\n\n---\n## Supervisor\n\n- `GET /healthcheck` => Check if the Directory API is online.\n  - Permissions : _according to your permissions_\n",
+    "title" : "AFNOR Directory Service",
+    "version" : "1.1.0",
+    "x-audience" : "external-public",
+    "x-api-id" : "3230c8a1-f7df-4fa1-8506-24ce034670ce",
+    "contact" : {
+      "name" : "AFNOR",
+      "email" : "sg5@afnor.org"
+    }
+  },
+  "externalDocs" : {
+    "description" : "Spécifications externes du PPF v3.0",
+    "url" : "https://www.impots.gouv.fr"
+  },
+  "servers" : [ {
+    "url" : "https://{sub-domain}.{domain}/directory-service",
+    "variables" : {
+      "sub-domain" : {
+        "default" : "api.directory",
+        "description" : "Sub domain related to the directory API if any"
+      },
+      "domain" : {
+        "default" : "company.com",
+        "description" : "Domain name"
+      }
+    },
+    "description" : "Prod public URLs"
+  } ],
+  "security" : [ {
+    "bearerAuth" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Company by Siren number",
+    "name" : "Siren"
+  }, {
+    "description" : "Facility by Siret number",
+    "name" : "Siret"
+  }, {
+    "description" : "routing Code",
+    "name" : "Routing Code"
+  }, {
+    "description" : "Directory Line",
+    "name" : "Directory Line"
+  }, {
+    "description" : "Reserved for the supervisor",
+    "name" : "Supervisor"
+  } ],
+  "paths" : {
+    "/v1/siren/search" : {
+      "post" : {
+        "description" : "Multi-criteria company search.",
+        "operationId" : "searchCompanyBySiren",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/searchSiren"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/sirenSearchPost200Response"
+                }
+              }
+            },
+            "description" : "Returns one or more companies.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "206" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/sirenSearchPost200Response"
+                }
+              }
+            },
+            "description" : "Request processed without error, but the volume of information returned has been reduced.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "SIREN search (or legal unit)",
+        "tags" : [ "Siren" ]
+      }
+    },
+    "/v1/siren/code-insee:{siren}" : {
+      "get" : {
+        "description" : "Returns the details of a company (legal unit) identified by the SIREN number passed as a parameter.",
+        "operationId" : "getCompanyBySiren",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the SIREN number of a legal unit.",
+          "example" : "702042755",
+          "in" : "path",
+          "name" : "siren",
+          "required" : true,
+          "schema" : {
+            "maxLength" : 9,
+            "pattern" : "^([0-9]{9})$",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Fields of the SIREN resource",
+          "example" : [ "siren", "businessName", "entityType", "administrativeStatus", "idInstance" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/sirenField"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/legalUnitPayloadHistory"
+                }
+              }
+            },
+            "description" : "Returns a company.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Consult a siren (legal unit) by SIREN number",
+        "tags" : [ "Siren" ]
+      }
+    },
+    "/v1/siren/id-instance:{id-instance}" : {
+      "get" : {
+        "description" : "Returns the details of a company (legal unit) identified by the id-instance passed as a parameter.",
+        "operationId" : "getCompanyById",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the instance id of a legal unit.",
+          "example" : "13123155",
+          "in" : "path",
+          "name" : "id-instance",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Fields of the SIREN resource",
+          "example" : [ "siren", "businessName", "entityType", "administrativeStatus", "idInstance" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/sirenField"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/legalUnitPayloadHistory"
+                }
+              }
+            },
+            "description" : "Returns a routing code.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Gets a siren (legal unit) by instance ID",
+        "tags" : [ "Siren" ]
+      }
+    },
+    "/v1/siret/search" : {
+      "post" : {
+        "description" : "Multi-criteria search for facilities.",
+        "operationId" : "searchFacilityBySiret",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/searchSiret"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/siretSearchPost200Response"
+                }
+              }
+            },
+            "description" : "Returns an establishment as defined on a given observation date or as defined on the current date if the observation date is not specified.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "206" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/siretSearchPost200Response"
+                }
+              }
+            },
+            "description" : "Request processed without error, but the volume of information returned has been reduced.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Search for a SIRET (facility)",
+        "tags" : [ "Siret" ]
+      }
+    },
+    "/v1/siret/code-insee:{siret}" : {
+      "get" : {
+        "description" : "Returns the details of a facility associated to a SIRET.",
+        "operationId" : "getFacilityBySiret",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the SIRET number of a facility.",
+          "example" : "70204275500240",
+          "in" : "path",
+          "name" : "siret",
+          "required" : true,
+          "schema" : {
+            "maxLength" : 14,
+            "pattern" : "^([0-9]{14})$",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Fields of a SIRET resource.",
+          "example" : [ "siret", "siren", "name", "facilityType", "address", "diffusible", "administrativeStatus", "pmStatus", "pmOnly", "managesPaymentStatus", "managesLegalCommitment", "managesLegalCommitmentOrService", "serviceCodeStatus", "idInstance" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/siretField"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Relations to include in the response.",
+          "example" : [ "siren" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "include",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "enum" : [ "siren" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/facilityPayloadHistory"
+                }
+              }
+            },
+            "description" : "Returns a facility.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Gets a siret (facility) by SIRET number",
+        "tags" : [ "Siret" ]
+      }
+    },
+    "/v1/siret/id-instance:{id-instance}" : {
+      "get" : {
+        "description" : "Returns the details of a facility according to an instance-id.",
+        "operationId" : "getFacilityById",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the instance id of a legal unit.",
+          "example" : "13123155",
+          "in" : "path",
+          "name" : "id-instance",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Fields of a SIRET resource.",
+          "example" : [ "siret", "siren", "name", "facilityType", "address", "diffusible", "administrativeStatus", "pmStatus", "pmOnly", "managesPaymentStatus", "managesLegalCommitment", "managesLegalCommitmentOrService", "serviceCodeStatus", "idInstance" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/siretField"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/facilityPayloadHistory"
+                }
+              }
+            },
+            "description" : "Returns a routing code.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Gets a siret (facility) by id-instance",
+        "tags" : [ "Siret" ]
+      }
+    },
+    "/v1/routing-code" : {
+      "post" : {
+        "description" : "Creating a routing code.",
+        "operationId" : "createRoutingCode",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/createRoutingCodeBody"
+              }
+            }
+          },
+          "description" : "Routing code creation data.",
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/routingCodePost201Response"
+                }
+              }
+            },
+            "description" : "A new resource has been created.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Create a routing code",
+        "tags" : [ "Routing Code" ]
+      }
+    },
+    "/v1/routing-code/search" : {
+      "post" : {
+        "description" : "Search for routing codes that meet all the criteria passed as parameters and return the routing codes in the desired format.",
+        "operationId" : "searchRoutingCode",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/routingCodeSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/routingCodeSearchPost200Response"
+                }
+              }
+            },
+            "description" : "Returns the routing code(s) matching the search criteria.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "206" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/routingCodeSearchPost200Response"
+                }
+              }
+            },
+            "description" : "Request processed without error, but the volume of information returned has been reduced.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Search for a routing code",
+        "tags" : [ "Routing Code" ]
+      }
+    },
+    "/v1/routing-code/siret:{siret}/code:{routing-identifier}" : {
+      "get" : {
+        "description" : "Retrieve the Routing Code data corresponding to the identifier passed in parameters.",
+        "operationId" : "getRoutingCodeBySiretAndId",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the SIRET number of a facility.",
+          "example" : "70204275500240",
+          "in" : "path",
+          "name" : "siret",
+          "required" : true,
+          "schema" : {
+            "maxLength" : 14,
+            "pattern" : "^([0-9]{14})$",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the routing identifier of a routing code.",
+          "example" : "702042755",
+          "in" : "path",
+          "name" : "routing-identifier",
+          "required" : true,
+          "schema" : {
+            "maxLength" : 100,
+            "type" : "string"
+          }
+        }, {
+          "description" : "Relations to include in the response.",
+          "example" : [ "siren", "siret" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "include",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "enum" : [ "siren", "siret" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Fields of the Routing Code resource",
+          "example" : [ "siret", "routingIdentifierType", "routingCodeName", "routingIdentifier", "managesLegalCommitment", "administrativeStatus", "address", "idInstance" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/routingCodeField"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/routingCodePayloadHistoryLegalUnitFacility"
+                }
+              }
+            },
+            "description" : "Returns a routing code.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Get a routing code by SIRET and routing identifier",
+        "tags" : [ "Routing Code" ]
+      }
+    },
+    "/v1/routing-code/id-instance:{id-instance}" : {
+      "get" : {
+        "description" : "Retrieve the Routing Code data corresponding to the Instance ID.",
+        "operationId" : "getRoutingCodeById",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the instance id of a legal unit.",
+          "example" : "13123155",
+          "in" : "path",
+          "name" : "id-instance",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Fields of the Routing Code resource",
+          "example" : [ "siret", "routingIdentifierType", "routingCodeName", "routingIdentifier", "managesLegalCommitment", "administrativeStatus", "address", "idInstance" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/routingCodeField"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/routingCodePayloadHistoryLegalUnitFacility"
+                }
+              }
+            },
+            "description" : "Returns a routing code.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Get a routing code by instance-id.",
+        "tags" : [ "Routing Code" ]
+      },
+      "patch" : {
+        "description" : "Partially update a private routing code.",
+        "operationId" : "updateRoutingCode",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the instance id of a legal unit.",
+          "example" : "13123155",
+          "in" : "path",
+          "name" : "id-instance",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/updatePatchRoutingCodeBody"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/routingCodePost201Response"
+                }
+              }
+            },
+            "description" : "Request successful.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "206" : {
+            "description" : "Request processed without error, but the volume of information returned has been reduced."
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Partially update a private routing code.",
+        "tags" : [ "Routing Code" ]
+      },
+      "put" : {
+        "description" : "Completely update a private routing code.",
+        "operationId" : "replaceRoutingCode",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the instance id of a legal unit.",
+          "example" : "13123155",
+          "in" : "path",
+          "name" : "id-instance",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/updatePutRoutingCodeBody"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/routingCodePost201Response"
+                }
+              }
+            },
+            "description" : "Request successful.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "206" : {
+            "description" : "Request processed without error, but the volume of information returned has been reduced."
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Completely update a private routing code.",
+        "tags" : [ "Routing Code" ]
+      }
+    },
+    "/v1/directory-line/search" : {
+      "post" : {
+        "description" : "Search for directory lines that meet all the criteria passed as parameters and return the results in the desired format.",
+        "operationId" : "searchDirectoryLine",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/searchDirectoryLine"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/directoryLineSearchPost200Response"
+                }
+              }
+            },
+            "description" : "returns the directory line(s) matching the search criteria.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "206" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/directoryLineSearchPost200Response"
+                }
+              }
+            },
+            "description" : "Request processed without error, but the volume of information returned has been reduced.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Search for a directory line",
+        "tags" : [ "Directory Line" ]
+      }
+    },
+    "/v1/directory-line" : {
+      "post" : {
+        "description" : "Creation of a new directory line for a SIREN, a SIRET or a ROUTING CODE.",
+        "operationId" : "createDirectoryLine",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/createDirectoryLineBody"
+              }
+            }
+          },
+          "description" : "Directory line creation data.",
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/directoryLinePost201Response"
+                }
+              }
+            },
+            "description" : "A new resource has been created.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Creating a directory line",
+        "tags" : [ "Directory Line" ]
+      }
+    },
+    "/v1/directory-line/code:{addressing-identifier}" : {
+      "get" : {
+        "description" : "Retrieve the data from the directory line corresponding to the identifier passed in parameters.",
+        "operationId" : "getDirectoryLineById",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the address identifier of the directory line.",
+          "example" : "dcsc456sdcsdcs556",
+          "in" : "path",
+          "name" : "addressing-identifier",
+          "required" : true,
+          "schema" : {
+            "maxLength" : 125,
+            "type" : "string"
+          }
+        }, {
+          "description" : "Relations to include in the response.",
+          "example" : [ "siren", "siret", "codeRoutage", "platform" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "include",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "enum" : [ "siren", "siret", "routingCode", "platform" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Fields of the Directory Line resource.",
+          "example" : [ "addressingIdentifier", "siren", "siret", "routingIdentifier", "addressingSuffix", "idInstance" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/directoryLineField"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/directoryLinePayloadHistoryLegalUnitFacilityRoutingCode"
+                }
+              }
+            },
+            "description" : "Retourns a directory line.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Get a directory line.",
+        "tags" : [ "Directory Line" ]
+      }
+    },
+    "/v1/directory-line/id-instance:{id-instance}" : {
+      "delete" : {
+        "description" : "Delete a directory line.",
+        "operationId" : "deleteDirectoryLine",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the instance id of a legal unit.",
+          "example" : "13123155",
+          "in" : "path",
+          "name" : "id-instance",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "OK. The resource has been deleted."
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Delete a directory line",
+        "tags" : [ "Directory Line" ]
+      },
+      "get" : {
+        "description" : "Retrieve the data from the directory line corresponding to the identifier passed in parameters.",
+        "operationId" : "getDirectoryLineByCompanyId",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the instance id of a legal unit.",
+          "example" : "13123155",
+          "in" : "path",
+          "name" : "id-instance",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Fields of the Directory Line resource.",
+          "example" : [ "addressingIdentifier", "siren", "siret", "routingIdentifier", "addressingSuffix", "idInstance" ],
+          "explode" : false,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/directoryLineField"
+            },
+            "type" : "array"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/directoryLinePayloadHistoryLegalUnitFacilityRoutingCode"
+                }
+              }
+            },
+            "description" : "Returns a directory line.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Get a directory line.",
+        "tags" : [ "Directory Line" ]
+      },
+      "patch" : {
+        "description" : "Partially updates a directory line.",
+        "operationId" : "updateDirectoryLine",
+        "parameters" : [ {
+          "description" : "Specifies the language in which the resource is requested.",
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "default" : "fr",
+            "enum" : [ "fr", "en" ],
+            "type" : "string"
+          }
+        }, {
+          "description" : "Corresponds to the instance id of a legal unit.",
+          "example" : "13123155",
+          "in" : "path",
+          "name" : "id-instance",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/updatePatchDirectoryLineBody"
+              }
+            }
+          },
+          "description" : "Directory line data to update.",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/directoryLinePost201Response"
+                }
+              }
+            },
+            "description" : "Request successful.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request. The request is invalid or cannot be completed."
+          },
+          "401" : {
+            "description" : "Unauthorized. The request requires user authentication."
+          },
+          "403" : {
+            "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+          },
+          "404" : {
+            "description" : "Not found. There is no resource at the given URI."
+          },
+          "408" : {
+            "description" : "Request timeout exceeded."
+          },
+          "422" : {
+            "description" : "Data validation error."
+          },
+          "429" : {
+            "description" : "The client has issued too many calls within a given time frame."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "501" : {
+            "description" : "Not implemented."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          },
+          "default" : {
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                }
+              }
+            },
+            "description" : "An error has occurred - See the status code and json response for more information.",
+            "headers" : {
+              "Content-Language" : {
+                "$ref" : "#/components/headers/contentLanguage"
+              }
+            }
+          }
+        },
+        "summary" : "Partially updates a directory line..",
+        "tags" : [ "Directory Line" ]
+      }
+    },
+    "/v1/healthcheck" : {
+      "get" : {
+        "description" : "Checks if the API connection is operational.",
+        "operationId" : "getHealth",
+        "responses" : {
+          "200" : {
+            "description" : "The connection to the API is functional."
+          },
+          "500" : {
+            "description" : "Internal Server Error."
+          },
+          "503" : {
+            "description" : "Service unavailable."
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ "health.read" ]
+        } ],
+        "summary" : "Checks if the API connection is operational.",
+        "tags" : [ "Supervisor" ]
+      }
+    }
+  },
+  "components" : {
+    "headers" : {
+      "contentLanguage" : {
+        "description" : "Indicates the language in which the resource is returned.",
+        "required" : false,
+        "schema" : {
+          "default" : "fr",
+          "enum" : [ "fr", "en" ],
+          "type" : "string"
+        }
+      }
+    },
+    "parameters" : {
+      "acceptLanguage" : {
+        "description" : "Indicates the language in which the resource is requested.",
+        "in" : "header",
+        "name" : "Accept-Language",
+        "required" : false,
+        "schema" : {
+          "default" : "fr",
+          "enum" : [ "fr", "en" ],
+          "type" : "string"
+        }
+      },
+      "sirenPath" : {
+        "description" : "Corresponds to the SIREN number of a legal unit.",
+        "example" : "702042755",
+        "in" : "path",
+        "name" : "siren",
+        "required" : true,
+        "schema" : {
+          "maxLength" : 9,
+          "pattern" : "^([0-9]{9})$",
+          "type" : "string"
+        }
+      },
+      "observationDate" : {
+        "description" : "When the observation date is indicated, the information in effect on that date is returned. When it is not indicated, the information in effect on the current date is returned.",
+        "example" : "2024-01-01",
+        "in" : "query",
+        "name" : "observationDate",
+        "required" : false,
+        "schema" : {
+          "format" : "date",
+          "type" : "string"
+        }
+      },
+      "sirenFields" : {
+        "description" : "Fields of the SIREN resource.",
+        "example" : [ "siren", "businessName", "entityType", "administrativeStatus", "idInstance" ],
+        "explode" : false,
+        "in" : "query",
+        "name" : "fields",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "$ref" : "#/components/schemas/sirenField"
+          },
+          "type" : "array"
+        }
+      },
+      "idInstancePath" : {
+        "description" : "Identifier instance of a legal unit.",
+        "example" : "13123155",
+        "in" : "path",
+        "name" : "id-instance",
+        "required" : true,
+        "schema" : {
+          "type" : "integer"
+        }
+      },
+      "siretPath" : {
+        "description" : "SIRET number of a facility.",
+        "example" : "70204275500240",
+        "in" : "path",
+        "name" : "siret",
+        "required" : true,
+        "schema" : {
+          "maxLength" : 14,
+          "pattern" : "^([0-9]{14})$",
+          "type" : "string"
+        }
+      },
+      "siretFields" : {
+        "description" : "Fields of the SIRET resource.",
+        "example" : [ "siret", "siren", "businessName", "facilityType", "address", "diffusible", "administrativeStatus", "pmStatus", "pmOnly", "managesPaymentStatus", "managesLegalCommitment", "managesLegalCommitmentOrService", "serviceCodeStatus", "idInstance" ],
+        "explode" : false,
+        "in" : "query",
+        "name" : "fields",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "$ref" : "#/components/schemas/siretField"
+          },
+          "type" : "array"
+        }
+      },
+      "includeSiren" : {
+        "description" : "Relations to include in the response.",
+        "example" : [ "siren" ],
+        "explode" : false,
+        "in" : "query",
+        "name" : "include",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "enum" : [ "siren" ],
+            "type" : "string"
+          },
+          "type" : "array"
+        }
+      },
+      "routingIdentifier" : {
+        "description" : "Routing Identifier of a routing code",
+        "example" : "702042755",
+        "in" : "path",
+        "name" : "routing-identifier",
+        "required" : true,
+        "schema" : {
+          "maxLength" : 100,
+          "type" : "string"
+        }
+      },
+      "includeSirenSiret" : {
+        "description" : "Relations to include in the response.",
+        "example" : [ "siren", "siret" ],
+        "explode" : false,
+        "in" : "query",
+        "name" : "include",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "enum" : [ "siren", "siret" ],
+            "type" : "string"
+          },
+          "type" : "array"
+        }
+      },
+      "routingCodeFields" : {
+        "description" : "Fields of the Routing Code resource",
+        "example" : [ "siret", "routingIdentifierType", "routingCodeName", "routingIdentifier", "managesLegalCommitment", "administrativeStatus", "address", "idInstance" ],
+        "explode" : false,
+        "in" : "query",
+        "name" : "fields",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "$ref" : "#/components/schemas/routingCodeField"
+          },
+          "type" : "array"
+        }
+      },
+      "addressingIdentifier" : {
+        "description" : "Addressing identifier of the directory line",
+        "example" : "dcsc456sdcsdcs556",
+        "in" : "path",
+        "name" : "addressing-identifier",
+        "required" : true,
+        "schema" : {
+          "maxLength" : 125,
+          "type" : "string"
+        }
+      },
+      "includeSirenSiretRoutingCodePlatform" : {
+        "description" : "Relations to include in the response..",
+        "example" : [ "siren", "siret", "routingCode", "platform" ],
+        "explode" : false,
+        "in" : "query",
+        "name" : "include",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "enum" : [ "siren", "siret", "routingCode", "platform" ],
+            "type" : "string"
+          },
+          "type" : "array"
+        }
+      },
+      "directoryLineFields" : {
+        "description" : "Fields of the Directory Line resource",
+        "example" : [ "addressingIdentifier", "siren", "siret", "routingIdentifier", "addressingSuffix", "dateTo", "effectiveEndDate", "dateFrom", "idInstance" ],
+        "explode" : false,
+        "in" : "query",
+        "name" : "fields",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "$ref" : "#/components/schemas/directoryLineField"
+          },
+          "type" : "array"
+        }
+      }
+    },
+    "responses" : {
+      "badRequest" : {
+        "description" : "Bad request. The request is invalid or cannot be completed."
+      },
+      "unauthorized" : {
+        "description" : "Unauthorized. The request requires user authentication."
+      },
+      "forbidden" : {
+        "description" : "Forbidden. The server understood the request but denied access or access is not authorized."
+      },
+      "notFound" : {
+        "description" : "Not found. There is no resource at the given URI."
+      },
+      "requestTimeout" : {
+        "description" : "Request timeout exceeded."
+      },
+      "unprocessableEntity" : {
+        "description" : "Data validation error."
+      },
+      "tooManyRequests" : {
+        "description" : "The client made too many calls within a given time frame."
+      },
+      "internalServerError" : {
+        "description" : "Internal server error."
+      },
+      "notImplemented" : {
+        "description" : "Not implemented."
+      },
+      "serviceUnavailable" : {
+        "description" : "Service unavailable."
+      }
+    },
+    "schemas" : {
+      "searchSiren" : {
+        "properties" : {
+          "filters" : {
+            "$ref" : "#/components/schemas/searchSirenFilters"
+          },
+          "sorting" : {
+            "description" : "Sorting criteria on a field and an order (ascending or descending).",
+            "example" : [ {
+              "field" : "siren",
+              "order" : "ascending"
+            }, {
+              "field" : "administrativeStatus",
+              "order" : "descending"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/searchSirenSortingInner"
+            },
+            "type" : "array"
+          },
+          "fields" : {
+            "description" : "Allows you to filter the desired fields in the response.",
+            "example" : [ "siren", "businessName", "entityType", "administrativeStatus", "idInstance" ],
+            "items" : {
+              "$ref" : "#/components/schemas/sirenField"
+            },
+            "type" : "array"
+          },
+          "limit" : {
+            "$ref" : "#/components/schemas/limit"
+          },
+          "ignore" : {
+            "$ref" : "#/components/schemas/ignore"
+          }
+        },
+        "title" : "searchSiren",
+        "type" : "object"
+      },
+      "totalNumberOfResults" : {
+        "description" : "The total number of results",
+        "example" : 1500,
+        "format" : "int32",
+        "type" : "integer"
+      },
+      "legalUnitPayloadHistory" : {
+        "properties" : {
+          "siren" : {
+            "$ref" : "#/components/schemas/siren"
+          },
+          "businessName" : {
+            "$ref" : "#/components/schemas/recipientBusinessName"
+          },
+          "entityType" : {
+            "$ref" : "#/components/schemas/entityType"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/legalUnitAdministrativeStatus"
+          }
+        },
+        "title" : "legalUnitPayloadHistory",
+        "type" : "object"
+      },
+      "error" : {
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "example" : "/path/reference-url",
+            "format" : "uri-reference",
+            "type" : "string"
+          },
+          "message" : {
+            "example" : "Error message",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code generated by the origin server for this occurrence of the problem.\n",
+            "exclusiveMaximum" : true,
+            "format" : "int32",
+            "maximum" : 600,
+            "minimum" : 100,
+            "type" : "integer"
+          },
+          "details" : {
+            "example" : "Error detailed description",
+            "type" : "string"
+          },
+          "instance" : {
+            "example" : "/chemin/url-de-reference#instance-du-contexte",
+            "format" : "uri-reference",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "sirenField" : {
+        "description" : "Fields of the Siren resource.",
+        "enum" : [ "siren", "businessName", "entityType", "administrativeStatus", "idInstance" ],
+        "example" : "siren",
+        "type" : "string"
+      },
+      "searchSiret" : {
+        "properties" : {
+          "filters" : {
+            "$ref" : "#/components/schemas/searchSiretFilters"
+          },
+          "sorting" : {
+            "description" : "Sorting criteria on a field and an order (ascending or descending).",
+            "example" : [ {
+              "champ" : "siret",
+              "order" : "ascending"
+            }, {
+              "champ" : "name",
+              "order" : "descending"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/searchSiretSortingInner"
+            },
+            "type" : "array"
+          },
+          "fields" : {
+            "description" : "Allows you to filter the desired fields in the response.",
+            "example" : [ "siret", "siren", "name", "facilityType", "address", "diffusible", "administrativeStatus", "pmStatus", "pmOnly", "managesPaymentStatus", "managesLegalCommitment", "managesLegalCommitmentOrService", "serviceCodeStatus", "idInstance" ],
+            "items" : {
+              "$ref" : "#/components/schemas/siretField"
+            },
+            "type" : "array"
+          },
+          "include" : {
+            "example" : [ "siren" ],
+            "items" : {
+              "enum" : [ "siren" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "limit" : {
+            "$ref" : "#/components/schemas/limit"
+          },
+          "ignore" : {
+            "$ref" : "#/components/schemas/ignore"
+          }
+        },
+        "title" : "searchSiret",
+        "type" : "object"
+      },
+      "facilityPayloadHistory" : {
+        "properties" : {
+          "siret" : {
+            "$ref" : "#/components/schemas/siret"
+          },
+          "siren" : {
+            "$ref" : "#/components/schemas/siren"
+          },
+          "name" : {
+            "$ref" : "#/components/schemas/name"
+          },
+          "facilityType" : {
+            "$ref" : "#/components/schemas/facilityType"
+          },
+          "diffusible" : {
+            "$ref" : "#/components/schemas/diffusionStatus"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/facilityAdministrativeStatus"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/addressRead"
+          },
+          "b2gAdditionalData" : {
+            "$ref" : "#/components/schemas/facilityPayloadHistoryUleB2gAdditionalData"
+          },
+          "legalUnit" : {
+            "$ref" : "#/components/schemas/legalUnitPayloadIncludedNoSiren"
+          }
+        },
+        "title" : "facilityPayloadHistory",
+        "type" : "object"
+      },
+      "siretField" : {
+        "description" : "Fields of the Siret resource.",
+        "enum" : [ "siret", "siren", "name", "facilityType", "address", "diffusible", "administrativeStatus", "pmStatus", "pmOnly", "managesPaymentStatus", "managesLegalCommitment", "managesLegalCommitmentOrService", "serviceCodeStatus", "idInstance" ],
+        "example" : "siret",
+        "type" : "string"
+      },
+      "createRoutingCodeBody" : {
+        "additionalProperties" : false,
+        "properties" : {
+          "facilityNature" : {
+            "$ref" : "#/components/schemas/facilityNature"
+          },
+          "routingIdentifier" : {
+            "$ref" : "#/components/schemas/routingIdentifier"
+          },
+          "siret" : {
+            "$ref" : "#/components/schemas/siret"
+          },
+          "routingIdentifierType" : {
+            "$ref" : "#/components/schemas/routingIdentifierType"
+          },
+          "routingCodeName" : {
+            "$ref" : "#/components/schemas/recipientRoutingCodeName"
+          },
+          "managesLegalCommitmentCode" : {
+            "$ref" : "#/components/schemas/managesLegalCommitmentCode"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/routingCodeAdministrativeStatus"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/addressEdit"
+          }
+        },
+        "required" : [ "administrativeStatus", "routingIdentifier", "routingCodeName", "facilityNature", "siret" ],
+        "title" : "CreateRoutingCodeBody",
+        "type" : "object"
+      },
+      "idInstance" : {
+        "description" : "Platform instance identifier in the directory",
+        "example" : 120,
+        "type" : "integer"
+      },
+      "siret" : {
+        "description" : "SIRET Number",
+        "example" : "70204275500240",
+        "maxLength" : 14,
+        "pattern" : "^([0-9]{14})$",
+        "type" : "string"
+      },
+      "routingIdentifier" : {
+        "description" : "Routing identifier od a routing code.",
+        "example" : "dcsc456sdcsdcs556",
+        "maxLength" : 100,
+        "pattern" : "^(?!\\s+$)[\\-_/a-zA-Z0-9]{1,100}$",
+        "type" : "string"
+      },
+      "routingCodeSearch" : {
+        "properties" : {
+          "filters" : {
+            "$ref" : "#/components/schemas/routingCodeSearchFilters"
+          },
+          "sorting" : {
+            "description" : "Sorting criteria on a field and an order (ascending or descending).",
+            "example" : [ {
+              "field" : "siret",
+              "order" : "ascendant"
+            }, {
+              "field" : "routingIdentifier",
+              "order" : "ascendant"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/routingCodeSearchSortingInner"
+            },
+            "type" : "array"
+          },
+          "fields" : {
+            "description" : "Allows you to filter the desired fields in the response.",
+            "example" : [ "siret", "routingIdentifierType", "routingCodeName", "routingIdentifier", "managesLegalCommitmentCode", "administrativeStatus", "address", "idInstance" ],
+            "items" : {
+              "$ref" : "#/components/schemas/routingCodeField"
+            },
+            "type" : "array"
+          },
+          "include" : {
+            "example" : [ "siren", "siret" ],
+            "items" : {
+              "enum" : [ "siren", "siret" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "limit" : {
+            "$ref" : "#/components/schemas/limit"
+          },
+          "ignore" : {
+            "$ref" : "#/components/schemas/ignore"
+          }
+        },
+        "title" : "routingCodeSearch",
+        "type" : "object"
+      },
+      "routingCodePayloadHistoryLegalUnitFacility" : {
+        "properties" : {
+          "routingIdentifier" : {
+            "$ref" : "#/components/schemas/routingIdentifier"
+          },
+          "siret" : {
+            "$ref" : "#/components/schemas/siret"
+          },
+          "routingIdentifierType" : {
+            "$ref" : "#/components/schemas/routingIdentifierType"
+          },
+          "routingCodeName" : {
+            "$ref" : "#/components/schemas/recipientRoutingCodeName"
+          },
+          "managesLegalCommitmentCode" : {
+            "$ref" : "#/components/schemas/managesLegalCommitmentCode"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/routingCodeAdministrativeStatus"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/addressRead"
+          },
+          "legalUnit" : {
+            "$ref" : "#/components/schemas/legalUnitPayloadIncluded"
+          },
+          "facility" : {
+            "$ref" : "#/components/schemas/facilityPayloadIncluded"
+          }
+        },
+        "title" : "routingCodePayloadHistoryLegalUnitFacility",
+        "type" : "object"
+      },
+      "routingCodeField" : {
+        "description" : "Fields of the routing code resource.",
+        "enum" : [ "siret", "routingIdentifierType", "routingCodeName", "routingIdentifier", "managesLegalCommitmentCode", "administrativeStatus", "address", "idInstance" ],
+        "example" : "siret",
+        "type" : "string"
+      },
+      "updatePutRoutingCodeBody" : {
+        "properties" : {
+          "routingIdentifierType" : {
+            "$ref" : "#/components/schemas/routingIdentifierType"
+          },
+          "routingCodeName" : {
+            "$ref" : "#/components/schemas/recipientRoutingCodeName"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/routingCodeAdministrativeStatus"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/addressPut"
+          }
+        },
+        "required" : [ "administrativeStatus", "routingCodeName", "routingIdentifierType" ],
+        "title" : "updatePutRoutingCodeBody",
+        "type" : "object"
+      },
+      "updatePatchRoutingCodeBody" : {
+        "properties" : {
+          "routingIdentifierType" : {
+            "$ref" : "#/components/schemas/routingIdentifierType"
+          },
+          "routingCodeName" : {
+            "$ref" : "#/components/schemas/recipientRoutingCodeName"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/routingCodeAdministrativeStatus"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/addressPatch"
+          }
+        },
+        "title" : "updatePatchRoutingCodeBody",
+        "type" : "object"
+      },
+      "searchDirectoryLine" : {
+        "properties" : {
+          "filters" : {
+            "$ref" : "#/components/schemas/searchDirectoryLineFilters"
+          },
+          "sorting" : {
+            "description" : "Sorting criteria on a field and an order (ascending or descending).",
+            "example" : [ {
+              "champ" : "addressingIdentifier",
+              "order" : "ascending"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/searchDirectoryLineSortingInner"
+            },
+            "type" : "array"
+          },
+          "fields" : {
+            "description" : "Allows you to filter the desired fields in the response.",
+            "example" : [ "addressingIdentifier", "siren", "siret", "addressingSuffix", "idInstance" ],
+            "items" : {
+              "$ref" : "#/components/schemas/directoryLineField"
+            },
+            "type" : "array"
+          },
+          "limit" : {
+            "$ref" : "#/components/schemas/limit"
+          },
+          "ignore" : {
+            "$ref" : "#/components/schemas/ignore"
+          }
+        },
+        "title" : "searchDirectoryLine",
+        "type" : "object"
+      },
+      "directoryLinePayloadHistoryLegalUnitFacilityRoutingCode" : {
+        "properties" : {
+          "addressingIdentifier" : {
+            "$ref" : "#/components/schemas/addressingIdentifier"
+          },
+          "siren" : {
+            "$ref" : "#/components/schemas/siren"
+          },
+          "siret" : {
+            "$ref" : "#/components/schemas/siret"
+          },
+          "addressingSuffix" : {
+            "$ref" : "#/components/schemas/addressingSuffix"
+          },
+          "routingCode" : {
+            "$ref" : "#/components/schemas/directoryLinePayloadHistoryLegalUnitFacilityRoutingCodeRoutingCode"
+          },
+          "platform" : {
+            "$ref" : "#/components/schemas/directoryLinePayloadHistoryLegalUnitFacilityRoutingCodePlatform"
+          },
+          "legalUnit" : {
+            "$ref" : "#/components/schemas/legalUnitPayloadIncludedNoSiren"
+          },
+          "facility" : {
+            "$ref" : "#/components/schemas/facilityPayloadIncluded"
+          }
+        },
+        "title" : "directoryLinePayloadHistoryLegalUnitFacilityRoutingCode",
+        "type" : "object"
+      },
+      "createDirectoryLineBody" : {
+        "properties" : {
+          "period" : {
+            "$ref" : "#/components/schemas/createDirectoryLineBodyPeriod"
+          },
+          "addressingInformation" : {
+            "$ref" : "#/components/schemas/createDirectoryLineBodyAddressingInformation"
+          }
+        },
+        "title" : "CreateDirectoryLineBody",
+        "type" : "object"
+      },
+      "addressingIdentifier" : {
+        "description" : "Addressing identifier of the directory line.",
+        "example" : "dcsc456sdcsdcs556",
+        "maxLength" : 125,
+        "type" : "string"
+      },
+      "dateFrom" : {
+        "description" : "Effective start date of the directory line..",
+        "example" : "2023-01-01",
+        "format" : "date",
+        "type" : "string"
+      },
+      "directoryLineField" : {
+        "description" : "Fields of the directory line resource",
+        "enum" : [ "addressingIdentifier", "siren", "siret", "routingIdentifier", "addressingSuffix", "idInstance" ],
+        "example" : "siren",
+        "type" : "string"
+      },
+      "updatePatchDirectoryLineBody" : {
+        "properties" : {
+          "dateTo" : {
+            "$ref" : "#/components/schemas/dateTo"
+          }
+        },
+        "title" : "updatePatchDirectoryLineBody",
+        "type" : "object"
+      },
+      "containsOperator" : {
+        "description" : "\\\"contains\\\" comparison operator",
+        "enum" : [ "contains" ],
+        "example" : "contains",
+        "title" : "opContient",
+        "type" : "string"
+      },
+      "sirenSearch" : {
+        "description" : "SIREN number to search for.",
+        "example" : "702042755",
+        "maxLength" : 9,
+        "pattern" : "[0-9]*",
+        "type" : "string"
+      },
+      "recipientBusinessName" : {
+        "description" : "Business name",
+        "example" : "Boulangerie Pascale",
+        "maxLength" : 150,
+        "type" : "string"
+      },
+      "strictOperator" : {
+        "description" : "\\\"strict\\\" comparison operator",
+        "enum" : [ "strict" ],
+        "example" : "strict",
+        "title" : "opStrict",
+        "type" : "string"
+      },
+      "entityType" : {
+        "description" : "Business structure type",
+        "enum" : [ "Public", "PrivateVatRegistered" ],
+        "example" : "Public",
+        "maxLength" : 20,
+        "type" : "string"
+      },
+      "legalUnitAdministrativeStatus" : {
+        "description" : "Refers to the administrative status of the legal unit [A - Active , C - Closed]",
+        "enum" : [ "A", "C" ],
+        "example" : "A",
+        "maxLength" : 1,
+        "type" : "string"
+      },
+      "sortingOrder" : {
+        "description" : "Sorting order (ascending or descending)",
+        "enum" : [ "ascending", "descending" ],
+        "example" : "ascending",
+        "title" : "sortingOrder",
+        "type" : "string"
+      },
+      "limit" : {
+        "description" : "Maximum number of results",
+        "example" : 50,
+        "format" : "int32",
+        "type" : "integer"
+      },
+      "ignore" : {
+        "description" : "Number of results to skip",
+        "example" : 20,
+        "format" : "int32",
+        "type" : "integer"
+      },
+      "siren" : {
+        "description" : "SIREN number",
+        "example" : "702042755",
+        "maxLength" : 9,
+        "pattern" : "^([0-9]{9})$",
+        "type" : "string"
+      },
+      "siretSearch" : {
+        "description" : "SIRET number to search for.",
+        "example" : "70204275500000",
+        "maxLength" : 14,
+        "pattern" : "[0-9]*",
+        "type" : "string"
+      },
+      "facilityType" : {
+        "description" : "Indicates whether the facility is listed as the main facility or not [P - Main facility , S - Secondary facility]",
+        "enum" : [ "P", "S" ],
+        "example" : "P",
+        "maxLength" : 1,
+        "type" : "string"
+      },
+      "name" : {
+        "description" : "business name",
+        "example" : "Boulangerie Pascale",
+        "maxLength" : 100,
+        "type" : "string"
+      },
+      "addressLines" : {
+        "description" : "address lines of the recipient structure having defined the directory line(s).",
+        "example" : "16 BIS RUE HENRI BARBUSSE - CEDEX 1 - Bâtiment le Callipso",
+        "maxLength" : 600,
+        "type" : "string"
+      },
+      "postalCode" : {
+        "description" : "Service postal code",
+        "example" : "38100",
+        "maxLength" : 5,
+        "pattern" : "[0-9]*",
+        "type" : "string"
+      },
+      "countrySubdivision" : {
+        "description" : "Subdivision of the country",
+        "example" : "Bretagne",
+        "maxLength" : 255,
+        "type" : "string"
+      },
+      "locality" : {
+        "description" : "Municipality of the recipient structure having defined the directory line(s).",
+        "example" : "Grenoble",
+        "maxLength" : 100,
+        "type" : "string"
+      },
+      "facilityAdministrativeStatus" : {
+        "description" : "Facility administrative status [A - Active , C - Closed]",
+        "enum" : [ "A", "C" ],
+        "example" : "A",
+        "maxLength" : 1,
+        "type" : "string"
+      },
+      "diffusionStatus" : {
+        "description" : "Diffusion status of the structure [O - Yes, P - Partially diffusible]",
+        "enum" : [ "O", "P" ],
+        "example" : "O",
+        "maxLength" : 1,
+        "type" : "string"
+      },
+      "addressRead" : {
+        "description" : "Wrapper for postal addresses",
+        "properties" : {
+          "addressLine1" : {
+            "$ref" : "#/components/schemas/recipientAddressLine1"
+          },
+          "addressLine2" : {
+            "$ref" : "#/components/schemas/recipientAddressLine2"
+          },
+          "addressLine3" : {
+            "$ref" : "#/components/schemas/recipientAddressLine3"
+          },
+          "postalCode" : {
+            "$ref" : "#/components/schemas/postalCode"
+          },
+          "countrySubdivision" : {
+            "$ref" : "#/components/schemas/countrySubdivision"
+          },
+          "locality" : {
+            "$ref" : "#/components/schemas/locality"
+          },
+          "countryCode" : {
+            "$ref" : "#/components/schemas/recipientCountryCode"
+          },
+          "countryName" : {
+            "$ref" : "#/components/schemas/recipientCountryName"
+          }
+        },
+        "type" : "object"
+      },
+      "addressEdit" : {
+        "description" : "Wrapper for postal addresses without country name.",
+        "properties" : {
+          "ligneAdresse1" : {
+            "$ref" : "#/components/schemas/recipientAddressLine1"
+          },
+          "ligneAdresse2" : {
+            "$ref" : "#/components/schemas/recipientAddressLine2"
+          },
+          "ligneAdresse3" : {
+            "$ref" : "#/components/schemas/recipientAddressLine3"
+          },
+          "postalCode" : {
+            "$ref" : "#/components/schemas/postalCode"
+          },
+          "countrySubdivision" : {
+            "$ref" : "#/components/schemas/countrySubdivision"
+          },
+          "locality" : {
+            "$ref" : "#/components/schemas/locality"
+          },
+          "codePays" : {
+            "$ref" : "#/components/schemas/recipientCountryCode"
+          }
+        },
+        "type" : "object"
+      },
+      "addressPut" : {
+        "description" : "Wrapper for postal addresses",
+        "properties" : {
+          "ligneAdresse1" : {
+            "$ref" : "#/components/schemas/recipientAddressLine1Pattern"
+          },
+          "ligneAdresse2" : {
+            "$ref" : "#/components/schemas/recipientAddressLine2"
+          },
+          "ligneAdresse3" : {
+            "$ref" : "#/components/schemas/recipientAddressLine3"
+          },
+          "postalCode" : {
+            "$ref" : "#/components/schemas/postalCode"
+          },
+          "countrySubdivision" : {
+            "$ref" : "#/components/schemas/countrySubdivision"
+          },
+          "locality" : {
+            "$ref" : "#/components/schemas/localityPattern"
+          },
+          "codePays" : {
+            "$ref" : "#/components/schemas/recipientCountryCodePattern"
+          }
+        },
+        "required" : [ "codePays", "postalCode", "ligneAdresse1", "ligneAdresse2", "ligneAdresse3", "locality", "countrySubdivision" ],
+        "type" : "object"
+      },
+      "addressPatch" : {
+        "description" : "Wrapper for postal addresses",
+        "properties" : {
+          "ligneAdresse1" : {
+            "$ref" : "#/components/schemas/recipientAddressLine1Pattern"
+          },
+          "ligneAdresse2" : {
+            "$ref" : "#/components/schemas/recipientAddressLine2"
+          },
+          "ligneAdresse3" : {
+            "$ref" : "#/components/schemas/recipientAddressLine3"
+          },
+          "postalCode" : {
+            "$ref" : "#/components/schemas/postalCode"
+          },
+          "countrySubdivision" : {
+            "$ref" : "#/components/schemas/countrySubdivision"
+          },
+          "locality" : {
+            "$ref" : "#/components/schemas/localityPattern"
+          },
+          "codePays" : {
+            "$ref" : "#/components/schemas/recipientCountryCodePattern"
+          }
+        },
+        "type" : "object"
+      },
+      "pmStatus" : {
+        "description" : "Indicates whether the public structure acts as project manager for work invoices in addition to receiving simple invoices. This attribute is only returned if the directory line is defined for a public structure at the SIREN / SIRET or SIREN / SIRET / Routing code level.",
+        "example" : true,
+        "type" : "boolean"
+      },
+      "pmOnly" : {
+        "description" : "Indicates whether the public structure only acts as a project manager; if so, it can only receive invoices for work. This attribute is only returned if the directory line is defined for a public structure at the SIREN/SIRET or SIREN/SIRET/Routing code level.",
+        "example" : true,
+        "type" : "boolean"
+      },
+      "managesPaymentStatus" : {
+        "description" : "Indicates whether the public structure manages the payment status of invoices. This attribute is only returned if the directory line is defined for a public structure at the SIREN / SIRET or SIREN / SIRET / Routing code level.",
+        "example" : true,
+        "type" : "boolean"
+      },
+      "managesLegalCommitmentCode" : {
+        "description" : "Indicates whether the public structure requires a legal commitment number. This attribute is only returned if the directory line is defined for a public structure at the SIREN / SIRET or SIREN / SIRET / Routing code level.",
+        "example" : true,
+        "type" : "boolean"
+      },
+      "managesLegalCommitmentOrServiceCode" : {
+        "description" : "Indicates whether the public structure requires a service code or a commitment code in its exchanges. This attribute is only returned if the directory line is defined for a public structure at the SIREN / SIRET or SIREN / SIRET / Routing code level.",
+        "example" : true,
+        "type" : "boolean"
+      },
+      "serviceCodeStatus" : {
+        "description" : "Indicates whether the structure requires a service code. This attribute is only returned if the directory line is defined for a public structure at the SIREN / SIRET or SIREN / SIRET / Routing code level.",
+        "example" : true,
+        "type" : "boolean"
+      },
+      "legalUnitPayloadIncludedNoSiren" : {
+        "properties" : {
+          "businessName" : {
+            "$ref" : "#/components/schemas/recipientBusinessName"
+          },
+          "entityType" : {
+            "$ref" : "#/components/schemas/entityType"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/legalUnitAdministrativeStatus"
+          }
+        },
+        "title" : "legalUnitPayloadIncluded",
+        "type" : "object"
+      },
+      "facilityNature" : {
+        "description" : "facility nature (public ou private).",
+        "enum" : [ "Private", "Public" ],
+        "example" : "Privée",
+        "maxLength" : 5,
+        "type" : "string"
+      },
+      "routingIdentifierType" : {
+        "description" : "Routing Identifier type.",
+        "example" : "0224",
+        "maxLength" : 4,
+        "pattern" : "^(?!\\s*$).+",
+        "type" : "string"
+      },
+      "recipientRoutingCodeName" : {
+        "description" : "Name of the directory line routing code. This attribute is only returned if the directory line is defined at the SIREN / SIRET / Routing code mesh.",
+        "example" : "Libellé Code routage",
+        "maxLength" : 100,
+        "pattern" : "^(?!\\s*$).+",
+        "type" : "string"
+      },
+      "routingCodeAdministrativeStatus" : {
+        "description" : "Administrative status of the routing code [A - Active , C - Closed]",
+        "enum" : [ "A", "C" ],
+        "example" : "A",
+        "maxLength" : 1,
+        "type" : "string"
+      },
+      "routingIdentifierSearch" : {
+        "description" : "Routing identifier for a routing code.",
+        "example" : "dcsc456sdcsdcs556",
+        "maxLength" : 100,
+        "pattern" : "^$|^(?!\\s*$).+",
+        "type" : "string"
+      },
+      "routingCodeNameSearch" : {
+        "description" : "Name of the routing code.",
+        "example" : "Libellé Code routage",
+        "maxLength" : 100,
+        "pattern" : "^$|^(?!\\s*$).+",
+        "type" : "string"
+      },
+      "legalUnitPayloadIncluded" : {
+        "properties" : {
+          "siren" : {
+            "$ref" : "#/components/schemas/siren"
+          },
+          "businessName" : {
+            "$ref" : "#/components/schemas/recipientBusinessName"
+          },
+          "entityType" : {
+            "$ref" : "#/components/schemas/entityType"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/legalUnitAdministrativeStatus"
+          }
+        },
+        "title" : "legalUnitPayloadIncluded",
+        "type" : "object"
+      },
+      "facilityPayloadIncluded" : {
+        "properties" : {
+          "siret" : {
+            "$ref" : "#/components/schemas/siret"
+          },
+          "siren" : {
+            "$ref" : "#/components/schemas/siren"
+          },
+          "name" : {
+            "$ref" : "#/components/schemas/name"
+          },
+          "facilityType" : {
+            "$ref" : "#/components/schemas/facilityType"
+          },
+          "diffusible" : {
+            "$ref" : "#/components/schemas/diffusionStatus"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/facilityAdministrativeStatus"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/addressRead"
+          },
+          "b2gAdditionalData" : {
+            "$ref" : "#/components/schemas/facilityPayloadHistoryUleB2gAdditionalData"
+          }
+        },
+        "title" : "facilityPayloadIncluded",
+        "type" : "object"
+      },
+      "addressingSuffix" : {
+        "description" : "suffix of the directory line which defines an address mesh not attached to a facility",
+        "example" : "dcsc456sdcsdcs556",
+        "maxLength" : 100,
+        "type" : "string"
+      },
+      "dateTo" : {
+        "description" : "Effective end date of the directory line.",
+        "example" : "2023-01-31",
+        "format" : "date",
+        "type" : "string"
+      },
+      "recipientPlatformType" : {
+        "description" : "The type of platform for document reception",
+        "enum" : [ "WK", "DFH" ],
+        "example" : "WK",
+        "maxLength" : 3,
+        "type" : "string"
+      },
+      "platformStatus" : {
+        "description" : "Status of the platform",
+        "enum" : [ "Enabled", "Disabled" ],
+        "example" : "Enabled",
+        "maxLength" : 7,
+        "type" : "string"
+      },
+      "recipientAddressLine1" : {
+        "description" : "Corresponds to the address of the recipient structure having defined the directory line(s).",
+        "example" : "16 BIS RUE HENRI BARBUSSE",
+        "maxLength" : 255,
+        "type" : "string"
+      },
+      "recipientAddressLine2" : {
+        "description" : "Corresponds to the address of the recipient structure having defined the directory line(s).",
+        "example" : "CEDEX 1",
+        "maxLength" : 255,
+        "type" : "string"
+      },
+      "recipientAddressLine3" : {
+        "description" : "Corresponds to the address of the recipient structure having defined the directory line(s).",
+        "example" : "Bâtiment le Callipso",
+        "maxLength" : 255,
+        "type" : "string"
+      },
+      "recipientCountryCode" : {
+        "description" : "Corresponds to the country of the recipient structure.",
+        "example" : "FR",
+        "maxLength" : 2,
+        "type" : "string"
+      },
+      "recipientCountryName" : {
+        "description" : "Corresponds to the country of the recipient structure having defined the directory line(s).",
+        "example" : "France",
+        "maxLength" : 100,
+        "type" : "string"
+      },
+      "recipientAddressLine1Pattern" : {
+        "description" : "Corresponds to the address of the recipient structure having defined the directory line(s).",
+        "example" : "16 BIS RUE HENRI BARBUSSE",
+        "maxLength" : 200,
+        "pattern" : "^(?!\\s*$).+",
+        "type" : "string"
+      },
+      "localityPattern" : {
+        "description" : "Corresponds to the municipality of the recipient structure having defined the directory line(s).",
+        "example" : "Grenoble",
+        "maxLength" : 100,
+        "pattern" : "^(?!\\s*$).+",
+        "type" : "string"
+      },
+      "recipientCountryCodePattern" : {
+        "description" : "Corresponds to the country code of the recipient structure",
+        "example" : "FR",
+        "maxLength" : 2,
+        "pattern" : "^(?!\\s*$).+",
+        "type" : "string"
+      },
+      "sirenSearchPost200Response" : {
+        "properties" : {
+          "search" : {
+            "$ref" : "#/components/schemas/searchSiren"
+          },
+          "totalNumberOfResults" : {
+            "$ref" : "#/components/schemas/totalNumberOfResults"
+          },
+          "results" : {
+            "items" : {
+              "$ref" : "#/components/schemas/legalUnitPayloadHistory"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "siretSearchPost200Response" : {
+        "properties" : {
+          "search" : {
+            "$ref" : "#/components/schemas/searchSiret"
+          },
+          "totalNumberOfResults" : {
+            "$ref" : "#/components/schemas/totalNumberOfResults"
+          },
+          "results" : {
+            "items" : {
+              "$ref" : "#/components/schemas/facilityPayloadHistory"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "routingCodePost201Response" : {
+        "properties" : {
+          "idInstance" : {
+            "$ref" : "#/components/schemas/idInstance"
+          },
+          "siret" : {
+            "$ref" : "#/components/schemas/siret"
+          },
+          "routingIdentifier" : {
+            "$ref" : "#/components/schemas/routingIdentifier"
+          }
+        },
+        "type" : "object"
+      },
+      "routingCodeSearchPost200Response" : {
+        "properties" : {
+          "search" : {
+            "$ref" : "#/components/schemas/routingCodeSearch"
+          },
+          "totalNumberOfResults" : {
+            "$ref" : "#/components/schemas/totalNumberOfResults"
+          },
+          "results" : {
+            "items" : {
+              "$ref" : "#/components/schemas/routingCodePayloadHistoryLegalUnitFacility"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "directoryLineSearchPost200Response" : {
+        "properties" : {
+          "search" : {
+            "$ref" : "#/components/schemas/searchDirectoryLine"
+          },
+          "totalNumberOfResults" : {
+            "$ref" : "#/components/schemas/totalNumberOfResults"
+          },
+          "results" : {
+            "items" : {
+              "$ref" : "#/components/schemas/directoryLinePayloadHistoryLegalUnitFacilityRoutingCode"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "directoryLinePost201Response" : {
+        "properties" : {
+          "idInstance" : {
+            "$ref" : "#/components/schemas/idInstance"
+          },
+          "addressingIdentifier" : {
+            "$ref" : "#/components/schemas/addressingIdentifier"
+          },
+          "dateFrom" : {
+            "$ref" : "#/components/schemas/dateFrom"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSirenFiltersSiren" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/sirenSearch"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSirenFiltersBusinessName" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/recipientBusinessName"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSirenFiltersEntityType" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/strictOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/entityType"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSirenFiltersAdministrativeStatus" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/strictOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/legalUnitAdministrativeStatus"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSirenFilters" : {
+        "properties" : {
+          "siren" : {
+            "$ref" : "#/components/schemas/searchSirenFiltersSiren"
+          },
+          "businessName" : {
+            "$ref" : "#/components/schemas/searchSirenFiltersBusinessName"
+          },
+          "entityType" : {
+            "$ref" : "#/components/schemas/searchSirenFiltersEntityType"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/searchSirenFiltersAdministrativeStatus"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSirenSortingInner" : {
+        "description" : "A sorting criteria composed of a field and an order (ascending or descending).",
+        "example" : {
+          "champ" : "siren",
+          "order" : "ascendant"
+        },
+        "properties" : {
+          "field" : {
+            "$ref" : "#/components/schemas/sirenField"
+          },
+          "sortingOrder" : {
+            "$ref" : "#/components/schemas/sortingOrder"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFiltersSiret" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/siretSearch"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFiltersFacilityType" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/facilityType"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFiltersName" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/name"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFiltersAddressLines" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/addressLines"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFiltersPostalCode" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/postalCode"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFiltersCountrySubdivision" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/countrySubdivision"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFiltersLocality" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/locality"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFiltersAdministrativeStatus" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/strictOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/facilityAdministrativeStatus"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretFilters" : {
+        "properties" : {
+          "siret" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersSiret"
+          },
+          "siren" : {
+            "$ref" : "#/components/schemas/searchSirenFiltersSiren"
+          },
+          "facilityType" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersFacilityType"
+          },
+          "name" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersName"
+          },
+          "addressLines" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersAddressLines"
+          },
+          "postalCode" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersPostalCode"
+          },
+          "countrySubdivision" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersCountrySubdivision"
+          },
+          "locality" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersLocality"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersAdministrativeStatus"
+          }
+        },
+        "type" : "object"
+      },
+      "searchSiretSortingInner" : {
+        "description" : "A sorting criteria composed of a field and an order (ascending or descending).",
+        "example" : {
+          "field" : "siret",
+          "sortingOrder" : "ascending"
+        },
+        "properties" : {
+          "field" : {
+            "$ref" : "#/components/schemas/siretField"
+          },
+          "sortingOrder" : {
+            "$ref" : "#/components/schemas/sortingOrder"
+          }
+        },
+        "type" : "object"
+      },
+      "facilityPayloadHistoryUleB2gAdditionalData" : {
+        "properties" : {
+          "pm" : {
+            "$ref" : "#/components/schemas/pmStatus"
+          },
+          "pmOnly" : {
+            "$ref" : "#/components/schemas/pmOnly"
+          },
+          "managesPaymentStatus" : {
+            "$ref" : "#/components/schemas/managesPaymentStatus"
+          },
+          "managesLegalCommitmentCode" : {
+            "$ref" : "#/components/schemas/managesLegalCommitmentCode"
+          },
+          "managesLegalCommitmentOrServiceCode" : {
+            "$ref" : "#/components/schemas/managesLegalCommitmentOrServiceCode"
+          },
+          "serviceCodeStatus" : {
+            "$ref" : "#/components/schemas/serviceCodeStatus"
+          }
+        },
+        "type" : "object"
+      },
+      "routingCodeSearchFiltersRoutingIdentifier" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/routingIdentifierSearch"
+          }
+        },
+        "type" : "object"
+      },
+      "routingCodeSearchFiltersRoutingCodeName" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/routingCodeNameSearch"
+          }
+        },
+        "type" : "object"
+      },
+      "routingCodeSearchFiltersAdministrativeStatus" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/strictOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/routingCodeAdministrativeStatus"
+          }
+        },
+        "type" : "object"
+      },
+      "routingCodeSearchFilters" : {
+        "properties" : {
+          "routingIdentifier" : {
+            "$ref" : "#/components/schemas/routingCodeSearchFiltersRoutingIdentifier"
+          },
+          "siret" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersSiret"
+          },
+          "routingCodeName" : {
+            "$ref" : "#/components/schemas/routingCodeSearchFiltersRoutingCodeName"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/routingCodeSearchFiltersAdministrativeStatus"
+          },
+          "addressLines" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersAddressLines"
+          },
+          "postalCode" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersPostalCode"
+          },
+          "locality" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersLocality"
+          }
+        },
+        "type" : "object"
+      },
+      "routingCodeSearchSortingInner" : {
+        "description" : "A sort criteria composed of a field and an order (ascending or descending).",
+        "example" : {
+          "field" : "siret",
+          "order" : "descendant"
+        },
+        "properties" : {
+          "field" : {
+            "$ref" : "#/components/schemas/routingCodeField"
+          },
+          "order" : {
+            "$ref" : "#/components/schemas/sortingOrder"
+          }
+        },
+        "type" : "object"
+      },
+      "searchDirectoryLineFiltersAddressingIdentifier" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/containsOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/addressingIdentifier"
+          }
+        },
+        "type" : "object"
+      },
+      "searchDirectoryLineFiltersAddressingSuffix" : {
+        "properties" : {
+          "op" : {
+            "$ref" : "#/components/schemas/strictOperator"
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/addressingSuffix"
+          }
+        },
+        "type" : "object"
+      },
+      "searchDirectoryLineFilters" : {
+        "properties" : {
+          "addressingIdentifier" : {
+            "$ref" : "#/components/schemas/searchDirectoryLineFiltersAddressingIdentifier"
+          },
+          "siren" : {
+            "$ref" : "#/components/schemas/searchSirenFiltersSiren"
+          },
+          "siret" : {
+            "$ref" : "#/components/schemas/searchSiretFiltersSiret"
+          },
+          "routingIdentifier" : {
+            "$ref" : "#/components/schemas/routingCodeSearchFiltersRoutingIdentifier"
+          },
+          "addressingSuffix" : {
+            "$ref" : "#/components/schemas/searchDirectoryLineFiltersAddressingSuffix"
+          }
+        },
+        "type" : "object"
+      },
+      "searchDirectoryLineSortingInner" : {
+        "description" : "A sort criteria composed of a field and an order (ascending or descending).",
+        "example" : {
+          "champ" : "addressingIdentifier",
+          "order" : "ascending"
+        },
+        "properties" : {
+          "field" : {
+            "$ref" : "#/components/schemas/directoryLineField"
+          },
+          "sortingOrder" : {
+            "$ref" : "#/components/schemas/sortingOrder"
+          }
+        },
+        "type" : "object"
+      },
+      "directoryLinePayloadHistoryLegalUnitFacilityRoutingCodeRoutingCode" : {
+        "properties" : {
+          "routingIdentifier" : {
+            "$ref" : "#/components/schemas/routingIdentifier"
+          },
+          "routingIdentifierType" : {
+            "$ref" : "#/components/schemas/routingIdentifierType"
+          },
+          "routingCodeName" : {
+            "$ref" : "#/components/schemas/recipientRoutingCodeName"
+          },
+          "managesLegalCommitment" : {
+            "$ref" : "#/components/schemas/managesLegalCommitmentCode"
+          },
+          "administrativeStatus" : {
+            "$ref" : "#/components/schemas/routingCodeAdministrativeStatus"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/addressRead"
+          }
+        },
+        "type" : "object"
+      },
+      "directoryLinePayloadHistoryLegalUnitFacilityRoutingCodePlatform" : {
+        "properties" : {
+          "platformType" : {
+            "$ref" : "#/components/schemas/recipientPlatformType"
+          },
+          "platformStatus" : {
+            "$ref" : "#/components/schemas/platformStatus"
+          }
+        },
+        "type" : "object"
+      },
+      "createDirectoryLineBodyPeriod" : {
+        "properties" : {
+          "dateFrom" : {
+            "$ref" : "#/components/schemas/dateFrom"
+          },
+          "dateTo" : {
+            "$ref" : "#/components/schemas/dateTo"
+          }
+        },
+        "required" : [ "dateFrom" ],
+        "type" : "object"
+      },
+      "createDirectoryLineBodyAddressingInformation" : {
+        "additionalProperties" : false,
+        "properties" : {
+          "siren" : {
+            "$ref" : "#/components/schemas/siren"
+          },
+          "siret" : {
+            "$ref" : "#/components/schemas/siret"
+          },
+          "routingIdentifier" : {
+            "$ref" : "#/components/schemas/routingIdentifier"
+          },
+          "addressingSuffix" : {
+            "$ref" : "#/components/schemas/addressingSuffix"
+          }
+        },
+        "required" : [ "siren" ],
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "bearerFormat" : "JWT",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}
