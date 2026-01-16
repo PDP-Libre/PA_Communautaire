@@ -1,0 +1,13 @@
+# Fichier de configuration des outils requis
+tools:
+  - name: nats-server
+    url: https://github.com/nats-io/nats-server
+    version_command: --version
+  
+  - name: natscli
+    url: https://github.com/nats-io/natscli
+    version_command: --version
+  
+  - name: seaweedfs
+    url: https://github.com/chrislusf/seaweedfs
+    version_command: -version

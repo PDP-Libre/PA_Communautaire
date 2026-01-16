@@ -4,6 +4,7 @@
   "theme": "opencode",
   // "model": "openrouter/qwen/qwen3-coder",
   // "model": "openrouter/z-ai/glm-4.7",
-  "model": "openrouter/moonshotai/kimi-k2-0905",
+  "model": "openrouter/mistralai/devstral-2512",
+  // "model": "openrouter/moonshotai/kimi-k2-0905",
   "autoupdate": true,
 }

@@ -3,7 +3,6 @@
 
 version = 1
 
-# Normes/docs de référence
 [[annotations]]
 path = [
     ".gitignore",

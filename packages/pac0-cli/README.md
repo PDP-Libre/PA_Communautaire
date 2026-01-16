@@ -1,5 +1,15 @@
 # pac cli
 
+```
+______________________________ 
+________________ ________  __ \
+_____  __ \  __ `/  ___/  / / /
+____  /_/ / /_/ // /__ / /_/ / 
+___  .___/\__,_/ \___/ \____/  
+__/_/                          
+
+```
+
 Outil en ligne de commade (CLI) du projet pac (Plateforme Agréée Communautaire).
 En plus de l'usage CLI, un mode application console est disponible.
 
