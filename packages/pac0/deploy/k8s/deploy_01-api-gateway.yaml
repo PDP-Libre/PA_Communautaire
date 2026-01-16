@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 01-api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: 01-api-gateway
+      app.kubernetes.io/instance: pac0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: 01-api-gateway
+        app.kubernetes.io/instance: pac0
+    spec:
+
+      containers:
+        - name: main
+          image: xxxxxxxxx
+          #command: ["/bin/sh"]
+          #args: ["-c", "while true; do echo hello; sleep 10;done"]          
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8881
+              protocol: TCP
+          envFrom:
+          - configMapRef:
+              name: 01-api-gateway-cfg
+
+          volumeMounts:
+          #- name: pp-conf-volume
+          #  mountPath: /app/pp.conf.yaml  # Your desired mount path
+          #  subPath: "pp.conf.yaml"
+          #  readOnly: true
+          - name: pp-secrets-volume
+            mountPath: /app/.env  # Your desired mount path
+            subPath: ".env"
+            readOnly: true
+
+          livenessProbe:
+            httpGet:
+              path: /api/core/alive
+              port: http
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /api/core/ready
+              port: http
+            initialDelaySeconds: 10
+          resources:
+            requests:
+              memory: "1024Mi"
+              #cpu: "100m"
+            limits:
+              memory: "2048Mi"
+              #cpu: "1500m"
+
+      volumes:
+      - name: pp-conf-volume
+        configMap:
+          name: pp-conf
+          items:
+          - key: pp.conf.yaml
+            path: pp.conf.yaml  # Optional: rename file when mounted              
+      - name: pp-secrets-volume
+        configMap:
+          name: pp-conf-secrets
+          items:
+          - key: ".env"
+            path: ".env"  # Optional: rename file when mounted              
+---
+apiVersion: v1
+kind: 01-api-gateway
+metadata:
+  name: 01-api-gateway
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8881
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: 01-api-gateway
+    app.kubernetes.io/instance: pac0
+
+

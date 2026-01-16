@@ -1,0 +1,82 @@
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paxpar
+  annotations:
+    # uncomment staging or prod (not both !!)
+    # comment both to disable let's encrypt certificate
+    # to go back to the self-signed K8S certificate
+    #cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer-staging
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer-prod
+    
+    nginx.ingress.kubernetes.io/proxy-body-size: 250m
+    # see https://www.civo.com/learn/using-websockets-with-ingress-controller
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/server-snippets: |
+      location / {
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header Connection "upgrade";
+        proxy_cache_bypass $http_upgrade;
+      }
+spec:
+  tls:
+    # will be patched by kustomize
+    - hosts:      
+      - host: host1.void.local
+    #  - host: prod.paxpar.tech
+    #  - host: uat.paxpar.tech
+    #  - host: dev.paxpar.tech
+    #  - host: paxpar.tech
+      secretName: paxpar-tls
+
+  rules:
+    # this rule will be patched by kustomize
+    # and duplicated for each host defined
+    - host: host1.void.local
+      http:
+        paths:
+          - path: /forge
+            pathType: Prefix
+            backend:
+              service:
+                name: pp-forge
+                port:
+                  number: 8885
+          - path: /convert
+            pathType: Prefix
+            backend:
+              service:
+                name: pp-conv
+                port:
+                  number: 3010
+          - path: /ping
+            pathType: Prefix
+            backend:
+              service:
+                name: pp-conv
+                port:
+                  number: 3010
+          #- path: /chat
+          #- path: /chat(/|$)(.*)
+          #  pathType: Prefix
+          #  backend:
+          #    service:
+          #      name: pp-chat
+          #      port:
+          #        number: 8080                  
+          # everything else will go to the API
+          #- path: /api
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pp-core
+                port:
+                  number: 8881

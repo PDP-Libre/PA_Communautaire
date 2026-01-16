@@ -11,13 +11,18 @@ cd packages/pac0
 uv run fastapi dev src/pac0/service/api_gateway/main.py
 # lancement service 02-esb-central
 nats-server -V -js
-# lancement service 03 ... (TODO)
+# lancement service 03-controle-formats
+uv run faststream run src/pac0/service/controle-formats/main:app
 # lancement service 04-validation-metier
 uv run faststream run src/pac0/service/validation_metier/main:app
-# lancement service 05 ... (TODO)
-# lancement service 06 ... (TODO)
-# lancement service 07 ... (TODO)
-# lancement service 08 ... (TODO)
+# lancement service 05-conversion-formats
+uv run faststream run src/pac0/service/conversion-formats/main:app
+# lancement service 06-annuaire-local
+uv run faststream run src/pac0/service/annuaire-local/main:app
+# lancement service 07-routage
+uv run faststream run src/pac0/service/routage/main:app
+# lancement service 08-transmission-fiscale
+uv run faststream run src/pac0/service/transmission-fiscale/main:app
 # lancement service 09-gestion-cycle-vie
 uv run faststream run src/pac0/service/gestion_cycle_vie/main:app
 ```
