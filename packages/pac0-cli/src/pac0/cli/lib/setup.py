@@ -52,8 +52,9 @@ class SetupTool:
         except subprocess.CalledProcessError:
             return "0.0.0"
         # print('version_current====', version_current)
-        match = re.search(r"(\d+\.\d+\.\d+)", version_current)
+        match = re.search(r"(\d+\.\d+(\.\d+)?)", version_current)
         self.checked_version = match.group(0) if match else "0.0.0"
+        # print(f"{version_current=}, {self.checked_version=}, {match=}")
         return self.checked_version
 
     # see https://packaging.pypa.io/en/stable/specifiers.html#usage
@@ -142,11 +143,23 @@ tools: list[SetupTool] = [
         version=">=2.12.3",
         install="""
             wget https://github.com/nats-io/nats-server/releases/download/v{version}/nats-server-v{version}-linux-amd64.tar.gz
-            tar xvf nats-server-v*-linux-amd64.tar.gz
-            mv nats-server-v*-linux-amd64/nats-server /usr/local/bin/
+            tar xf nats-server-v*-linux-amd64.tar.gz
+            sudo mv nats-server-v*-linux-amd64/nats-server /usr/local/bin/
             rm -Rf nats-server-v*-linux-amd64*
         """,
         version_get="nats-server -v",
+    ),
+    SetupTool(
+        # https://github.com/seaweedfs/seaweedfs/releases/download/4.07/linux_amd64.tar.gz
+        name="seaweedfs",
+        version=">=4.07",
+        install="""
+            wget https://github.com/seaweedfs/seaweedfs/releases/download/{version}/linux_amd64.tar.gz
+            tar xf linux_amd64.tar.gz
+            sudo mv weed /usr/local/bin/
+            rm -Rf linux_amd64.tar.gz
+        """,
+        version_get="weed version 2> /dev/null | cut -d' ' -f3",
     ),
     SetupTool(
         name="hx",
