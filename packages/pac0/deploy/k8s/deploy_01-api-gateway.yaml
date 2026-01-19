@@ -25,7 +25,7 @@ spec:
           imagePullPolicy: Always
 
           command: ["uvx"]
-          args: ["pac0-cli@latest", "run", "1"]
+          args: ["--refresh", "pac0-cli@latest", "run", "1"]
           env:
           - name: NATS_URL
             value: "nats://s02-esb-central:4222"
@@ -35,16 +35,17 @@ spec:
               containerPort: 8000
               protocol: TCP
 
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: http
-            initialDelaySeconds: 20
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: http
-            initialDelaySeconds: 30
+          #livenessProbe:
+          #  httpGet:
+          #    path: /healthcheck
+          #    port: http
+          #  initialDelaySeconds: 20
+          #readinessProbe:
+          #  httpGet:
+          #    path: /healthcheck
+          #    port: http
+          #  initialDelaySeconds: 30
+
           resources:
             requests:
               memory: "1024Mi"

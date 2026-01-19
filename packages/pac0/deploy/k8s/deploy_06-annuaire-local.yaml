@@ -25,13 +25,13 @@ spec:
           
           image: astral/uv:python3.12-bookworm-slim
           command: ["uvx"]
-          args: ["pac0-cli@latest", "run", "6"]
+          args: ["--refresh", "pac0-cli@latest", "run", "6"]
           env:
           - name: NATS_URL
             value: "nats://s02-esb-central:4222"
     
           resources:
             requests:
-              memory: "128Mi"
+              memory: "1024Mi"
             limits:
               memory: "2048Mi"

@@ -49,7 +49,7 @@ def _call(
     print(f"{base_folder=}")
     if service == "01-api-gateway":
         full_path = f"src/pac0/service/{service_folder}/main.py"
-        cmd = ["uv", "run", "fastapi", "dev", str(full_path)]
+        cmd = ["uv", "run", "fastapi", "dev", "--host=0.0.0.0", str(full_path)]
     elif service == "02-esb-central":
         cmd = ["nats-server", "-V", "-js"]
     else:
