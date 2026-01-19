@@ -1,0 +1,47 @@
+#!/bin/bash
+
+if ! [[ -v 1 ]]; then
+    cat <<'DOC'
+"Script management de la Plateforme Agréé Communautaire"
+
+Usage:
+
+    pdplibre command
+
+The commands are:
+
+    up              Start all services
+    sync            Dowload all depedendance
+    test            Lauch all test
+    pwd             Donne le répertoire de l'app
+    install_script  Instal le script
+DOC
+exit
+fi
+
+SCRIPT_PATH=$(readlink -f "$0")
+SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+command cd $SCRIPT_DIR
+
+up() {
+    echo "Démarage ... $@"
+}
+
+sync() {
+    echo "Sync ... $@"
+}
+
+test() {
+    up
+    echo "Test ... $@"
+}
+
+pwd() {
+    echo $SCRIPT_DIR
+}
+
+cmd=$1
+shift
+$cmd $@
+
+exit
