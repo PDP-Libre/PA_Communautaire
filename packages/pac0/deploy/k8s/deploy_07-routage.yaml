@@ -5,17 +5,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 03-controle-formats
+  name: 07-routage
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: 03-controle-formats
+      app.kubernetes.io/name: 07-routage
       app.kubernetes.io/instance: pac0
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: 03-controle-formats
+        app.kubernetes.io/name: 07-routage
         app.kubernetes.io/instance: pac0
     spec:
 
@@ -25,10 +25,10 @@ spec:
           
           image: astral/uv:python3.12-bookworm-slim
           command: ["uvx"]
-          args: ["pac0-cli@latest", "run", "3"]
+          args: ["pac0-cli@latest", "run", "7"]
           env:
           - name: NATS_URL
-            value: "nats://02-esb-central:4222"
+            value: "nats://s02-esb-central:4222"
     
           resources:
             requests:

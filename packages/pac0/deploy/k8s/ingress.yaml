@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -29,7 +32,12 @@ spec:
   tls:
     - hosts:      
       - host: pac01.document.legal
-    #  - host: pac01.arundo.tech
+
+    # - host: pac02.document.legal
+    # - host: pac03.document.legal
+    # - host: pac04.document.legal
+    # - host: pac0.document.legal
+    #  - host: pac0.arundo.tech
       secretName: pac0-tls
 
   rules:
@@ -40,6 +48,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: 01-api-gateway
+                name: s01-api-gateway
                 port:
                   number: 8000

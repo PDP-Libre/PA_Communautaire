@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from textual.screen import Screen
 from textual.widgets import DataTable, Label, Footer
 from textual.containers import Container

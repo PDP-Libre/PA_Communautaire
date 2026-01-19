@@ -1,25 +1,62 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import subprocess
 from pathlib import Path
+from typing import Annotated
 
 import typer
 
 from .. import utils
+from ..lib import setup
+from rich.table import Table
+from rich.console import Console
 
 
 app = typer.Typer()
+console = Console()
 
 DEFAULT_REPO_URL = "https://github.com/paxpar-tech/PA_Communautaire"
 
 
 @app.command()
 def tool(
-    install: bool = False,
+    tool: Annotated[list[str], typer.Argument()],
+    install: bool = True,
+    summary: bool = True,
 ):
-    """Vérifie les versions d'outils et les installe si besoin"""
-    typer.echo("Vérification des outils...")
-    # TODO: check dependencies (some pytest)
+    installed_tools: list[setup.SetupTool] = []
+    if tool == ["all"]:
+        tool = [t.name for t in setup.tools]
+    for single_tool in tool:
+        for t in setup.tools:
+            if single_tool in (t.name, ""):
+                installed_tools.append(t)
+                if install:
+                    t.setup()
+                if single_tool != "":
+                    # return only if single tool install, stay for all
+                    break
+        else:
+            if single_tool != "":
+                # only if ask for a specific tool
+                print(f"tool {single_tool} not supported !")
 
-    # raise NotImplementedError()
+    if summary:
+        table = Table()
+
+        table.add_column("tool", style="cyan", no_wrap=True)
+        table.add_column("required", justify="right", style="magenta")
+        table.add_column("installed", justify="right", style="green")
+
+        for t in installed_tools:
+            valid = t.check()
+            table.add_row(
+                t.name, t.version, t.checked_version, style="red" if not valid else None
+            )
+
+        console.print(table)
 
 
 @app.command()

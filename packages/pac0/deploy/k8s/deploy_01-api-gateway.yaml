@@ -1,26 +1,35 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 01-api-gateway
+  name: "01-api-gateway"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: 01-api-gateway
+      app.kubernetes.io/name: "01-api-gateway"
       app.kubernetes.io/instance: pac0
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: 01-api-gateway
+        app.kubernetes.io/name: "01-api-gateway"
         app.kubernetes.io/instance: pac0
     spec:
 
       containers:
         - name: main
           image: astral/uv:python3.12-bookworm-slim
+          imagePullPolicy: Always
+
           command: ["uvx"]
           args: ["pac0-cli@latest", "run", "1"]
-          imagePullPolicy: Always
+          env:
+          - name: NATS_URL
+            value: "nats://s02-esb-central:4222"
+
           ports:
             - name: http
               containerPort: 8000
@@ -30,12 +39,12 @@ spec:
             httpGet:
               path: /healthcheck
               port: http
-            initialDelaySeconds: 5
+            initialDelaySeconds: 20
           readinessProbe:
             httpGet:
               path: /healthcheck
               port: http
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
           resources:
             requests:
               memory: "1024Mi"
@@ -46,7 +55,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: 01-api-gateway
+  name: s01-api-gateway
 spec:
   type: ClusterIP
   ports:
@@ -55,7 +64,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: 01-api-gateway
+    app.kubernetes.io/name: "01-api-gateway"
     app.kubernetes.io/instance: pac0
 
 

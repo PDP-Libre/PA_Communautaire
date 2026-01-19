@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,7 +21,7 @@ spec:
 
       containers:
         - name: main
-          image: nats:2.12
+          image: "nats:2.12"
           #TODO: choose how to persist storage
           args: ["--js"]
           imagePullPolicy: Always
@@ -26,16 +30,17 @@ spec:
               containerPort: 4222
               protocol: TCP
 
-          #livenessProbe:
-          #  httpGet:
-          #    path: /healthcheck
-          #    port: http
-          #  initialDelaySeconds: 5
-          #readinessProbe:
-          #  httpGet:
-          #    path: /healthcheck
-          #    port: http
-          #  initialDelaySeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 4222
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 4222
+            initialDelaySeconds: 15
+            periodSeconds: 10
+
           resources:
             requests:
               memory: "1024Mi"
@@ -46,7 +51,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: 02-esb-central
+  name: s02-esb-central
 spec:
   type: ClusterIP
   ports:

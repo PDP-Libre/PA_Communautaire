@@ -28,7 +28,7 @@ spec:
           args: ["pac0-cli@latest", "run", "3"]
           env:
           - name: NATS_URL
-            value: "nats://02-esb-central:4222"
+            value: "nats://s02-esb-central:4222"
     
           resources:
             requests:

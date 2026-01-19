@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import textual
 from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer, Placeholder
