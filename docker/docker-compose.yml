@@ -1,0 +1,92 @@
+services:
+  # 02-esb-central (NATS Server - Le pivot de communication)
+  02-esb-central:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac02-esb-central
+    entrypoint: uvx
+    command: pac0-cli@latest run 2
+    environment:
+      - UV_CACHE_DIR=/root/.cache/uv
+    volumes:
+      - uv_cache:/root/.cache/uv
+
+  # 01-api-gateway (FastAPI)
+  01-api-gateway:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac01-api-gateway
+    entrypoint: uvx
+    command: pac0-cli@latest run 1
+    ports:
+      - "8000:8000"
+    depends_on:
+      - 02-esb-central
+    volumes:
+      - uv_cache:/root/.cache/uv
+
+  # Services de traitement (FastStream)
+  03-controle-formats:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac03-controle-formats
+    entrypoint: uvx
+    command: pac0-cli@latest run 3
+    depends_on:
+      - 02-esb-central
+    volumes: &uv_vol
+      - uv_cache:/root/.cache/uv
+
+  04-validation-metier:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac04-validation-metier
+    entrypoint: uvx
+    command: pac0-cli@latest run 4
+    depends_on:
+      - 02-esb-central
+    volumes: *uv_vol
+
+  05-conversion-formats:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac05-conversion-formats
+    entrypoint: uvx
+    command: pac0-cli@latest run 5
+    depends_on:
+      - 02-esb-central
+    volumes: *uv_vol
+
+  06-annuaire-local:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac06-annuaire-local    
+    entrypoint: uvx
+    command: pac0-cli@latest run 6
+    depends_on:
+      - 02-esb-central
+    volumes: *uv_vol
+
+  07-routage:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac07-routage
+    entrypoint: uvx
+    command: pac0-cli@latest run 7
+    depends_on:
+      - 02-esb-central
+    volumes: *uv_vol
+
+  08-transmission-fiscale:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac08-transmission-fiscale
+    entrypoint: uvx
+    command: pac0-cli@latest run 8
+    depends_on:
+      - 02-esb-central
+    volumes: *uv_vol
+
+  09-gestion-cycle-vie:
+    image: astral/uv:python3.12-bookworm-slim
+    container_name: pac09-gestion-cycle-vie
+    entrypoint: uvx
+    command: pac0-cli@latest run 9
+    depends_on:
+      - 02-esb-central
+    volumes: *uv_vol
+
+volumes:
+  uv_cache:
