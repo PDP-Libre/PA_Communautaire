@@ -5,8 +5,6 @@ services:
     container_name: pac02-esb-central
     entrypoint: uvx
     command: pac0-cli@latest run 2
-    environment:
-      - UV_CACHE_DIR=/root/.cache/uv
     volumes:
       - uv_cache:/root/.cache/uv
 
@@ -35,7 +33,7 @@ services:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
-    volumes: &uv_vol
+    volumes:
       - uv_cache:/root/.cache/uv
 
   04-validation-metier:
@@ -47,7 +45,8 @@ services:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
-    volumes: *uv_vol
+    volumes:
+      - uv_cache:/root/.cache/uv
 
   05-conversion-formats:
     image: astral/uv:python3.12-bookworm-slim
@@ -58,18 +57,20 @@ services:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
-    volumes: *uv_vol
+    volumes:
+      - uv_cache:/root/.cache/uv
 
   06-annuaire-local:
     image: astral/uv:python3.12-bookworm-slim
-    container_name: pac06-annuaire-local    
+    container_name: pac06-annuaire-local
     entrypoint: uvx
     command: pac0-cli@latest run 6
     environment:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
-    volumes: *uv_vol
+    volumes:
+      - uv_cache:/root/.cache/uv
 
   07-routage:
     image: astral/uv:python3.12-bookworm-slim
@@ -80,7 +81,8 @@ services:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
-    volumes: *uv_vol
+    volumes:
+      - uv_cache:/root/.cache/uv
 
   08-transmission-fiscale:
     image: astral/uv:python3.12-bookworm-slim
@@ -91,7 +93,8 @@ services:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
-    volumes: *uv_vol
+    volumes:
+      - uv_cache:/root/.cache/uv
 
   09-gestion-cycle-vie:
     image: astral/uv:python3.12-bookworm-slim
@@ -102,7 +105,8 @@ services:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
-    volumes: *uv_vol
+    volumes:
+      - uv_cache:/root/.cache/uv
 
 volumes:
   uv_cache:
