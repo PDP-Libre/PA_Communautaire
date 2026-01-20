@@ -24,7 +24,7 @@ Le projet est découpé en 9 briques:
 * [08-transmission-fiscale](../briques/08-transmission-fiscale/index.md)
 * [09-gestion-cycle-vie](../briques/09-gestion-cycle-vie/index.md)
 
-Vous trouverez également dans ce dépôt les [normes de référence](../norme/README.md).
+Vous trouverez également dans ce dépôt les [normes de référence](../norme/index.md).
 
 D'autres liens sont disponibles sur [le projet awesome-facturation-electronique](https://github.com/PDP-Libre/awesome-facturation-electronique)
 
