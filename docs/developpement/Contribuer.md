@@ -1,7 +1,3 @@
-#  DOCUMENTATION EN COURS DE REDACTION - N'HESITEZ PAS A LA COMMENTER 
-**TODO: rédiger comment installer nats-server et fastapi comme des services systemd**
-**TODO docker
-
 # 🚀 Contribuer à PA_Communautaire
 
 Bienvenue ! Nous sommes ravis que vous envisagiez de contribuer au projet **PA_Communautaire**. Ce projet repose sur l'implication de sa communauté, et chaque contribution — petite ou grande — nous aide à construire un outil plus performant et ouvert.
@@ -15,33 +11,30 @@ Rejoindre ce projet, c'est participer à une initiative **Open Source** concrèt
 ### 🛠️ Compétences recherchées
 Le projet évolue et nous avons besoin de profils variés :
 
-* **Experts métiers :** pour définir les besoins et valider les arbitrages
-* **Documentation :** Rédaction technique pour aider les nouveaux utilisateurs et développeurs à prendre en main l'outil.
-* **Développement Backend :** Maîtrise de la logique serveur, de la sécurité et de la gestion des données.
-* **Développement Frontend :** Amélioration de l'interface utilisateur (UI), de l'accessibilité et de l'expérience utilisateur (UX).
-* **Base de données :** Optimisation des schémas et des performances de stockage.
-* **DevOps & CI/CD :** Automatisation des tests et amélioration des processus de déploiement.
+- **Développeurs** (backend, frontend, DevOps)
+- **Architectes** techniques
+- **Experts** en facturation électronique et EDI
+- **Juristes** et spécialistes conformité
+- **Chefs de projet** et product owners
+- **Testeurs** QA
+- **Designers** UX/UI
+- **Rédacteurs** techniques
 
 > **Débutant ?** Ne soyez pas intimidé ! Nous accueillons avec plaisir les développeurs juniors. Cherchez les issues avec le label `good first issue` pour commencer.
+
+### Comment contribuer ?
+
+1. **Consultez les issues** pour identifier les tâches en cours
+2. **Rejoignez les groupes de travail** sur le forum https://forum.pdplibre.org/
+3. **Proposez des améliorations** via pull requests
+4. **Participez aux discussions** communautaires https://forum.pdplibre.org/
+5. **Partagez votre expertise** et vos retours d'expérience
 
 ---
 
 ## Architecture du projet
 
-Le système utilise les services suivants:   
-* un serveur de message [NATS](https://github.com/nats-io/nats-server)  
-  pour encaisser un grand nombre de sollicitations et séquencer avec rigueur les différents traitements
-* un serveur d'API FASTAPI  
-  pour faciliter les appels entre les différentes applications
-* un système de test basé sur la méthode [Behavior Driven Development](https://fr.wikipedia.org/wiki/Programmation_pilot%C3%A9e_par_le_comportement)  
-  pour pouvoir vérifier le bon fonctionnement de tous les flux autours du projet et garantir une stabilité des fonctionnalités au fur et à mesure du développement.
-* un stockage fichier S3  
-  pour stocker un gros volume de fichier i.e les factures en pdf  
-  Voir [seaweedfs](https://github.com/seaweedfs/seaweedfs)
-
-On a choisi de mettre en place des tests en mode BDD pour permettre à des non programmeurs de pouvoir expliquer et valider le fonctionnement du système. 
-  
-
+- [Architecture et choix techniques](/docs/developpement/Architecture.md)
 
 ## 💻 Installation de l'environnement de développement
 
@@ -248,7 +241,6 @@ git push origin feature/ma-super-idee
 ## Pour en savoir plus
 * Comment rédiger un test BDD ?
 * Comment programmer un test BDD ?
-
 
 ## 💬 Contact & Communauté
 Si vous avez des questions ou si vous bloquez sur l'installation :
