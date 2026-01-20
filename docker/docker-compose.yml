@@ -16,6 +16,8 @@ services:
     container_name: pac01-api-gateway
     entrypoint: uvx
     command: pac0-cli@latest run 1
+    environment:
+      - NATS_URL=nats://02-esb-central:4222
     ports:
       - "8000:8000"
     depends_on:
@@ -29,6 +31,8 @@ services:
     container_name: pac03-controle-formats
     entrypoint: uvx
     command: pac0-cli@latest run 3
+    environment:
+      - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
     volumes: &uv_vol
@@ -39,6 +43,8 @@ services:
     container_name: pac04-validation-metier
     entrypoint: uvx
     command: pac0-cli@latest run 4
+    environment:
+      - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
     volumes: *uv_vol
@@ -48,6 +54,8 @@ services:
     container_name: pac05-conversion-formats
     entrypoint: uvx
     command: pac0-cli@latest run 5
+    environment:
+      - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
     volumes: *uv_vol
@@ -57,6 +65,8 @@ services:
     container_name: pac06-annuaire-local    
     entrypoint: uvx
     command: pac0-cli@latest run 6
+    environment:
+      - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
     volumes: *uv_vol
@@ -66,6 +76,8 @@ services:
     container_name: pac07-routage
     entrypoint: uvx
     command: pac0-cli@latest run 7
+    environment:
+      - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
     volumes: *uv_vol
@@ -75,6 +87,8 @@ services:
     container_name: pac08-transmission-fiscale
     entrypoint: uvx
     command: pac0-cli@latest run 8
+    environment:
+      - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
     volumes: *uv_vol
@@ -84,6 +98,8 @@ services:
     container_name: pac09-gestion-cycle-vie
     entrypoint: uvx
     command: pac0-cli@latest run 9
+    environment:
+      - NATS_URL=nats://02-esb-central:4222
     depends_on:
       - 02-esb-central
     volumes: *uv_vol
