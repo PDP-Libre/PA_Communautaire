@@ -52,7 +52,10 @@ Vous pouvez installer le projet en fonction de votre profil technique:
 Avant de commencer, assurez-vous d'avoir installé :
 * **Git** (pour versionner votre code)
 * **Python**
-
+* Un bucket S3 pour stocker les factures en transit
+  Par défaut, il y a un bucket S3 communautaire dédiés aux développeurs.
+  Mais on peut facilement installer un bucket S3 en local ou chez un autre fournisseur. 
+  
 ### 2. Clonage du dépôt
 
 Le projet principal est hébergé sur GITHUB: https://github.com/PDP-Libre/PA_Communautaire  
