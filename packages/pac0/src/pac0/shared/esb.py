@@ -9,6 +9,8 @@ from faststream import FastStream, ContextRepo
 import os
 from faststream.nats import NatsBroker, NatsRouter
 
+
+# TODO: we will use NATS queue to have pool of instances
 QUEUE = "q"
 
 
@@ -38,6 +40,8 @@ def init_esb_app(prefix):
     _broker.include_router(router)
 
     broker = _broker
+    publisher_ping = broker.publisher("ping")
+    publisher_pong = broker.publisher("pong")
 
     subject_in = f"{prefix}-IN"
     subject_out = f"{prefix}-OUT"
@@ -54,33 +58,15 @@ def init_esb_app(prefix):
         publisher_err=_broker.publisher(subject_err),
     )
 
+    # TODO: add on_startup behaviour to annonce the new service instance
+    # @app.on_startup
+    # async def setup(context: ContextRepo, env: str = ".env"):
+    #    print("setup pac0 service ...")
+    #    settings = SettingsService(_env_file=env)
+    #    context.set_global("settings", settings)
+
     # You MUST return broker and app separatly
     return ctx, _broker, app
-
-
-# TODO: deprecate
-def init_esb_app_old():
-    # TODO: use router to allow dynamic router setup
-    # broker.include_router(router)
-    # broker = NatsBroker("nats://demo.nats.io:4222")
-    broker = NatsBroker("nats://localhost:4222")
-    app = FastStream(broker)
-    publisher_ping = broker.publisher("pong")
-    publisher_pong = broker.publisher("pong")
-
-
-    @app.on_startup
-    async def setup(context: ContextRepo, env: str = ".env"):
-        print("setup pac0 service ...")
-        settings = SettingsService(_env_file=env)
-        context.set_global("settings", settings)
-
-
-    @broker.subscriber("ping")
-    async def ping(message):
-        await publisher_pong.publish("Hi!", correlation_id=message.correlation_id)
-
-    return broker, app
 
 
 def get_nats_url():
@@ -94,6 +80,7 @@ def get_nats_url():
 
 router = NatsRouter(prefix="")
 
+# will be set by when you import this module
 broker = None
 
 
@@ -102,5 +89,16 @@ async def healthcheck_sub(
     # message: Incoming,
     # logger: Logger,
 ):
+    """
+    respond to tell the service is alive
+    """
     # logger.info("Incoming value: %s, depends value: %s" % (message.m, dependency))
     await broker.publish("I am alive !", "healthcheck_resp")
+
+
+@router.subscriber("ping")
+async def ping(message):
+    """
+    respond to ping with a pong
+    """
+    await broker.publish("Hi!", "pong", correlation_id=message.correlation_id)
