@@ -39,7 +39,7 @@ Le système utilise les services suivants:
   pour stocker un gros volume de fichier i.e les factures en pdf  
   Voir [seaweedfs](https://github.com/seaweedfs/seaweedfs)
 
-On a choisi de mettre en place des tests en mode BDD pour permettre à des non programmeurs de pouvoir expliquer et valider le fonctionnement du système. 
+On a choisi de mettre en place des tests en mode "Behavior Driven Development" pour permettre à des non programmeurs de pouvoir expliquer et valider le fonctionnement du système. 
 
 ## 🏗️ Sous-projets
 
