@@ -1,0 +1,28 @@
+[project]
+name = "pac0-cli"
+version = "0.11.0"
+description = "Outil en ligne de commande (CLI) du projet PAC"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "typer>=0.9.0",
+    "textual>=0.70.0",
+    "PyYAML>=6.0",
+    "packaging>=25.0",
+]
+[[project.authors]]
+name = "Philippe ENTZMANN"
+email = "philippe@entzmann.name"
+
+[build-system]
+requires = ["uv_build>=0.9.4,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "pac0.cli"
+
+[project.scripts]
+pac0-cli = "pac0.cli.main:app"
+pac0_cli = "pac0.cli.main:app"
+pac0 = "pac0.cli.main:app"
+pac = "pac0.cli.main:app"

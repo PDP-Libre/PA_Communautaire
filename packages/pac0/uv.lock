@@ -533,7 +533,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/e1/8d/d17254baea57fe4a7
 
 [[package]]
 name = "pac0"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
