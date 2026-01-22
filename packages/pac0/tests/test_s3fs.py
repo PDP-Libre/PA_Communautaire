@@ -1,6 +1,12 @@
 # see https://s3fs.readthedocs.io/en/latest/
 # see https://github.com/fsspec/s3fs
 
+
+# secret dans projet forgejo CI
+# credentials bucket par Camille
+# test s3fs
+
+
 import s3fs
 
 
