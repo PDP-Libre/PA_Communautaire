@@ -2,40 +2,26 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import subprocess
 from pathlib import Path
-import typer
-import subprocess
-import subprocess
-from . import setup
-from .. import utils
 
+import typer
+
+from .. import utils
+from ..lib.conf import DEFAULT_BRANCH, DEFAULT_REPO
+from . import setup
 
 app = typer.Typer()
 
 
-services = [
-    "01-api-gateway",
-    "02-esb-central",
-    "03-controle-formats",
-    "04-validation-metier",
-    "05-conversion-formats",
-    "06-annuaire-local",
-    "07-routage",
-    "08-transmission-fiscale",
-    "09-gestion-cycle-vie",
-    "10-stockage",
-]
-
-
 def _run_service(
     service: str,
+    repo_url: str,
+    branch: str,
     tools: list[str],
 ):
-    # TODO: check/install tools
     setup.tool(tools)
-    # TODO: get app folder
-    setup.source()
-    # TODO: clone if necessary
+    setup.source(repo=repo_url, branch=branch)
     _call(service)
 
 
@@ -74,41 +60,41 @@ def _call(
 
 
 @app.command(name="1", help="lance le service 01-api-gateway ...")
-def _(ctx: typer.Context):
-    _run_service("01-api-gateway", ["git"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("01-api-gateway", repo, branch, ["git"])
 
 @app.command(name='2', help='lance le service 02-esb-central ...')
-def _(ctx: typer.Context):
-    _run_service("02-esb-central", ["git", "nats-server"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("02-esb-central", repo, branch, ["git", "nats- branch,server"])
 
 @app.command(name='3', help='lance le service 03-controle-formats ...')
-def _(ctx: typer.Context):
-    _run_service("03-controle-formats", ["git"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("03-controle-formats", repo, branch, ["git"])
 
 @app.command(name='4', help='lance le service 04-validation-metier ...')
-def _(ctx: typer.Context):
-    _run_service("04-validation-metier", ["git"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("04-validation-metier", repo, branch, ["git"])
 
 @app.command(name='5', help='lance le service 05-conversion-formats ...')
-def _(ctx: typer.Context):
-    _run_service("05-conversion-formats", ["git"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("05-conversion-formats", repo, branch, ["git"])
 
 @app.command(name='6', help='lance le service 06-annuaire-local ...')
-def _(ctx: typer.Context):
-    _run_service("06-annuaire-local", ["git"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("06-annuaire-local", repo, branch, ["git"])
 
 @app.command(name='7', help='lance le service 07-routage") ...')
-def _(ctx: typer.Context):
-    _run_service("07-routage", ["git"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("07-routage", repo, branch, ["git"])
 
 @app.command(name='8', help='lance le service 08-transmission-fiscale ...')
-def _(ctx: typer.Context):
-    _run_service("08-transmission-fiscale", ["git"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("08-transmission-fiscale", repo, branch, ["git"])
 
 @app.command(name='9', help='lance le service 09-gestion-cycle ...')
-def _(ctx: typer.Context):
-    _run_service("09-gestion-cycle-vie", ["git"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("09-gestion-cycle-vie", repo, branch, ["git"])
 
 @app.command(name="10", help="lance le service 09-stockage ...")
-def _(ctx: typer.Context):
-    _run_service("10-stockage", ["git", "seeseaweedfs"])
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("10-stockage", repo, branch, ["git", "seeseaweedfs"])
