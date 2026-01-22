@@ -9,10 +9,6 @@ docker compose up -d
 podman compose -f docker-compose.yml up -d
 ```
 
-Une fois les conteneurs actifs, l'application devrait maintenant être accessible sur http://localhost:8000.
+Une fois les conteneurs actifs, l'application devrait maintenant être accessible sur http://localhost:xxxx.
 
-* pour vérifier que les docker fonctionnent: 
-
-```
-docker ps
-```
+Si vous pouvez tester que le clonage fonctionne dans le container 01-api-gateway : docker compose exec 01-api-gateway git clone https://git.pdplibre.org/Construction_PA/PA_Communautaire.git pl
