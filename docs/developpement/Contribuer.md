@@ -84,6 +84,8 @@ Nous allons trouver l'arborescence suivante :
   les documentations diverses : métier et développeur
   * /docs/briques:  
   contient aussi de la doc métier et les tests BDD compréhensible pour tout le monde
+  * /docs/norme:  
+  les fichiers ou les liens de la norme de référence
 * /packages  
   Les sources des applications  
   * pac-bdd  
@@ -92,11 +94,9 @@ Nous allons trouver l'arborescence suivante :
   Une application "proto" pour maquetter l'organisation en place.  
   Les choix d'architecture et de langage sont en cours de réflexions. 
 * /report  
-  ???
+  Contient les rapports suite au lancement des tests. 
 * /script  
   Diverses commandes a tout faire
-
-Vous trouverez dans le dossier **norme** les liens de téléchargement de la norme.
 
 
 ### 3. Configuration
@@ -140,10 +140,6 @@ git push origin feature/ma-super-idee
 
 ---
 
-## Pour en savoir plus
-* Comment rédiger un test BDD ?
-* Comment programmer un test BDD ?
-
 ## 💬 Contact & Communauté
 Si vous avez des questions ou si vous bloquez sur l'installation :
 
@@ -151,5 +147,6 @@ Si vous avez des questions ou si vous bloquez sur l'installation :
   Adresse: https://github.com/PDP-Libre/PA_Communautaire/issues
 * Rejoignez notre forum de discussion  
   https://forum.pdplibre.org/
+
 
 Merci de contribuer à rendre PA_Communautaire meilleur !
