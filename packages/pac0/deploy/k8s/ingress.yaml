@@ -31,7 +31,7 @@ metadata:
 spec:
   tls:
     - hosts:      
-      - host: pac01.document.legal
+      - pac01.document.legal
 
     # - host: pac02.document.legal
     # - host: pac03.document.legal

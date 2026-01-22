@@ -2,13 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import textual
 from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, Placeholder
-from textual.containers import Container
-from .screens.services import ServicesScreen
-from .screens.stats import StatsScreen
-from .screens.tests import TestsScreen
+from textual.widgets import Footer, Header
 
 
 class ConsoleApp(App):
@@ -24,12 +19,6 @@ class ConsoleApp(App):
         ("e", "switch_screen('tests')", "Tests"),
         ("q", "quit", "Quitter"),
     ]
-
-    SCREENS = {
-        "services": ServicesScreen,
-        "stats": StatsScreen,
-        "tests": TestsScreen,
-    }
 
     # def on_mount(self) -> None:
     #    """Initialisation de l'application"""
