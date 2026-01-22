@@ -14,8 +14,6 @@ from . import setup
 app = typer.Typer()
 
 
-
-
 def _run_service(
     service: str,
     repo_url: str,
@@ -41,6 +39,8 @@ def _call(
         cmd = ["uv", "run", "fastapi", "dev", "--host=0.0.0.0", str(full_path)]
     elif service == "02-esb-central":
         cmd = ["nats-server", "-V", "-js"]
+    elif service == "10-stockage":
+        cmd = ["weed", "mini", "-dir=/data"]
     else:
         full_path = f"src/pac0/service/{service_folder}/main:app"
         cmd = ["uv", "run", "faststream", "run", str(full_path)]
@@ -95,4 +95,6 @@ def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("09-gestion-cycle-vie", repo, branch, ["git"])
 
-
+@app.command(name="10", help="lance le service 09-stockage ...")
+def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
+    _run_service("10-stockage", repo, branch, ["git", "seeseaweedfs"])

@@ -20,4 +20,5 @@ SERVICES = [
     "07-routage",
     "08-transmission-fiscale",
     "09-gestion-cycle-vie",
+    "10-stockage",
 ]

@@ -19,7 +19,6 @@ path = [
     "report/pac-bdd/**",
     "report/pac0/**",
     "**/.env.template",
-
 ]
 SPDX-FileCopyrightText = "Philippe ENTZMANN <philippe@entzmann.name>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
@@ -27,6 +26,7 @@ SPDX-License-Identifier = "GPL-3.0-or-later"
 # All external public reference ressources
 [[annotations]]
 path = [
+    "docs/developpement/**",
     "docs/norme/**",
     "docs/test/**",
 ]
