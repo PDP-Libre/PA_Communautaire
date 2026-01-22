@@ -1,0 +1,12 @@
+volumes:
+  s3Data:
+
+services:
+  seaweedfs-s3:
+    image: chrislusf/seaweedfs
+    ports:
+      - "8333:8333"
+    volumes:
+      - ./seaweedfs-config.json:/etc/seaweedfs/config.json
+      - s3Data:/data
+    command: "server -s3 -s3.config /etc/seaweedfs/config.json"

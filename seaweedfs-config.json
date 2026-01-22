@@ -1,0 +1,24 @@
+{
+  "identities": [
+    {
+      "name": "anonymous",
+      "actions": []
+    },
+    {
+      "name": "pdplibre",
+      "credentials": [
+        {
+          "accessKey": "pdplibrekey",
+          "secretKey": "Sup3rCl3"
+        }
+      ],
+      "actions": [
+        "Admin",
+        "Read",
+        "List",
+        "Tagging",
+        "Write"
+      ]
+    }
+  ]
+}
