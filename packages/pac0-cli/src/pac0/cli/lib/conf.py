@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # default repo to use on `pac0 run`
-DEFAULT_REPO = "https://github.com/paxpar-tech/PA_Communautaire"
+# DEFAULT_REPO = "https://github.com/paxpar-tech/PA_Communautaire"
+DEFAULT_REPO = "https://git.pdplibre.org/Construction_PA/PA_Communautaire.git"
+
 # default branch to use on `pac0 run`
 DEFAULT_BRANCH = "main"
 
