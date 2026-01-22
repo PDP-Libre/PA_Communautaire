@@ -1,6 +1,6 @@
 ---
 name: 'Déclarer un bug'
-about: 'J'ai trouvé un problème.'
+about: "J'ai trouvé un problème."
 title: '[BUG] '
 ref: 'main'
 labels:
