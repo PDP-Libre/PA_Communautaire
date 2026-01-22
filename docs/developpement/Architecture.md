@@ -36,7 +36,7 @@ Le système utilise les services suivants:
 * un système de test basé sur la méthode [Behavior Driven Development](https://fr.wikipedia.org/wiki/Programmation_pilot%C3%A9e_par_le_comportement)  
   pour pouvoir vérifier le bon fonctionnement de tous les flux autours du projet et garantir une stabilité des fonctionnalités au fur et à mesure du développement.
 * un stockage fichier S3  
-  pour stocker un gros volume de fichier i.e les factures en pdf  
+  pour stocker un gros volume de fichier tel que les factures en pdf
   Voir [seaweedfs](https://github.com/seaweedfs/seaweedfs)
 
 On a choisi de mettre en place des tests en mode "Behavior Driven Development" pour permettre à des non programmeurs de pouvoir expliquer et valider le fonctionnement du système. 
