@@ -101,4 +101,4 @@ async def ping(message):
     """
     respond to ping with a pong
     """
-    await broker.publish("Hi!", "pong", correlation_id=message.correlation_id)
+    await broker.publish("Hi!", "pong")

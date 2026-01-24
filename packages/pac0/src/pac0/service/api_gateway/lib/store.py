@@ -5,10 +5,19 @@ pac0.service.api_gateway.lib.store handles all s3 storage interaction.
 """
 
 import hashlib
+import aiobotocore
 from fastapi import UploadFile
 import httpx
 import s3fs
 from botocore.config import Config
+
+
+# TODO: move to conf
+# ENDPOINT_URL = "http://localhost:8333"
+ENDPOINT_URL = "https://store.document.legal"
+REGION_NAME = "fr-par"
+AWS_ACCESS_KEY_ID = "pdplibrekey"
+AWS_SECRET_ACCESS_KEY = "Sup3rCl3"
 
 
 async def put(
@@ -19,8 +28,6 @@ async def put(
     Upload un fichier via un url s3 pre-signé
     """
     async with httpx.AsyncClient() as client:
-        # Open the file in binary mode
-        #with open(file_path, "rb") as f:
         filename = (file.filename or "document").split("/")[-1]
         files = {"file": (filename, file.file, "application/octet-stream")}
         response = await client.put(url, files=files)
@@ -40,11 +47,12 @@ def get_srv_bucket_key_from_file_ctx(
     """
     #
     server = s3fs.S3FileSystem(
-        key="pdplibrekey",
-        # TODO: move to secrets/envvar
-        secret="Sup3rCl3",
-        endpoint_url="http://localhost:8333/",
-        client_kwargs={"region_name": "fr-par"},
+        key=AWS_ACCESS_KEY_ID,
+        secret=AWS_SECRET_ACCESS_KEY,
+        endpoint_url=ENDPOINT_URL,
+        # endpoint_url="http://192.168.12.50:8333",
+        # endpoint_url="https://store.document.legal/",
+        client_kwargs={"region_name": REGION_NAME},
         asynchronous=True,
     )
 
@@ -73,13 +81,25 @@ async def get_presigned_url(
     expiration = 3600  # 1 h
 
     # 1. Get the aiobotocore session from s3fs
+    if s3.session is None:
+        await s3.set_session()
+
     session = s3.session
+    # session = aiobotocore.session
+    session = aiobotocore.session.get_session()
 
     # 2. Create a client using the same session
     # For 'put_object', explicitly set signature_version to avoid issues
-    config = Config(signature_version="s3v4")
-
-    async with session.create_client("s3", config=config) as client:
+    async with session.create_client(
+        "s3",
+        # config=config
+        # endpoint_url="https://store.document.legal/",
+        endpoint_url=ENDPOINT_URL,
+        config=Config(signature_version="s3v4"),
+        region_name=REGION_NAME,
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    ) as client:
         # 3. Generate the pre-signed URL
         url = await client.generate_presigned_url(
             ClientMethod=method,

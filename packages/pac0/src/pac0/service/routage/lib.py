@@ -128,11 +128,11 @@ async def process(message):
         # Publier le résultat
         if routing_result.status == RoutingStatus.ERROR:
             await publisher_err.publish(
-                routing_result.model_dump(), correlation_id=message.correlation_id
+                routing_result.model_dump(),
             )
         else:
             await publisher_out.publish(
-                routing_result.model_dump(), correlation_id=message.correlation_id
+                routing_result.model_dump(),
             )
 
     except Exception as e:
@@ -144,5 +144,5 @@ async def process(message):
             error_message=str(e),
         )
         await publisher_err.publish(
-            error_result.model_dump(), correlation_id=message.correlation_id
+            error_result.model_dump(),
         )

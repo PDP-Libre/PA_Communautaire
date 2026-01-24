@@ -9,6 +9,7 @@ dependencies = [
     "textual>=0.70.0",
     "PyYAML>=6.0",
     "packaging>=25.0",
+    "faststream[nats]>=0.6.5",
 ]
 [[project.authors]]
 name = "Philippe ENTZMANN"

@@ -2,43 +2,48 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header
+import asyncio
+from textual.app import App
+from textual import events
+from faststream.nats import NatsBroker
+from faststream import FastStream
+
+broker = NatsBroker("nats://localhost:4222")
+
+
+@broker.subscriber("test")  # subject name
+async def handle_msg(msg_body):
+    print("recieved ....")
 
 
 class ConsoleApp(App):
-    """Application console principale"""
-
-    TITLE = "PAC Console"
-    SUB_TITLE = "Plateforme Agréée Communautaire"
-
-    BINDINGS = [
-        ("d", "toggle_dark", "Mode sombre"),
-        ("s", "switch_screen('services')", "Services"),
-        ("t", "switch_screen('stats')", "Statistiques"),
-        ("e", "switch_screen('tests')", "Tests"),
-        ("q", "quit", "Quitter"),
+    COLORS = [
+        "white",
+        "maroon",
+        "red",
+        "purple",
+        "fuchsia",
+        "olive",
+        "yellow",
+        "navy",
+        "teal",
+        "aqua",
     ]
 
-    # def on_mount(self) -> None:
-    #    """Initialisation de l'application"""
-    #    self.switch_screen("services")
+    async def on_mount(self) -> None:
+        self.screen.styles.background = "darkblue"
 
-    def compose(self) -> ComposeResult:
-        """Création de l'interface"""
-        yield Header()
-        # yield Container()
-        yield Footer()
+    async def on_key(self, event: events.Key) -> None:
+        if event.key.isdecimal():
+            self.screen.styles.background = self.COLORS[int(event.key)]
 
-    def action_toggle_dark(self) -> None:
-        """Basculer entre le mode clair et sombre"""
-        self.dark = not self.dark
 
-    def action_switch_screen(self, screen_name: str) -> None:
-        """Changer d'écran"""
-        self.switch_screen(screen_name)
+async def main():
+    app_console = ConsoleApp()
+    app = FastStream(broker)
+
+    await asyncio.gather(app_console.run(), app.run())
 
 
 if __name__ == "__main__":
-    app = ConsoleApp()
-    app.run()
+    asyncio.run(main())

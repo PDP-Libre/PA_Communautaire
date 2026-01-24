@@ -6,18 +6,19 @@ import asyncio
 import os
 from typing import Annotated, Optional
 
-import boto3
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 from faststream.nats import NatsBroker
 from pac0.service.api_gateway.lib import trace
 from pac0.service.api_gateway.lib.common import broker, global_state
 from pac0.shared.subjects import *
-from packages.pac0.src.pac0.service.api_gateway.lib.models import MsgApiFlowsOutPayload
-from packages.pac0.src.pac0.shared.payload import (
+from pac0.service.api_gateway.lib.models import MsgApiFlowsOutPayload
+from pac0.shared.payload import (
+    VERSION,
     get_token_optional,
     get_token_required,
     flow_id_new,
 )
+from . import store
 
 router = APIRouter()
 
@@ -29,6 +30,7 @@ async def read_root():
 
 @router.post("/flows")
 async def flows_post(
+    broker: Annotated[NatsBroker, Depends(broker)],
     # la facture déposée
     file: UploadFile = File(...),
     # L'authentification JWT est facultative pour cet appel
@@ -36,7 +38,7 @@ async def flows_post(
     jwt: str = Depends(get_token_optional),
 ):
     # calcule le hash sha256 de la facture déposée
-    upload_hash = store.compute_h256(file)
+    upload_hash = await store.compute_h256(file)
 
     # où stocker la facture déposée
     srv, bucket, file_key = store.get_srv_bucket_key_from_file_ctx(

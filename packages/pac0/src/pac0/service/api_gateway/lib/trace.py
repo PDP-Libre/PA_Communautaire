@@ -6,7 +6,7 @@ from typing import Any
 from pydantic import BaseModel
 
 # TODO: set to False on prod
-TESTING = True
+TESTING = False
 MAX_TRACE = 200
 
 class MsgInfo(BaseModel):

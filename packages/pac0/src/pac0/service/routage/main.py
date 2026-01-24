@@ -12,6 +12,6 @@ ctx, broker, app = init_esb_app("routage")
 
 @broker.subscriber(ctx.subject_in, ctx.queue)
 async def process(message):
-    await ctx.publisher_out.publish(message, correlation_id=message.correlation_id)
-    # await publisher_err.publish(message, correlation_id=message.correlation_id)
+    await ctx.publisher_out.publish(message)
+    # await publisher_err.publish(message)
     # TODO see lib.process()

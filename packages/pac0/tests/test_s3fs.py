@@ -24,3 +24,13 @@ def test_10():
     s3.ls("my-bucket")
     with s3.open("my-bucket/my-file.txt", "rb") as f:
         print(f.read())
+
+
+def test_presignedurl():
+    # TODO: add some test about pre-signed url (basic and with store module)
+    assert False
+
+
+def test_store_put():
+    # TODO: add some test about pre-signed url (basic and with store module)
+    assert False

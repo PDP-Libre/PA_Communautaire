@@ -19,7 +19,7 @@ class MsgPayloadBase(BaseModel):
     # the unique flow id
     flow_id: int
     # JWT token as given in the API entry point
-    jwt: str
+    jwt: str | None
 
 
 

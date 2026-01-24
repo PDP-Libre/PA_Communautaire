@@ -9,7 +9,7 @@ services:
     image: astral/uv:python3.12-bookworm-slim
     container_name: pac01-api-gateway
     entrypoint: uvx
-    command: pac0-cli@latest run 1
+    command: pac0-cli@latest run 1 --install-tools --install-src
     environment:
       - NATS_URL=nats://02-esb-central:4222
     ports:
@@ -24,7 +24,7 @@ services:
     image: astral/uv:python3.12-bookworm-slim
     container_name: pac03-controle-formats
     entrypoint: uvx
-    command: pac0-cli@latest run 3
+    command: pac0-cli@latest run 3 --install-tools --install-src
     environment:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
@@ -36,7 +36,7 @@ services:
     image: astral/uv:python3.12-bookworm-slim
     container_name: pac04-validation-metier
     entrypoint: uvx
-    command: pac0-cli@latest run 4
+    command: pac0-cli@latest run 4 --install-tools --install-src
     environment:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
@@ -48,7 +48,7 @@ services:
     image: astral/uv:python3.12-bookworm-slim
     container_name: pac05-conversion-formats
     entrypoint: uvx
-    command: pac0-cli@latest run 5
+    command: pac0-cli@latest run 5 --install-tools --install-src
     environment:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
@@ -60,7 +60,7 @@ services:
     image: astral/uv:python3.12-bookworm-slim
     container_name: pac06-annuaire-local
     entrypoint: uvx
-    command: pac0-cli@latest run 6
+    command: pac0-cli@latest run 6 --install-tools --install-src
     environment:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
@@ -72,7 +72,7 @@ services:
     image: astral/uv:python3.12-bookworm-slim
     container_name: pac07-routage
     entrypoint: uvx
-    command: pac0-cli@latest run 7
+    command: pac0-cli@latest run 7 --install-tools --install-src
     environment:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
@@ -84,7 +84,7 @@ services:
     image: astral/uv:python3.12-bookworm-slim
     container_name: pac08-transmission-fiscale
     entrypoint: uvx
-    command: pac0-cli@latest run 8
+    command: pac0-cli@latest run 8 --install-tools --install-src
     environment:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
@@ -96,7 +96,7 @@ services:
     image: astral/uv:python3.12-bookworm-slim
     container_name: pac09-gestion-cycle-vie
     entrypoint: uvx
-    command: pac0-cli@latest run 9
+    command: pac0-cli@latest run 9 --install-tools --install-src
     environment:
       - NATS_URL=nats://02-esb-central:4222
     depends_on:
