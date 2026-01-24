@@ -5,7 +5,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: paxpar
+  name: pac0
   annotations:
     # uncomment staging or prod (not both !!)
     # comment both to disable let's encrypt certificate

@@ -67,5 +67,52 @@ spec:
   selector:
     app.kubernetes.io/name: "01-api-gateway"
     app.kubernetes.io/instance: pac0
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paxpar
+  annotations:
+    # uncomment staging or prod (not both !!)
+    # comment both to disable let's encrypt certificate
+    # to go back to the self-signed K8S certificate
+    #cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer-staging
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer-prod
+    
+    nginx.ingress.kubernetes.io/proxy-body-size: 250m
+    # see https://www.civo.com/learn/using-websockets-with-ingress-controller
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/server-snippets: |
+      location / {
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header Connection "upgrade";
+        proxy_cache_bypass $http_upgrade;
+      }
+spec:
+  tls:
+    - hosts:      
+      - pac01.document.legal
+    # - host: pac02.document.legal
+    # - host: pac03.document.legal
+    # - host: pac04.document.legal
+    # - host: pac0.document.legal
+    #  - host: pac0.arundo.tech
+      secretName: pac01-api-tls
 
-
+  rules:
+    - host: pac01.document.legal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: s01-api-gateway
+                port:
+                  number: 8000

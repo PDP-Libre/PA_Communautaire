@@ -1,6 +1,9 @@
 # Specs brique Gestion Cycle de Vie
 
 
+```mermaid
+```
+
 
 ## divers
 

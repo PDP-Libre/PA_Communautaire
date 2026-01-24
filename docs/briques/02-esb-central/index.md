@@ -7,7 +7,7 @@ Elles doivent passer par le service `02-esb-central`.
 
 
 ```mermaid
-flowchart TD
+flowchart LR
     01-api-gateway <--> 02-esb-central
     03-controle-formats <--> 02-esb-central
     04-validation-metier <--> 02-esb-central
@@ -16,6 +16,7 @@ flowchart TD
     07-routage <--> 02-esb-central
     08-transmission-fiscale <--> 02-esb-central
     09-gestion-cycle-vie <--> 02-esb-central
+    
 ```
 
 

@@ -5,33 +5,122 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 10-stockage
+  name: "10-stockage"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: 10-stockage
+      app.kubernetes.io/name: "10-stockage"
       app.kubernetes.io/instance: pac0
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: 10-stockage
+        app.kubernetes.io/name: "10-stockage"
         app.kubernetes.io/instance: pac0
     spec:
 
       containers:
         - name: main
           imagePullPolicy: Always
-          
-          image: astral/uv:python3.12-bookworm-slim
-          command: ["uvx"]
-          args: ["--refresh", "pac0-cli@latest", "run", "10"]
-          env:
-          - name: NATS_URL
-            value: "nats://s02-esb-central:4222"
+
+          #WARNING: no persistent storage !!          
+          image: "chrislusf/seaweedfs:4.07"
+          #command: ["server"]
+          args: ["server", "-s3", "-s3.config", "/etc/seaweedfs/config.json"]
+
+          # S3 port : 8333
+          # filer port : 8888
+          # volume server : 8080
+          ports:
+            - name: http
+              containerPort: 8333
+              protocol: TCP
+
+          volumeMounts:
+          - name: config-volume
+            mountPath: /etc/seaweedfs
     
           resources:
             requests:
               memory: "1024Mi"
             limits:
               memory: "2048Mi"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: 10-stockage-conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 10-stockage-conf
+data:
+  config.json: |
+    {
+      "identities": [
+        {
+          "name": "anonymous",
+          "actions": []
+        },
+        {
+          "name": "pdplibre",
+          "credentials": [
+            {
+              "accessKey": "pdplibrekey",
+              "secretKey": "Sup3rCl3"
+            }
+          ],
+          "actions": [
+            "Admin",
+            "Read",
+            "List",
+            "Tagging",
+            "Write"
+          ]
+        }
+      ]
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s10-stockage
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8333
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: "10-stockage"
+    app.kubernetes.io/instance: pac0
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pac-store-ingress
+  annotations:
+    #cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer-staging
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer-prod    
+    nginx.ingress.kubernetes.io/proxy-body-size: 250m
+    # see https://www.civo.com/learn/using-websockets-with-ingress-controller
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  tls:
+    - hosts:      
+      - store.document.legal
+      secretName: pac01-store-tls
+
+  rules:
+    - host: store.document.legal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: s10-stockage
+                port:
+                  number: 8333

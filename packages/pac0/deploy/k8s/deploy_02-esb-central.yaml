@@ -21,10 +21,12 @@ spec:
 
       containers:
         - name: main
-          image: "nats:2.12"
-          #TODO: choose how to persist storage
-          args: ["--js"]
           imagePullPolicy: Always
+
+          #WARNING: no persistent storage !!
+          image: "nats:2.12"
+          args: ["--js"]
+
           ports:
             - name: nats
               containerPort: 4222
@@ -53,14 +55,16 @@ kind: Service
 metadata:
   name: s02-esb-central
 spec:
-  type: ClusterIP
+  type: NodePort
+  #type: ClusterIP
   ports:
     - port: 4222
       targetPort: nats
       protocol: TCP
       name: nats
+      # NodePort will be auto-assigned (30000-32767) 
+      # or specify: nodePort: 31000
+      nodePort: 32222
   selector:
     app.kubernetes.io/name: 02-esb-central
     app.kubernetes.io/instance: pac0
-
-

@@ -3,12 +3,21 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import asyncio
-from typing import Annotated
+import os
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, Request
+import boto3
+from fastapi import APIRouter, Depends, File, Request, UploadFile
 from faststream.nats import NatsBroker
 from pac0.service.api_gateway.lib import trace
 from pac0.service.api_gateway.lib.common import broker, global_state
+from pac0.shared.subjects import *
+from packages.pac0.src.pac0.service.api_gateway.lib.models import MsgApiFlowsOutPayload
+from packages.pac0.src.pac0.shared.payload import (
+    get_token_optional,
+    get_token_required,
+    flow_id_new,
+)
 
 router = APIRouter()
 
@@ -19,12 +28,71 @@ async def read_root():
 
 
 @router.post("/flows")
-async def flows_post():
-    return {"Hello": "World"}
+async def flows_post(
+    # la facture déposée
+    file: UploadFile = File(...),
+    # L'authentification JWT est facultative pour cet appel
+    # un autre PA peut nous appeler sans jwt
+    jwt: str = Depends(get_token_optional),
+):
+    # calcule le hash sha256 de la facture déposée
+    upload_hash = store.compute_h256(file)
 
+    # où stocker la facture déposée
+    srv, bucket, file_key = store.get_srv_bucket_key_from_file_ctx(
+        hash=upload_hash,
+        # le token jwt est peut-être vide
+        jwt=jwt,
+        # à ce moment, on ne connait ni l'utilisateur,
+        # ni le fournisseur, ni le client
+        user_id=None,
+        supplier_id=None,
+        customer_id=None,
+    )
+
+    # on pre-calcule l'URL signé pour stocker la facture (utilisé plus bas)
+    store_post_presigned_url = await store.get_presigned_url(
+        s3=srv,
+        bucket=bucket,
+        key=file_key,
+        method="put_object",
+    )
+    # on pre-calcule l'URL signé pour récupérer la facture (utilisé par d'autres briques)
+    store_get_presigned_url = await store.get_presigned_url(
+        s3=srv,
+        bucket=bucket,
+        key=file_key,
+        method="get_object",
+    )
+
+    # upload the file to s3
+    await store.put(store_post_presigned_url, file)
+
+    # Your file processing logic here
+    # TODO: get pre-signed URL
+    flow_id = await flow_id_new()
+    await broker.publish(
+        MsgApiFlowsOutPayload(
+            version=VERSION,
+            flow_id=flow_id,
+            jwt=jwt,
+            store_presigned_url=store_get_presigned_url,
+            upload_hash=upload_hash,
+            upload_filename=file.filename,
+        ),
+        SUBJECT_01_OUT,
+    )
+
+    return {
+        "flow_id": flow_id,
+        "filename": file.filename,
+    }
 
 @router.get("/flows/{flowId}")
-async def flows_get():
+async def flows_get(
+    # On doit être authentifié pour cet appel
+    jwt: str = Depends(get_token_required),
+):
     return {"Hello": "World"}
 
 

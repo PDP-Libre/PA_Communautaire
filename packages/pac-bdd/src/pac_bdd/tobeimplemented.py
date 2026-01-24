@@ -11,25 +11,6 @@ from pytest_bdd import given, parsers, scenario, then, when
 # Note: "je dépose la facture #{invoice_id}" is now defined in peppol.py
 
 
-@when("je dépose une facture")
-def submit_invoice_simple():
-    # POST /
-    raise NotImplementedError()
-
-
-@when(parsers.parse("je dépose la facture #{invoice} sur #{pa}"))
-def submit_invoice_on_pa(invoice, pa):
-    # POST /
-    raise NotImplementedError()
-
-
-@when(
-    parsers.parse("je dépose pour contrôle la facture @{invoice}"),
-)
-def control_invoice():
-    raise NotImplementedError()
-
-
 @then("j'obtiens un numéro de tâche")
 def job_id():
     raise NotImplementedError()
