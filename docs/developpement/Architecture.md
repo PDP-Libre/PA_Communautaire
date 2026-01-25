@@ -42,6 +42,7 @@ Le système utilise les services suivants:
 
 On a choisi de mettre en place des tests en mode "Behavior Driven Development" pour permettre à des non programmeurs de pouvoir expliquer et valider le fonctionnement du système. 
 
+
 ## Sous-projets
 
 Le présent projet est [un monorepo](https://en.wikipedia.org/wiki/Monorepo).
@@ -50,7 +51,8 @@ Les sous-projets sont dans le répertoire `/packages`:
 * [packages/pac-bdd](../../packages/pac-bdd/README.md) permets d'exécuter les tests BDD.
 * [packages/pac0](../../packages/pac0/README.md) est l'implémentation de référence.  
 
-# Arborescence
+
+# Arborescence
 
 Nous allons trouver l'arborescence suivante :
 
