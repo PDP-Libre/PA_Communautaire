@@ -9,22 +9,12 @@ from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import Button, Header, Footer
 
-from faststream.nats import NatsBroker
-from faststream import FastStream
 
 from .screen.tests import TestsScreen
 from .screen.factures import FacturesScreen
 from .screen.briques import BriquesScreen
 from .screen.dashboard import DashboardScreen
-
-
-broker = NatsBroker("nats://localhost:4222")
-
-
-@broker.subscriber("test")  # subject name
-async def handle_msg(msg_body):
-    print("recieved ....")
-
+from . import esb
 
 
 class ConsoleApp(App):
@@ -50,38 +40,19 @@ class ConsoleApp(App):
         ("q", "quit", "quitter"),
     ]
 
-    COLORS = [
-        "white",
-        "maroon",
-        "red",
-        "purple",
-        "fuchsia",
-        "olive",
-        "yellow",
-        "navy",
-        "teal",
-        "aqua",
-    ]
-
     async def on_mount(self) -> None:
-        self.switch_mode("briques")
+        self.switch_mode("dashboard")
 
-    # def compose(self) -> ComposeResult:
-    #    yield Header()
-    #    # yield Container()
-    #    yield Button("Switch", id="switch")
-    #    yield Footer()
-
-    # @on(Button.Pressed, "#switch")
-    # def on_switch(self) -> None:
-    #    self.push_screen(GreenScreen())
 
 
 async def main():
     app_console = ConsoleApp()
-    app = FastStream(broker)
+    # app_esb = esb.app_factory()
+    # await esb.broker.start()
+    # await esb.broker.publish("hello", "from console")
 
-    await asyncio.gather(app_console.run(), app.run())
+    # await asyncio.gather(app_console.run(), app_esb.run())
+    await app_console.run()
 
 
 if __name__ == "__main__":

@@ -4,6 +4,19 @@ from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import Button, Label, Header, Footer, DataTable
 
+# from .. import esb
+
+from faststream.nats import NatsBroker
+from faststream import FastStream
+
+
+# TODO: move to conf/settings
+broker = NatsBroker("nats://localhost:4222")
+
+# def app_factory():
+#    app = FastStream(broker)
+#    return app
+
 
 ROWS = [
     ("#", "brique", "IN", "OUT"),
@@ -30,7 +43,7 @@ ROWS = [
 
 
 class BriquesScreen(Screen):
-    #BINDINGS = [("escape", "app.pop_screen", "Pop screen")]
+    BINDINGS = [("h", "healthcheck", "healthcheck")]
 
     def compose(self) -> ComposeResult:        
         self.styles.background = "yellow"
@@ -46,7 +59,25 @@ class BriquesScreen(Screen):
     #def on_main(self) -> None:
     #    self.dismiss()
 
-    def on_mount(self) -> None:
+    async def on_healthcheck(self):
+        await broker.publish("healthcheck from CLI", "healthcheck")
+
+    async def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.add_columns(*ROWS[0])
         table.add_rows(ROWS[1:])
+
+        @broker.subscriber("test2")  # subject name
+        async def handle_msg(msg_body):
+            # print("recieved ....", msg_body)
+
+            table = self.query_one(DataTable)
+            table.add_row(8, "msg ...", 0, 0)
+
+        await broker.start()
+        await broker.publish("Hello from CLI", "healthcheck")
+
+    async def on_unmount(self) -> None:
+        """Stop the process when app exits."""
+        await broker.publish("bye from CLI", "healthcheck")
+        await broker.stop()
