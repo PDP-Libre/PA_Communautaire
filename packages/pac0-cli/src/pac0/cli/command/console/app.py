@@ -4,9 +4,18 @@
 
 import asyncio
 from textual.app import App
-from textual import events
+from textual import events, on
+from textual.screen import Screen
+from textual.app import ComposeResult
+from textual.widgets import Button, Header, Footer
+
 from faststream.nats import NatsBroker
 from faststream import FastStream
+
+from .screen.green import GreenScreen
+from .screen.briques import BriquesScreen
+from .screen.dashboard import DashboardScreen
+
 
 broker = NatsBroker("nats://localhost:4222")
 
@@ -16,7 +25,28 @@ async def handle_msg(msg_body):
     print("recieved ....")
 
 
+
 class ConsoleApp(App):
+    TITLE = "PAC0 Console"
+    SUB_TITLE = "Plateforme Agréée Communautaire"
+
+    CSS_PATH = "app.tcss"
+
+    MODES = {
+        "dashboard": DashboardScreen,
+        "briques_screen": BriquesScreen,
+        "green_screen": GreenScreen,
+    }
+
+    BINDINGS = [
+        ("d", "switch_mode('dashboard')", "dashboard"),
+        ("b", "switch_mode('briques_screen')", "briques"),
+        ("g", "switch_mode('green_screen')", "green"),
+        # ("t", "switch_screen('stats')", "Statistiques"),
+        # ("e", "switch_screen('tests')", "Tests"),
+        ("q", "quit", "Quitter"),
+    ]
+
     COLORS = [
         "white",
         "maroon",
@@ -31,11 +61,21 @@ class ConsoleApp(App):
     ]
 
     async def on_mount(self) -> None:
-        self.screen.styles.background = "darkblue"
+        self.switch_mode("dashboard")
 
     async def on_key(self, event: events.Key) -> None:
         if event.key.isdecimal():
             self.screen.styles.background = self.COLORS[int(event.key)]
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        # yield Container()
+        yield Button("Switch", id="switch")
+        yield Footer()
+
+    @on(Button.Pressed, "#switch")
+    def on_switch(self) -> None:
+        self.push_screen(GreenScreen())
 
 
 async def main():

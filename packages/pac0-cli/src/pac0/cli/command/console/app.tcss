@@ -1,0 +1,21 @@
+Screen {
+    layout: vertical;
+}
+
+#table-container {
+    height: 100%;
+    border: solid $primary;
+    margin: 1;
+}
+
+DataTable {
+    height: 100%;
+}
+
+.status-bar {
+    height: 3;
+    dock: bottom;
+    padding: 0 1;
+    background: $panel;
+    color: $text;
+}
