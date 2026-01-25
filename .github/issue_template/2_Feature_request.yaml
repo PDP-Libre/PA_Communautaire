@@ -1,0 +1,20 @@
+name: 🚀 Demande de Fonctionnalité
+description: Idées pour de nouvelles fonctionnalités et améliorations
+body:
+    - type: textarea
+      id: description
+      attributes:
+         label: Description
+         description: Une description claire et concise de la nouvelle fonctionnalité
+      validations:
+            required: true
+    - type: textarea
+      id: example
+      attributes:
+            label: Exemple
+            description: |
+                Un exemple simple de la nouvelle fonctionnalité en action.
+                Si la nouvelle fonctionnalité modifie une fonctionnalité existante, incluez une simple comparaison avant/après.
+                Si possible, donnez des liens vers documentations, normes ou réglementations de référence.
+                N'hésitez pas à donner des exemples concrets. 
+
