@@ -13,10 +13,6 @@ from faststream import FastStream
 # TODO: move to conf/settings
 broker = NatsBroker("nats://localhost:4222")
 
-# def app_factory():
-#    app = FastStream(broker)
-#    return app
-
 
 ROWS = [
     ("#", "brique", "IN", "OUT"),
@@ -38,7 +34,7 @@ ROWS = [
     (7, "routage", 0, 0),
     (8, "transmission-fiscale", 0, 0),
     (9, "gestion-cycle-vie", 0, 0),
-    (10, "stockage", 0, 0),
+    (10, "stockage", "N/A", "N/A"),
 ]
 
 

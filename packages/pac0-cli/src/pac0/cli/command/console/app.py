@@ -14,6 +14,8 @@ from .screen.tests import TestsScreen
 from .screen.factures import FacturesScreen
 from .screen.briques import BriquesScreen
 from .screen.dashboard import DashboardScreen
+from .screen.config import ConfigScreen
+
 from . import esb
 
 
@@ -28,6 +30,7 @@ class ConsoleApp(App):
         "briques": BriquesScreen,
         "tests": TestsScreen,
         "factures": FacturesScreen,
+        "config": ConfigScreen,
     }
 
     BINDINGS = [
