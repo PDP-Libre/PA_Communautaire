@@ -2,7 +2,31 @@ from textual.app import App
 from textual import events, on
 from textual.screen import Screen
 from textual.app import ComposeResult
-from textual.widgets import Button, Label, Header, Footer
+from textual.widgets import Button, Label, Header, Footer, DataTable
+
+
+ROWS = [
+    ("#", "brique", "IN", "OUT"),
+    # (4, "Joseph Schooling", "Singapore", 50.39),
+    # (2, "Michael Phelps", "United States", 51.14),
+    # (5, "Chad le Clos", "South Africa", 51.14),
+    # (6, "László Cseh", "Hungary", 51.14),
+    # (3, "Li Zhuhao", "China", 51.26),
+    # (8, "Mehdy Metella", "France", 51.58),
+    # (7, "Tom Shields", "United States", 51.73),
+    # (1, "Aleksandr Sadovnikov", "Russia", 51.84),
+    # (10, "Darren Burns", "Scotland", 51.84),
+    (1, "api-gateway", 0, 0),
+    (2, "esb-central", 0, 0),
+    (3, "controle-formats", 0, 0),
+    (4, "validation-metier", 0, 0),
+    (5, "conversion-formats", 0, 0),
+    (6, "annuaire-local", 0, 0),
+    (7, "routage", 0, 0),
+    (8, "transmission-fiscale", 0, 0),
+    (9, "gestion-cycle-vie", 0, 0),
+    (10, "stockage", 0, 0),
+]
 
 
 class BriquesScreen(Screen):
@@ -13,9 +37,16 @@ class BriquesScreen(Screen):
         yield Header()
         yield Label("briques...", id="question")
 
+        yield DataTable()
+
         #yield Button("Main Screen", id="main")
         yield Footer()
 
     #@on(Button.Pressed, "#main")
     #def on_main(self) -> None:
     #    self.dismiss()
+
+    def on_mount(self) -> None:
+        table = self.query_one(DataTable)
+        table.add_columns(*ROWS[0])
+        table.add_rows(ROWS[1:])

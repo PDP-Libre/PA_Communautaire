@@ -12,7 +12,8 @@ from textual.widgets import Button, Header, Footer
 from faststream.nats import NatsBroker
 from faststream import FastStream
 
-from .screen.green import GreenScreen
+from .screen.tests import TestsScreen
+from .screen.factures import FacturesScreen
 from .screen.briques import BriquesScreen
 from .screen.dashboard import DashboardScreen
 
@@ -34,17 +35,19 @@ class ConsoleApp(App):
 
     MODES = {
         "dashboard": DashboardScreen,
-        "briques_screen": BriquesScreen,
-        "green_screen": GreenScreen,
+        "briques": BriquesScreen,
+        "tests": TestsScreen,
+        "factures": FacturesScreen,
     }
 
     BINDINGS = [
         ("d", "switch_mode('dashboard')", "dashboard"),
-        ("b", "switch_mode('briques_screen')", "briques"),
-        ("g", "switch_mode('green_screen')", "green"),
+        ("b", "switch_mode('briques')", "briques"),
+        ("t", "switch_mode('tests')", "tests"),
+        ("f", "switch_mode('factures')", "factures"),
         # ("t", "switch_screen('stats')", "Statistiques"),
         # ("e", "switch_screen('tests')", "Tests"),
-        ("q", "quit", "Quitter"),
+        ("q", "quit", "quitter"),
     ]
 
     COLORS = [
@@ -61,21 +64,17 @@ class ConsoleApp(App):
     ]
 
     async def on_mount(self) -> None:
-        self.switch_mode("dashboard")
+        self.switch_mode("briques")
 
-    async def on_key(self, event: events.Key) -> None:
-        if event.key.isdecimal():
-            self.screen.styles.background = self.COLORS[int(event.key)]
+    # def compose(self) -> ComposeResult:
+    #    yield Header()
+    #    # yield Container()
+    #    yield Button("Switch", id="switch")
+    #    yield Footer()
 
-    def compose(self) -> ComposeResult:
-        yield Header()
-        # yield Container()
-        yield Button("Switch", id="switch")
-        yield Footer()
-
-    @on(Button.Pressed, "#switch")
-    def on_switch(self) -> None:
-        self.push_screen(GreenScreen())
+    # @on(Button.Pressed, "#switch")
+    # def on_switch(self) -> None:
+    #    self.push_screen(GreenScreen())
 
 
 async def main():
