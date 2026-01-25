@@ -1,5 +1,8 @@
 name: 🐛 Bug Report
-description: Expliquez comment vous avez trouvé ce bug. 
+description: Vous avez trouvé un bug. 
+title: '[BUG]: '
+labels: 
+ - bug
 body:
     # - type: input
     #   id: affected-versions
@@ -20,11 +23,10 @@ body:
       attributes:
             label: Comment reproduire
             description: |
-             ⚠️  Ceci est la partie la plus importante du rapport ⚠️
-             Sans un moyen facile de reproduire votre problème, nous aurons peu de chances de pouvoir vous aider et de corriger le bug.
-             Veuillez prendre le temps de nous montrer du code et/ou une configuration nécessaire pour que d'autres puissent reproduire facilement le problème.
-             La plupart du temps, créer un "bug reproducer" comme expliqué dans l'URL ci-dessous est la meilleure façon de nous aider
-             et augmente les chances que quelqu'un y jette un œil :
+             ⚠️  Ceci est la partie la plus importante du rapport ⚠️  
+             Sans un moyen facile de reproduire votre problème, nous aurons peu de chances de pouvoir vous aider et de corriger le bug.  
+             Veuillez prendre le temps de nous montrer du code et/ou une configuration nécessaire pour que d'autres puissent reproduire facilement le problème.  
+             La plupart du temps, créer un "bug reproducer" comme expliqué dans l'URL ci-dessous est la meilleure façon de nous aider et augmente les chances que quelqu'un y jette un œil :
              https://git.pdplibre.org/Construction_PA/PA_Communautaire/src/branch/main/docs/developpement/Contribuer.md
       validations:
             required: true

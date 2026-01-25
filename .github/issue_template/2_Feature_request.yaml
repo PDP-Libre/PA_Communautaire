@@ -1,5 +1,8 @@
 name: 🚀 Demande de Fonctionnalité
 description: Idées pour de nouvelles fonctionnalités et améliorations
+title: '[FEATURE]: '
+labels: 
+ - enhancement
 body:
     - type: textarea
       id: description
