@@ -1,8 +1,5 @@
 name: 🐛 Bug Report
-about: "J'ai trouvé un problème."
 description: Expliquez comment vous avez trouvé ce bug. 
-labels: Bug
-
 body:
     # - type: input
     #   id: affected-versions
