@@ -1,8 +1,17 @@
-## 🧪 Exécution des tests
+# Tests pilotés par le comportement
 
 Pour garantir un niveau de qualité élevé du code et s'assurer que le code continue de fonctionner comme prévue, nous avons mis en place des tests BDD - Behavior Driven Development.
 
 Les BDD permettent à des développeurs mais aussi à des experts métiers de comprendre facilement le fonctionnement du projet. 
+
+Vous trouverez 2 guides pour comprendre et construire des jeux de tests : 
+
+* [Guide pour l'expert métier](BDD_Guide_Expert_Metier.md)
+* [Guide pour le développeur](BDD_Guide_Developpeur.md)
+
+# Exécution des tests
+
+TODO a relire avec philippe
 
 Pour exécuter tous les tests et générer des rapports:
 
@@ -37,10 +46,3 @@ Si on veut lancer un test seulement sur une partie du projet :
 ```bash
 uv run pytest -v test_scenario.py
 ```
-
-# En savoir plus
-
-Voir ces articles :
-
-* Comment rédiger un test BDD quand on est un expert métier ?
-* Comment programmer un test BDD ? 

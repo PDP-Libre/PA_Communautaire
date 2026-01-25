@@ -69,7 +69,7 @@ Pour garantir un niveau de qualité élevé du code et s'assurer que le code con
 
 Les BDD permettent à des développeurs mais aussi à des experts métiers de comprendre facilement le fonctionnement du projet. 
 
-- [Comment utiliser les tests ?](docs/developpement/Test.md)
+- [Comment utiliser les tests ?](docs/developpement/BDD_README.md)
 
 
 ## 🤝 Contribution
