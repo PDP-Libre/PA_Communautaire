@@ -33,8 +33,8 @@ body:
       attributes:
             label: Solution Possible
             description: |
-            Optionnel : uniquement si vous avez des suggestions sur un correctif/raison du bug
-            N'hésitez pas à créer une pull request avec votre solution, cela aide à obtenir des commentaires plus rapides.
+              Optionnel : uniquement si vous avez des suggestions sur un correctif/raison du bug
+              N'hésitez pas à créer une pull request avec votre solution, cela aide à obtenir des commentaires plus rapides.
     - type: textarea
       id: additional-context
       attributes:
