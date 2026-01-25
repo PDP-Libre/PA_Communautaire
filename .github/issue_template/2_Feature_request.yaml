@@ -16,8 +16,8 @@ body:
       attributes:
             label: Exemple
             description: |
-                Un exemple simple de la nouvelle fonctionnalité en action.
-                Si la nouvelle fonctionnalité modifie une fonctionnalité existante, incluez une simple comparaison avant/après.
-                Si possible, donnez des liens vers documentations, normes ou réglementations de référence.
+                Un exemple simple de la nouvelle fonctionnalité en action.  
+                Si la nouvelle fonctionnalité modifie une fonctionnalité existante, incluez une simple comparaison avant/après.  
+                Si possible, donnez des liens vers documentations, normes ou réglementations de référence.  
                 N'hésitez pas à donner des exemples concrets. 
 
