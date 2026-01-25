@@ -1,6 +1,3 @@
-Title : Merge pull request '[PR title]' ([PR reference]) from [head branch] into [base branch].
-Body : Reviewed-on: [PR url].
-
 | Q             | A
 | ------------- | ---
 | Branche?      |   
