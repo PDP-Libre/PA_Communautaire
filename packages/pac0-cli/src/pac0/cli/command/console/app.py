@@ -3,18 +3,22 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import asyncio
+from typing import Any
 from textual.app import App
 from textual import events, on
 from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import Button, Header, Footer
-
+from textual.command import Provider, Hit
+from rich.style import Style
+from functools import partial
 
 from .screen.tests import TestsScreen
 from .screen.factures import FacturesScreen
 from .screen.briques import BriquesScreen
 from .screen.dashboard import DashboardScreen
 from .screen.config import ConfigScreen
+from .screen.nats import NatsScreen
 
 from . import esb
 
@@ -31,6 +35,8 @@ class ConsoleApp(App):
         "tests": TestsScreen,
         "factures": FacturesScreen,
         "config": ConfigScreen,
+        "nats": NatsScreen,
+
     }
 
     BINDINGS = [
@@ -47,15 +53,15 @@ class ConsoleApp(App):
         self.switch_mode("dashboard")
 
 
+app = ConsoleApp()
 
 async def main():
-    app_console = ConsoleApp()
     # app_esb = esb.app_factory()
     # await esb.broker.start()
     # await esb.broker.publish("hello", "from console")
 
     # await asyncio.gather(app_console.run(), app_esb.run())
-    await app_console.run()
+    await app.run()
 
 
 if __name__ == "__main__":

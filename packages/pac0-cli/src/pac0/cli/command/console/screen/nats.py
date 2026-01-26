@@ -7,55 +7,38 @@ from textual import events, on
 from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import Button, Label, Header, Footer, DataTable
-
-# from .. import esb
+from ..palette import CustomCommand
 
 from faststream.nats import NatsBroker
 from faststream import FastStream
 
-from ..palette import CustomCommand
+
+ROWS = [
+    ("#", "test", "statut"),
+    (1, "test_scenario::test_peppol", "OK"),
+    (2, "test_scenario::test_metier", "FAIL"),
+    (3, "test_scenario::test_peppol", "FAIL"),
+]
+
 
 # TODO: move to conf/settings
 # TODO: move to ebs.py
 broker = NatsBroker("nats://localhost:4222")
 
 
-ROWS = [
-    ("#", "brique", "IN", "OUT"),
-    (1, "api-gateway", 0, 0),
-    (2, "esb-central", 0, 0),
-    (3, "controle-formats", 0, 0),
-    (4, "validation-metier", 0, 0),
-    (5, "conversion-formats", 0, 0),
-    (6, "annuaire-local", 0, 0),
-    (7, "routage", 0, 0),
-    (8, "transmission-fiscale", 0, 0),
-    (9, "gestion-cycle-vie", 0, 0),
-    (10, "stockage", "N/A", "N/A"),
-]
-
-
-class BriquesScreen(Screen):
-    TITLE = "briques"
-    BINDINGS = [("h", "healthcheck", "healthcheck")]
+class NatsScreen(Screen):
     COMMANDS = App.COMMANDS | {CustomCommand}
 
     def compose(self) -> ComposeResult:
-        self.styles.background = "yellow"
         yield Header()
-        yield Label("briques...", id="question")
-
+        yield Label("NATS ...", id="question")
         yield DataTable()
+        yield Button("ping", id="msg1", variant="success")  
+        yield Button("healthcheck", id="msg2", variant="error")
 
-        # yield Button("Main Screen", id="main")
         yield Footer()
 
-    # @on(Button.Pressed, "#main")
-    # def on_main(self) -> None:
-    #    self.dismiss()
 
-    async def on_healthcheck(self):
-        await broker.publish("healthcheck from CLI", "healthcheck")
 
     async def on_mount(self) -> None:
         table = self.query_one(DataTable)
@@ -76,9 +59,14 @@ class BriquesScreen(Screen):
         await broker.stop()
 
 
-def handle_msg(
-    screen: BriquesScreen,
-    msg,
-):
-    table = screen.query_one(DataTable)
-    table.add_row(8, str(msg), 0, 0)
+
+    async def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Event handler called when a button is pressed."""
+        if event.button.id == "ping":
+            #self.add_class("started")
+            await broker.publish("ping from CLI", "ping")
+
+        elif event.button.id == "healthcheck":
+            self.remove_class("started")
+            await broker.publish("healthcheck from CLI", "healthcheck")
+

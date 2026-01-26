@@ -7,6 +7,7 @@ from textual.widgets import Button, Label, Header, Footer, DataTable
 from textual.command import Hit, Hits, Provider
 from textual.app import App, SystemCommand
 
+from ..palette import CustomCommand
 
 ROWS = [
     ("#", "eid", "montant", "statut"),
@@ -17,6 +18,7 @@ ROWS = [
 
 
 class FacturesScreen(Screen):
+    COMMANDS = App.COMMANDS | {CustomCommand}
 
     def compose(self) -> ComposeResult:
         yield Header()

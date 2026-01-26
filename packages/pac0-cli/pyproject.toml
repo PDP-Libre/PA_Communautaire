@@ -22,6 +22,12 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "pac0.cli"
 
+[dependency-groups]
+dev = [
+    "textual[syntax]>=7.3.0",
+    "textual-dev>=1.8.0",
+]
+
 [project.scripts]
 pac0-cli = "pac0.cli.main:app"
 pac0_cli = "pac0.cli.main:app"
