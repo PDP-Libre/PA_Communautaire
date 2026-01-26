@@ -65,7 +65,7 @@ class BriquesScreen(Screen):
         @broker.subscriber("*")  # subject name
         async def handle_msg(msg_body):
             # print("recieved ....", msg_body)
-            handle_msg(msg_body)
+            ...
 
         await broker.start()
         await broker.publish("Hello from CLI", "healthcheck")

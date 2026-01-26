@@ -7,6 +7,7 @@ from textual import events, on
 from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import Button, Label, Header, Footer, DataTable
+from textual.containers import HorizontalGroup, VerticalScroll
 from ..palette import CustomCommand
 
 from faststream.nats import NatsBroker
@@ -14,10 +15,7 @@ from faststream import FastStream
 
 
 ROWS = [
-    ("#", "test", "statut"),
-    (1, "test_scenario::test_peppol", "OK"),
-    (2, "test_scenario::test_metier", "FAIL"),
-    (3, "test_scenario::test_peppol", "FAIL"),
+    ("#", "subject", "message"),
 ]
 
 
@@ -32,10 +30,11 @@ class NatsScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Header()
         yield Label("NATS ...", id="question")
-        yield DataTable()
-        yield Button("ping", id="msg1", variant="success")  
-        yield Button("healthcheck", id="msg2", variant="error")
-
+        yield VerticalScroll(
+            Button("ping", id="ping", variant="success")  ,
+            Button("healthcheck", id="healthcheck", variant="error"),
+            DataTable(),
+        )
         yield Footer()
 
 
@@ -48,10 +47,12 @@ class NatsScreen(Screen):
         @broker.subscriber("*")  # subject name
         async def handle_msg(msg_body):
             # print("recieved ....", msg_body)
-            handle_msg(msg_body)
+            table = self.query_one(DataTable)
+            table.add_row("aaa", "bbb", "ccc")
 
         await broker.start()
         await broker.publish("Hello from CLI", "healthcheck")
+
 
     async def on_unmount(self) -> None:
         """Stop the process when app exits."""
