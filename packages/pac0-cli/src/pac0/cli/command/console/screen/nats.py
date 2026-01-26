@@ -46,7 +46,7 @@ class NatsScreen(Screen):
 
         @broker.subscriber("*")  # subject name
         async def handle_msg(msg_body):
-            # print("recieved ....", msg_body)
+            print("recieved ....", msg_body)
             table = self.query_one(DataTable)
             table.add_row("aaa", "bbb", "ccc")
 
