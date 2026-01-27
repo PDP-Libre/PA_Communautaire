@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # see https://s3fs.readthedocs.io/en/latest/
 # see https://github.com/fsspec/s3fs
 

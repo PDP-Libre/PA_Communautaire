@@ -10,5 +10,5 @@ ctx, broker, app = init_esb_app("conversion-formats")
 
 @broker.subscriber(ctx.subject_in, ctx.queue)
 async def process(message):
+    #TODO: faire qq chose ...
     await ctx.publisher_out.publish(message)
-    # await publisher_err.publish(message)

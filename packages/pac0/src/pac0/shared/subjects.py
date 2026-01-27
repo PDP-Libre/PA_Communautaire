@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
 # X="api-gateway-OUT"
 SUBJECT_01_ERR = "api-gateway-ERR"
 SUBJECT_01_OUT = "api-gateway-OUT"

@@ -29,6 +29,11 @@ path = [
     "docs/developpement/**",
     "docs/norme/**",
     "docs/test/**",
+    ".github/issue_template/*.md",
+    "docker/**/*.md",
+    "seaweedfs-config.json",
+    "**/docker-compose.yml",
+    "**/my-file.txt",
 ]
 SPDX-FileCopyrightText = "Various public contributors"
 SPDX-License-Identifier = "any-OSI"
