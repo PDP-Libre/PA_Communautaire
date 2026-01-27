@@ -1,2 +1,4 @@
 NATS_URL=nats://02-esb-central:4222
 STOCKAGE_URL=http://10-stockage:8333
+API_DOC_URL=http://01-api-gateway:8000/openapi.json
+API_URL=http://01-api-gateway:8000

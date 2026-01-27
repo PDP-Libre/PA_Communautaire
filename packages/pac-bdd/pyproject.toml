@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "openapi-spec-validator>=0.7.2",
     "pac0",
 ]
 

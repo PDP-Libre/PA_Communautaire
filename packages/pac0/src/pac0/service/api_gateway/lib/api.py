@@ -24,7 +24,7 @@ async def flows_post():
 
 
 @router.get("/flows/{flowId}")
-async def flows_get():
+async def flows_get(flowId: int):
     return {"Hello": "World"}
 
 
