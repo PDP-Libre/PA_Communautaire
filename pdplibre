@@ -11,8 +11,14 @@ Usage:
 The commands are:
 
     up              Start all services
-    sync            Dowload all depedendance
+    ps              Liste all services
+    top             Top all services
+    stop            Stop all services
+    down            Down all services
+    build           Build all images services
+    push            Push all images services
     test            Lauch all test
+    dc              docker compose
     pwd             Donne le répertoire de l'app
     install_script  Instal le script
 DOC
@@ -23,21 +29,75 @@ SCRIPT_PATH=$(readlink -f "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
 command cd $SCRIPT_DIR
 
-up() {
-    echo "Démarage ... $@"
+dc() {
+    init_docker
+    docker compose "$@"
 }
 
-sync() {
-    echo "Sync ... $@"
+up() {
+    init_docker
+    docker compose up -d $@
+}
+
+ps() {
+    init_docker
+    docker compose ps $@
+}
+
+top() {
+    init_docker
+    docker compose top $@
+}
+
+stop() {
+    init_docker
+    docker compose stop $@
+}
+
+down() {
+    init_docker
+    docker compose down -v $@
+}
+
+build() {
+    init_docker
+    docker compose build 01-api-gateway
+    docker compose build $@
+}
+
+push() {
+    init_docker
+    docker compose push $@
 }
 
 test() {
-    up
-    echo "Test ... $@"
+    init_docker
+    docker compose run test-bdd $@
 }
 
 pwd() {
     echo $SCRIPT_DIR
+}
+
+install_script() {
+    ln -s $PWD/pdplibre ~/.local/bin/pdplibre
+}
+
+login_registry_pdplibre() {
+    docker login git.pdplibre.org
+}
+
+test_auth_registry_pdplibre() {
+    if ! grep -q git.pdplibre.org ~/.docker/config.json
+    then
+        echo "Authentifier sur le registre d'image docker git.phplibre.org"
+        login_registry_pdplibre
+    fi
+}
+
+init_docker() {
+    cd docker
+    test_auth_registry_pdplibre
 }
 
 cmd=$1
