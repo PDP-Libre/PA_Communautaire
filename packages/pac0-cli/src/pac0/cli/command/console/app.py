@@ -5,18 +5,14 @@
 import asyncio
 from typing import Any
 from textual.app import App
-from textual import events, on
-from textual.screen import Screen
-from textual.app import ComposeResult
-from textual.widgets import Button, Header, Footer
-from textual.command import Provider, Hit
+
 from rich.style import Style
 from functools import partial
 
 from .screen.tests import TestsScreen
 from .screen.factures import FacturesScreen
 from .screen.briques import BriquesScreen
-from .screen.dashboard import DashboardScreen
+from .screen.accueil import AccueilScreen
 from .screen.config import ConfigScreen
 from .screen.nats import NatsScreen
 
@@ -30,7 +26,7 @@ class ConsoleApp(App):
     CSS_PATH = "app.tcss"
 
     MODES = {
-        "dashboard": DashboardScreen,
+        "accueil": AccueilScreen,
         "briques": BriquesScreen,
         "tests": TestsScreen,
         "factures": FacturesScreen,
@@ -40,17 +36,17 @@ class ConsoleApp(App):
     }
 
     BINDINGS = [
-        ("d", "switch_mode('dashboard')", "dashboard"),
-        ("b", "switch_mode('briques')", "briques"),
-        ("t", "switch_mode('tests')", "tests"),
-        ("f", "switch_mode('factures')", "factures"),
+        ("a", "switch_mode('accueil')", "accueil"),
+        # ("b", "switch_mode('briques')", "briques"),
+        # ("t", "switch_mode('tests')", "tests"),
+        # ("f", "switch_mode('factures')", "factures"),
         # ("t", "switch_screen('stats')", "Statistiques"),
         # ("e", "switch_screen('tests')", "Tests"),
         ("q", "quit", "quitter"),
     ]
 
     async def on_mount(self) -> None:
-        self.switch_mode("dashboard")
+        self.switch_mode("accueil")
 
 
 app = ConsoleApp()

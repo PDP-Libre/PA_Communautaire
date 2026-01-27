@@ -40,8 +40,6 @@ def init_esb_app(prefix):
     _broker.include_router(router)
 
     broker = _broker
-    publisher_ping = broker.publisher("ping")
-    publisher_pong = broker.publisher("pong")
 
     subject_in = f"{prefix}-IN"
     subject_out = f"{prefix}-OUT"
@@ -65,6 +63,35 @@ def init_esb_app(prefix):
     #    settings = SettingsService(_env_file=env)
     #    context.set_global("settings", settings)
 
+
+
+    #@app.on_startup
+    @app.after_startup
+    async def _():
+        await broker.publish(f"startup {prefix}", "service")
+        
+    @app.on_shutdown
+    #@app.after_shutdown
+    async def _():
+        await broker.publish(f"shutdown {prefix}", "service")
+        
+
+    @router.subscriber("healthcheck")
+    async def healthcheck_sub():
+        """
+        respond to tell the service is alive
+        """
+        await broker.publish(f"{prefix} is alive", "healthcheck_resp")
+
+
+    @router.subscriber("ping", "ping-pong")
+    async def ping(message):
+        """
+        respond to ping with a pong
+        """
+        await broker.publish(f"Pong from {prefix}", "pong")
+
+
     # You MUST return broker and app separatly
     return ctx, _broker, app
 
@@ -84,21 +111,4 @@ router = NatsRouter(prefix="")
 broker = None
 
 
-@router.subscriber("healthcheck")
-async def healthcheck_sub(
-    # message: Incoming,
-    # logger: Logger,
-):
-    """
-    respond to tell the service is alive
-    """
-    # logger.info("Incoming value: %s, depends value: %s" % (message.m, dependency))
-    await broker.publish("I am alive !", "healthcheck_resp")
 
-
-@router.subscriber("ping")
-async def ping(message):
-    """
-    respond to ping with a pong
-    """
-    await broker.publish("Hi!", "pong")

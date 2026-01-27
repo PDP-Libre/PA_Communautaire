@@ -11,11 +11,11 @@ from textual.containers import HorizontalGroup, VerticalScroll
 from ..palette import CustomCommand
 
 from faststream.nats import NatsBroker
-from faststream import FastStream
+from faststream import FastStream, Context
 
 
 ROWS = [
-    ("#", "subject", "message"),
+    ("sujet", "message", "divers"),
 ]
 
 
@@ -25,16 +25,21 @@ broker = NatsBroker("nats://localhost:4222")
 
 
 class NatsScreen(Screen):
+    TITLE = "NATS - PAC0 Console"
+    BINDINGS = [("z", "do_reset()", "RAZ")]
     COMMANDS = App.COMMANDS | {CustomCommand}
 
     def compose(self) -> ComposeResult:
         yield Header()
         yield Label("NATS ...", id="question")
         yield VerticalScroll(
-            Button("ping", id="ping", variant="success")  ,
-            Button("healthcheck", id="healthcheck", variant="error"),
+            HorizontalGroup(
+                Button("ping", id="ping", variant="success")  ,
+                Button("healthcheck", id="healthcheck", variant="error"),
+            ),
             DataTable(),
         )
+
         yield Footer()
 
 
@@ -44,11 +49,15 @@ class NatsScreen(Screen):
         table.add_columns(*ROWS[0])
         table.add_rows(ROWS[1:])
 
-        @broker.subscriber("*")  # subject name
-        async def handle_msg(msg_body):
-            print("recieved ....", msg_body)
+        # voir https://docs.nats.io/nats-concepts/subjects#wildcards
+        # voir https://faststream.ag2.ai/latest/nats/message/#headers-access
+        @broker.subscriber(">")  # subject name
+        async def _(
+                msg_body,
+                subject: str = Context("message.raw_message.subject"),
+        ):
             table = self.query_one(DataTable)
-            table.add_row("aaa", "bbb", "ccc")
+            table.add_row(subject, msg_body, "")
 
         await broker.start()
         await broker.publish("Hello from CLI", "healthcheck")
@@ -70,4 +79,10 @@ class NatsScreen(Screen):
         elif event.button.id == "healthcheck":
             self.remove_class("started")
             await broker.publish("healthcheck from CLI", "healthcheck")
+
+
+    async def action_do_reset(self) -> None:
+        table = self.query_one(DataTable)
+        table.clear()
+
 

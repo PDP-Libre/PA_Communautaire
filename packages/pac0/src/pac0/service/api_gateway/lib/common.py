@@ -13,7 +13,9 @@ def broker(
     return request.app.state.broker
 
 
-# global state from api router or broker router"""
+# global state from api router or broker router
+#TODO: pour une meilleure "mémorisation" des messages reçus
+# voir https://docs.nats.io/using-nats/developer/receiving/wildcards#python-1
 global_state: dict[str, Any] = {
     'healthcheck_resp': [],
 }

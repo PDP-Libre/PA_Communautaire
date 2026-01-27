@@ -37,7 +37,7 @@ ROWS = [
 
 class BriquesScreen(Screen):
     TITLE = "briques"
-    BINDINGS = [("h", "healthcheck", "healthcheck")]
+    BINDINGS = [("h", "do_healthcheck()", "healthcheck")]
     COMMANDS = App.COMMANDS | {CustomCommand}
 
     def compose(self) -> ComposeResult:
@@ -54,7 +54,7 @@ class BriquesScreen(Screen):
     # def on_main(self) -> None:
     #    self.dismiss()
 
-    async def on_healthcheck(self):
+    async def action_do_healthcheck(self) -> None:
         await broker.publish("healthcheck from CLI", "healthcheck")
 
     async def on_mount(self) -> None:

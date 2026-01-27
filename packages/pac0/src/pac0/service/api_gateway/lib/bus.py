@@ -13,11 +13,15 @@ from pac0.shared.esb import get_nats_url
 router = NatsRouter(get_nats_url())
 
 
-@router.after_startup
-async def test(app: FastAPI):
-    await router.broker.publish("Startup!!!", "test")
+#@router.on_startup()
+#def _():
+#    print("@router.on_startup ...")
+#    #await app.broker.publish("startup api-gateway", "service")
+#    #await app.broker.publish("shutdown api-gateway", "service")
 
 
+#TODO: pour une meilleure "mémorisation" des messages reçus
+# voir https://docs.nats.io/using-nats/developer/receiving/wildcards#python-1
 if trace.TESTING:
 
     @router.subscriber("*")
@@ -52,6 +56,9 @@ if trace.TESTING:
             )
         )
         """
+
+        #TODO: pour une meilleure "mémorisation" des messages reçus
+        # voir https://docs.nats.io/using-nats/developer/receiving/wildcards#python-1
         # print("****** all_sub ...", body, msg)
         trace.add(
             trace.MsgInfo(
@@ -68,18 +75,12 @@ if trace.TESTING:
 
 
 @router.subscriber("healthcheck")
-async def healthcheck_sub(
-    # message: Incoming,
-    # logger: Logger,
-):
-    # logger.info("Incoming value: %s, depends value: %s" % (message.m, dependency))
-    await router.broker.publish("I am alive !", "healthcheck_resp")
+async def healthcheck_sub():
+    await router.broker.publish("api-gateway is alive", "healthcheck_resp")
+
 
 @router.subscriber("healthcheck_resp")
-async def healthcheck_resp_sub(
-    # message: Incoming,
-    # logger: Logger,
-    #state: Annotated[dict[str, Any], Depends(global_state)],
-):
-    # logger.info("Incoming value: %s, depends value: %s" % (message.m, dependency))
+async def healthcheck_resp_sub():
+    #TODO: pour une meilleure "mémorisation" des messages reçus
+    # voir https://docs.nats.io/using-nats/developer/receiving/wildcards#python-1
     global_state["healthcheck_resp"].append("xx")
