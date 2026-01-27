@@ -8,19 +8,10 @@ from pac0.service.api_gateway.lib.api import router as router_api
 from pac0.service.api_gateway.lib.bus import router as router_bus
 
 
-
-app = FastAPI(
-    state={
-        "rank" : "dev",
-        "broker" : router_bus.broker                    ,
-    },
-)
-
-
+app = FastAPI()
 
 app.include_router(router_bus)
 app.include_router(router_api)
 
-# app.state.rank = "dev"
-# app.state.broker = router_bus.broker
-
+app.state.rank = "dev"
+app.state.broker = router_bus.broker
