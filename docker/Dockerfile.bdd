@@ -1,0 +1,5 @@
+FROM git.pdplibre.org/ha/01-api-gateway:dev
+
+WORKDIR /app/packages/pac-bdd
+
+ENTRYPOINT [ "/usr/local/bin/uv", "run", "pytest" ]

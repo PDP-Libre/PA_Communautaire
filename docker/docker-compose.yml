@@ -178,6 +178,37 @@ services:
       - ../packages/pac0:/app
       - venv_09_gestion_cycle_vie:/app/.venv
 
+  test-bdd:
+    build:
+      context: .
+      dockerfile: Dockerfile.bdd
+    image: git.pdplibre.org/ha/bdd:dev
+    container_name: bdd
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+      - 01-api-gateway
+      - 03-controle-formats
+      - 04-validation-metier
+      - 05-conversion-formats
+      - 06-annuaire-local
+      - 07-routage
+      - 08-transmission-fiscale
+      - 09-gestion-cycle-vie
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../:/app
+      - venv_bdd:/app/packages/pac-bdd/.venv
+      - pytest_cache_bdd:/app/.pytest_cache
+    profiles:
+      - test
+
 volumes:
   uv_cache:
   s3Data:
@@ -189,3 +220,5 @@ volumes:
   venv_07_routage:
   venv_08_transmission_fiscale:
   venv_09_gestion_cycle_vie:
+  venv_bdd:
+  pytest_cache_bdd:
