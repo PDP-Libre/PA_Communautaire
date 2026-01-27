@@ -1,0 +1,224 @@
+services:
+  # 10-stockage (S3 - Le pivot du stockage de fichier)
+  10-stockage:
+    image: chrislusf/seaweedfs
+    ports:
+      - "8333:8333"
+    volumes:
+      - ./seaweedfs-config.json:/etc/seaweedfs/config.json
+      - s3Data:/data
+    command: "server -s3 -s3.config /etc/seaweedfs/config.json"
+
+  # 02-esb-central (NATS Server - Le pivot de communication)
+  02-esb-central:
+    image: nats:latest
+    container_name: pac02-esb-central
+
+  # 01-api-gateway (FastAPI)
+  01-api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.01-api-gateway
+    image: git.pdplibre.org/construction_pa/01-api-gateway:dev
+    container_name: pac01-api-gateway
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    ports:
+      - "8000:8000"
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../packages/pac0:/app
+      - venv_01_api_gateway:/app/.venv
+
+  # Services de traitement (FastStream)
+  03-controle-formats:
+    build:
+      context: .
+      dockerfile: Dockerfile.03-controle-formats
+    image: git.pdplibre.org/construction_pa/03-controle-formats:dev
+    container_name: pac03-controle-formats
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../packages/pac0:/app
+      - venv_03_controle_formats:/app/.venv
+
+  04-validation-metier:
+    build:
+      context: .
+      dockerfile: Dockerfile.04-validation-metier
+    image: git.pdplibre.org/construction_pa/04-validation-metier:dev
+    container_name: pac04-validation-metier
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../packages/pac0:/app
+      - venv_04_validation_metier:/app/.venv
+
+  05-conversion-formats:
+    build:
+      context: .
+      dockerfile: Dockerfile.05-conversion-formats
+    image: git.pdplibre.org/construction_pa/05-conversion-formats:dev
+    container_name: pac05-conversion-formats
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../packages/pac0:/app
+      - venv_05_conversion_formats:/app/.venv
+
+  06-annuaire-local:
+    build:
+      context: .
+      dockerfile: Dockerfile.06-annuaire-local
+    image: git.pdplibre.org/construction_pa/06-annuaire-local:dev
+    container_name: pac06-annuaire-local
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../packages/pac0:/app
+      - venv_06_annuaire_local:/app/.venv
+
+  07-routage:
+    build:
+      context: .
+      dockerfile: Dockerfile.07-routage
+    image: git.pdplibre.org/construction_pa/07-routage:dev
+    container_name: pac07-routage
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../packages/pac0:/app
+      - venv_07_routage:/app/.venv
+
+  08-transmission-fiscale:
+    build:
+      context: .
+      dockerfile: Dockerfile.08-transmission-fiscale
+    image: git.pdplibre.org/construction_pa/08-transmission-fiscale:dev
+    container_name: pac08-transmission-fiscale
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../packages/pac0:/app
+      - venv_08_transmission_fiscale:/app/.venv
+
+  09-gestion-cycle-vie:
+    build:
+      context: .
+      dockerfile: Dockerfile.09-gestion-cycle-vie
+    image: git.pdplibre.org/construction_pa/09-gestion-cycle-vie:dev
+    container_name: pac09-gestion-cycle-vie
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../packages/pac0:/app
+      - venv_09_gestion_cycle_vie:/app/.venv
+
+  test-bdd:
+    build:
+      context: .
+      dockerfile: Dockerfile.bdd
+    image: git.pdplibre.org/construction_pa/bdd:dev
+    container_name: bdd
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    env_file:
+      - env
+      - secret
+    depends_on:
+      - 02-esb-central
+      - 10-stockage
+      - 01-api-gateway
+      - 03-controle-formats
+      - 04-validation-metier
+      - 05-conversion-formats
+      - 06-annuaire-local
+      - 07-routage
+      - 08-transmission-fiscale
+      - 09-gestion-cycle-vie
+    volumes:
+      - uv_cache:/home/appuser/.cache/uv
+      - ../:/app
+      - venv_bdd:/app/packages/pac-bdd/.venv
+      - pytest_cache_bdd:/app/.pytest_cache
+    profiles:
+      - test
+
+volumes:
+  uv_cache:
+  s3Data:
+  venv_01_api_gateway:
+  venv_03_controle_formats:
+  venv_04_validation_metier:
+  venv_05_conversion_formats:
+  venv_06_annuaire_local:
+  venv_07_routage:
+  venv_08_transmission_fiscale:
+  venv_09_gestion_cycle_vie:
+  venv_bdd:
+  pytest_cache_bdd:

@@ -14,7 +14,7 @@ Runs pytest in both packages/pac0/ and packages/pac-bdd/ and generates
 JUnit XML and HTML reports in the /report folder.
 
 Usage:
-    uv run test.py
+    uv run test
 """
 
 import subprocess

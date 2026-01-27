@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 07-routage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: 07-routage
+      app.kubernetes.io/instance: pac0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: 07-routage
+        app.kubernetes.io/instance: pac0
+    spec:
+
+      containers:
+        - name: main
+          imagePullPolicy: Always
+          
+          image: astral/uv:python3.12-bookworm-slim
+          command: ["uvx"]
+          args: ["--refresh", "pac0-cli@latest", "run", "7"]
+          env:
+          - name: NATS_URL
+            value: "nats://s02-esb-central:4222"
+    
+          resources:
+            requests:
+              memory: "1024Mi"
+            limits:
+              memory: "2048Mi"

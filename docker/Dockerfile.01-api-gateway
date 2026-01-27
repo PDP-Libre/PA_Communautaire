@@ -1,0 +1,36 @@
+FROM python:3.13-slim-bookworm
+COPY --from=docker.io/astral/uv:latest /uv /uvx /usr/local/bin/
+
+RUN useradd appuser && \
+    mkdir -p /home/appuser/.cache/uv && \
+    mkdir -p /home/appuser/.local/share/uv && \
+    chown -R appuser:appuser /home/appuser && \
+    mkdir -p /app/.venv && \
+    chown -R appuser:appuser /app
+
+# Permet de gérer un uid ou un Gid différent
+COPY <<'EOF' /entrypoint.sh
+#!/bin/bash
+set -e
+
+# Si des variables d'environnement HOST_UID/HOST_GID sont définies
+if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ] && { [ "$HOST_UID" != "1000" ] || [ "$HOST_GID" != "1000" ]; }; then
+    echo "Modifier l'UID/GID de l'utilisateur existant"
+    groupmod -g "$HOST_GID" appuser 2>/dev/null || true
+    usermod -u "$HOST_UID" -g "$HOST_GID" appuser 2>/dev/null || true
+
+    echo "Correction des permissions"
+    chown -R appuser:appuser /home/appuser /app
+fi
+
+exec runuser -u appuser -- "$@"
+
+EOF
+
+RUN chmod +x /entrypoint.sh
+
+USER ${USER}
+WORKDIR /app
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/usr/local/bin/uv", "run", "fastapi", "dev", "--host=0.0.0.0", "/app/src/pac0/service/api_gateway/main.py"]
