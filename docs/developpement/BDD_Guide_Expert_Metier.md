@@ -2,7 +2,7 @@
 
 ## Qu'est-ce que le BDD ?
 
-Le **Behavior Driven Development** (BDD) permet de décrire le comportement attendu du système dans un langage naturel. Les scénarios sont écrits en **Gherkin**, un format structuré lisible par tous : experts métier, développeurs et testeurs.
+Le **Behavior Driven Development** (BDD) permet de décrire le comportement attendu du système dans un langage naturel. Les scénarios sont écrits en **[Gherkin](https://www.artza-technologies.com/blog/langage-gherkin)**, un format structuré lisible par tous : experts métier, développeurs et testeurs.
 
 ```
 ┌────────────┐                 ┌──────────────┐                 ┌───────────┐
@@ -43,16 +43,25 @@ Fonctionnalité: Nom de la fonctionnalité
 
         Scénario: Healthcheck réussi
             Etant un utilisateur
-            Quand j'appele l'API GET /healthcheck
-            Alors j'obtiens le code de retour 200
+            Quand j'appele l'API GET "/healthcheck"
+            Alors j'obtiens le code de retour "200"
 
         Scénario: Healthcheck détaillé
-            Quand j'appele l'API GET /healthcheck/deep
-            Alors j'obtiens le code de retour 200
-            Et la réponse a une clé "healthcheck_resp" avec 8 éléments
+            Quand j'appele l'API GET "/healthcheck/deep"
+            Alors j'obtiens le code de retour "200"
+            Et la réponse a une clé "healthcheck_resp" avec "8" éléments
 ```
 
+## Conventions
+
+* Les variables doivent être entourés par des "
+* Les constantes doivent être précédées par des #
+
+
 ## Mots-clés Gherkin en français
+
+Chacun de ces mots clefs permet de structurer l'expression du comportement.
+
 
 | Français | Rôle |
 |----------|------|
@@ -67,6 +76,8 @@ Fonctionnalité: Nom de la fonctionnalité
 | `Alors` | Résultat attendu (Then) |
 | `Et` | Continuation de l'étape précédente |
 | `Mais` | Continuation négative |
+
+Attention a bien vérifier que le titre de la fonctionnalité est bien unique et qu'il n'est pas utilisé dans un autre test. 
 
 ## Fonctionnalités avancées
 
@@ -191,19 +202,10 @@ Alors l'identification est correcte
 ```gherkin
 Fonctionnalité: healthcheck
     Section 4.4 de XP_Z12-013.pdf
-    L'API doit avoir une route GET /healthcheck
+    Un adresse /healthcheck doit permettre de vérifier la disponibilité du système.
 ```
 
 ## Anti-patterns à éviter
-
-### ❌ Tester l'implémentation technique
-
-```gherkin
-# Mauvais
-Quand j'envoie une requête GET à "/api/users/1"
-Alors le statut de la réponse est 200
-Et le corps contient "id": 1
-```
 
 ### ❌ Détails non essentiels
 
@@ -232,7 +234,7 @@ Créez plutôt deux scénarios distincts.
 
 Avant de rédiger les scénarios, réunissez :
 
-1. **Expert métier (Product Owner)** : Explique la fonctionnalité et les critères d'acceptation
+1. **Expert métier** : Explique la fonctionnalité et les critères d'acceptation
 2. **Développeur** : Identifie les considérations techniques
 3. **Testeur** : Pose des questions sur les cas limites
 
