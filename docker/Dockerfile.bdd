@@ -1,4 +1,4 @@
-FROM git.pdplibre.org/ha/01-api-gateway:dev
+FROM git.pdplibre.org/construction_pa/01-api-gateway:dev
 
 WORKDIR /app/packages/pac-bdd
 

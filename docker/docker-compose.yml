@@ -19,7 +19,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.01-api-gateway
-    image: git.pdplibre.org/ha/01-api-gateway:dev
+    image: git.pdplibre.org/construction_pa/01-api-gateway:dev
     container_name: pac01-api-gateway
     environment:
       - HOST_UID=${UID:-1000}
@@ -42,7 +42,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.03-controle-formats
-    image: git.pdplibre.org/ha/03-controle-formats:dev
+    image: git.pdplibre.org/construction_pa/03-controle-formats:dev
     container_name: pac03-controle-formats
     environment:
       - HOST_UID=${UID:-1000}
@@ -62,7 +62,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.04-validation-metier
-    image: git.pdplibre.org/ha/04-validation-metier:dev
+    image: git.pdplibre.org/construction_pa/04-validation-metier:dev
     container_name: pac04-validation-metier
     environment:
       - HOST_UID=${UID:-1000}
@@ -82,7 +82,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.05-conversion-formats
-    image: git.pdplibre.org/ha/05-conversion-formats:dev
+    image: git.pdplibre.org/construction_pa/05-conversion-formats:dev
     container_name: pac05-conversion-formats
     environment:
       - HOST_UID=${UID:-1000}
@@ -102,7 +102,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.06-annuaire-local
-    image: git.pdplibre.org/ha/06-annuaire-local:dev
+    image: git.pdplibre.org/construction_pa/06-annuaire-local:dev
     container_name: pac06-annuaire-local
     environment:
       - HOST_UID=${UID:-1000}
@@ -122,7 +122,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.07-routage
-    image: git.pdplibre.org/ha/07-routage:dev
+    image: git.pdplibre.org/construction_pa/07-routage:dev
     container_name: pac07-routage
     environment:
       - HOST_UID=${UID:-1000}
@@ -142,7 +142,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.08-transmission-fiscale
-    image: git.pdplibre.org/ha/08-transmission-fiscale:dev
+    image: git.pdplibre.org/construction_pa/08-transmission-fiscale:dev
     container_name: pac08-transmission-fiscale
     environment:
       - HOST_UID=${UID:-1000}
@@ -162,7 +162,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.09-gestion-cycle-vie
-    image: git.pdplibre.org/ha/09-gestion-cycle-vie:dev
+    image: git.pdplibre.org/construction_pa/09-gestion-cycle-vie:dev
     container_name: pac09-gestion-cycle-vie
     environment:
       - HOST_UID=${UID:-1000}
@@ -182,7 +182,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.bdd
-    image: git.pdplibre.org/ha/bdd:dev
+    image: git.pdplibre.org/construction_pa/bdd:dev
     container_name: bdd
     environment:
       - HOST_UID=${UID:-1000}

@@ -1,3 +1,3 @@
-FROM git.pdplibre.org/ha/01-api-gateway:dev
+FROM git.pdplibre.org/construction_pa/01-api-gateway:dev
 
 CMD ["/usr/local/bin/uv", "run", "faststream", "run", "pac0.service.validation_metier.main:app", "--reload"]
