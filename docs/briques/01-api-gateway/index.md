@@ -73,3 +73,21 @@ Voici les routes dédiées à la gestion des clés API:
 * GET /api-keys/{id} : Retrieve a key by identifier.
 * PATCH /api-keys/{id} : Update name, description, or activation flag.
 * DELETE /api-keys/{id} : Remove a key.
+
+
+
+## messages
+
+- `SUBJECT_01_OUT` : message produit en situation nominale
+- `SUBJECT_01_ERR` : message produit en cas d'erreur
+
+
+## stockage
+
+- `<PACID>/<EID>/<IID>/upload` : fichier déposé
+
+
+## communication externe
+
+Point d'entrée API.
+

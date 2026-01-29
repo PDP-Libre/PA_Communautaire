@@ -59,3 +59,13 @@ Questions en cours à arbitrer.
 1. Mon outils de gestion peut-il être informé du rejet d'une facture ?
 
     **Oui**: votre système peut au choix consulter via un appel API l'état de la facture ou s'inscrire à une annonce **webhook**  
+
+## messages
+
+- `SUBJECT_04_IN` : message consommé en situation nominale
+- `SUBJECT_04_OUT` : message produit en situation nominale
+- `SUBJECT_04_ERR` : message produit en cas d'erreur
+
+## communication externe
+
+- appels API pour vérifications personnalisées 
