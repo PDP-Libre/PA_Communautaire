@@ -5,6 +5,9 @@
 from pac0.shared.test.service.base import BaseServiceContext, ServiceConfig
 
 
+# TODO: use envvar for already running service
+# if TEST_SVC_PA_BRIQUE don't start a process
+# TODO: port=-1 don't use port
 class FastStreamServiceContext(BaseServiceContext):
     """Test context for a FastStream service."""
 

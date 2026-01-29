@@ -27,6 +27,7 @@ class PacServiceContext(BaseServiceContext):
     external_url: str | None = None
     api_gateway: FastApiServiceContext | None = None
     esb_central: NatsServiceContext | None = None
+    # stockage service is **always** external
 
     controle_formats: FastStreamServiceContext | None = None
     validation_metier: FastStreamServiceContext | None = None

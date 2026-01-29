@@ -6,6 +6,7 @@ import pytest
 from pac0.shared.test.service.base import BaseServiceContext, ServiceConfig
 
 
+# TODO: use envvar for already running service
 class FastApiServiceContext(BaseServiceContext):
     """Test context for a FastAPI service."""
 

@@ -69,10 +69,6 @@ class WorldContext:
         tasks = [pa.__aenter__() for pa in pas_new]
         await asyncio.gather(*tasks)
 
-        # pa = PacServiceContext()
-        # # we enter the new PA context (pa exit is done when on world exit)
-        # pa = await pa.__aenter__()
-
         # self.pas.append(pa)
         self.pas.extend(pas_new)
         return self.pas[-1]

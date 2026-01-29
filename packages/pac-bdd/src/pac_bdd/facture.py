@@ -5,6 +5,24 @@
 import pytest
 from pytest_bdd import given, parsers, scenario, then, when
 from pac0.shared.test.world import WorldContext, world, world1
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+
+## local BDD context class
+# class LocalTestCtx(BaseModel):
+#    result: Any | None = None
+#    result_status_code: int | None = None
+#    # TODO: make a typed result_request
+#
+#
+## local BDD context fixture
+# @pytest.fixture
+# def ctx():
+#    """Contexte pour les tests BDD"""
+#    return LocalTestCtx()
 
 
 # Note: "l'entreprise #{enterprise_id} enregistrée sur la PA #{pa_id}" is now defined in peppol.py
@@ -17,12 +35,10 @@ def submit_invoice(
     world1: WorldContext,
     invoice: str,
 ):
+    logger.debug(f"{invoice=}")
     with world1.pa1.api_gateway.get_client() as client:
         response = client.post("/flows")
-        ctx.result_status_code = response.status_code
-        ctx.result_json = response.json()
-        # TODO: not a good idea to store a context manager outside its scope
-        ctx.result = response
+        assert response.status_code == 200
     raise NotImplementedError()
 
 
