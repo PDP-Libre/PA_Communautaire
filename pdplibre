@@ -72,7 +72,7 @@ push() {
 
 test() {
     init_docker
-    docker compose run test-bdd $@
+    docker compose run --rm test-bdd $@
 }
 
 pwd() {
