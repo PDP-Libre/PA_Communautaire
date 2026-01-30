@@ -8,7 +8,7 @@ Fonctionnalité: boucle métier
         S'assurer que les messages circulent bien entre les différentes briques
         via la brique `gestion-cycle-vie`.
 
-        Quand je dépose la facture #xxxx.pdf
+        Quand je dépose la facture ~doc/xxxx.pdf
 
         Alors un message arrive sur le canal "api-gateway-OUT"
 

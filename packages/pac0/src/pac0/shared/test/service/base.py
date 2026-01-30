@@ -114,6 +114,12 @@ class BaseServiceContext:
     """
     Base implementation of ServiceContext protocol.
     Using composition over inheritance for better flexibility.
+
+    Set TEST_SVC_EXTERNAL env vat to use an existing external service
+
+    Set config.port = 0 to find an available port
+    Set config.port = -! to tell you don't need a port (pure convention)
+
     """
 
     def __init__(self, config: ServiceConfig) -> None:
@@ -131,11 +137,20 @@ class BaseServiceContext:
 
     async def __aenter__(self) -> Self:
         """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_svc = os.environ.get("TEST_SVC_EXTERNAL")
+        if external_svc is None:
+            logger.info(f"Service  {self.config.name} using external")
+
+        # find an available port
         if self.config.port == 0:
             self.config.port = await find_available_port()
         logger.info(
             f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
         )
+
         env = os.environ.copy()
         env["PORT"] = str(self.config.port)
         if self.config.env_var_extra:

@@ -56,6 +56,11 @@ async def find_available_port(
     raise Exception("no port available")
 
 
+async def is_port_available(port: int) -> bool:
+    # TODO: implement
+    return False
+
+
 @asynccontextmanager
 async def uvicorn_context(
     app,
