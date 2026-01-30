@@ -52,18 +52,20 @@ Vous pouvez installer le projet en fonction de votre profil technique:
 Avant de commencer, assurez-vous d'avoir installé :
 * **Git** (pour versionner votre code)
 * **Python**
-* Un bucket S3 pour stocker les factures en transit
-  Par défaut, il y a un bucket S3 communautaire dédiés aux développeurs.
-  Mais on peut facilement installer un bucket S3 en local ou chez un autre fournisseur. 
+* Eventuellement un bucket S3 pour stocker les factures en transit.  
+  * vous pouvez utiliser un serveur S3 dans le cloud
+  * ou utiliser le serveur local fourni dans la version Docker
+  * ou utiliser le bucket S3 communautaire dédiés aux développeurs. (TODO adresse à définir)
+
   
 ### 2. Clonage du dépôt
 
 Le projet principal est hébergé sur GITHUB: https://github.com/PDP-Libre/PA_Communautaire  
-Ce dépot est utilisé pour publier les releases finales. 
+Ce dépot est utilisé pour publier les releases finales. Ne l'utilisez pas pour vos développements.
 
 Pour participer au développement, vous devez utiliser la copie du projet hébergé sur Forgejo: https://git.pdplibre.org/
 
-On utilise Foregejo pour profiter d'un dépot qui va automatiser certains process de livraisons et permet de respecter certaines contraintes légales : intégration continue, automatisation des tests ...
+On utilise Foregejo pour profiter d'un dépot qui va automatiser certains process de livraisons et permet de respecter certaines contraintes légales qui sont floues coté Github : intégration continue, automatisation des tests, respects des licences ...
 
 Le dépot Forgejo est synchronisé avec le projet principal à chaque livraison d'une release.
 
@@ -76,45 +78,28 @@ Le dépot Forgejo est synchronisé avec le projet principal à chaque livraison 
 cd PA_Communautaire
 ```
 
-Nous allons trouver l'arborescence suivante :
-
-* /docker
-  Les fichiers de configuration de la version DOCKER
-* /docs  
-  les documentations diverses : métier et développeur
-  * /docs/briques:  
-  contient aussi de la doc métier et les tests BDD compréhensible pour tout le monde
-  * /docs/norme:  
-  les fichiers ou les liens de la norme de référence
-* /packages  
-  Les sources des applications  
-  * pac-bdd  
-  L'application qui fait tourner les tests BDD qui sont dans /docs/briques
-  * pac0  
-  Une application "proto" pour maquetter l'organisation en place.  
-  Les choix d'architecture et de langage sont en cours de réflexions. 
-* /report  
-  Contient les rapports suite au lancement des tests. 
-* /script  
-  Diverses commandes a tout faire
-
+* consultez [le document sur l'Architecture](Architecture.md) qui explique comment sont organisez les dossiers. 
 
 ### 3. Configuration
 
-#### 3.1 installation sous Linux
+#### 3.1 installation avec Docker
 
-Voir [Installation Linux](Installation_Linux.md)
-
-
-#### 3.2 installation avec Docker
+Version recommandée pour démarrer rapidement avec tous les services en place et un serveur de stockage local.
 
 Voir [Installation Docker](Installation_Docker.md)
 
+#### 3.2 installation sous Linux
+
+Voir [Installation Linux](Installation_Linux.md)
+
 ## Tester
 
-- [Comment utiliser les tests ?](docs/developpement/Test.md)
+- [Comment utiliser les tests ?](BDD_README.md)
 
 ## 🚦 Cycle de contribution
+
+En cours de rédaction 
+
 Pour garantir la qualité du code, merci de respecter ce flux :
 
 * Forker le projet.
