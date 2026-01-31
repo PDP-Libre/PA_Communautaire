@@ -3,11 +3,16 @@ services:
   10-stockage:
     image: chrislusf/seaweedfs
     ports:
-      - "8333:8333"
+      # - "9333:9333" # Master UI
+      # - "9340:9340" # Volume Server
+      - "8888:8888" # Filer UI
+      - "8333:8333" # S3 Endpoint
+      # - "7333:7333" # WebDAV:
+      - "23646:23646" # Admin UI
     volumes:
       - ./seaweedfs-config.json:/etc/seaweedfs/config.json
       - s3Data:/data
-    command: "server -s3 -s3.config /etc/seaweedfs/config.json"
+    command: "mini -s3 -s3.config /etc/seaweedfs/config.json"
 
   # 02-esb-central (NATS Server - Le pivot de communication)
   02-esb-central:
