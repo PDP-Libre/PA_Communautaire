@@ -5,6 +5,9 @@
 import pytest
 from pytest_bdd import given, parsers, scenario, then, when
 from pac0.shared.test.world import WorldContext, world, world1
+from pac_bdd.lib import reffile
+
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -30,15 +33,20 @@ logger.setLevel(logging.DEBUG)
 # Note: "je dépose la facture #{invoice_id}" is now defined in peppol.py
 
 
-@when(parsers.parse("je dépose la facture #{invoice}"))
+@when(parsers.parse("je dépose la facture {invoice}"))
 def submit_invoice(
     world1: WorldContext,
     invoice: str,
 ):
     logger.debug(f"{invoice=}")
+    invoice = reffile.resolve(invoice)
     with world1.pa1.api_gateway.get_client() as client:
-        response = client.post("/flows")
+        # TODO: attacher le fichier
+        files = {"upload-file": invoice}
+        response = client.post("/flows", files=files)
+        # TODO: recuperer le numero de job
         assert response.status_code == 200
+    # TODO: attendre la fin du job via des appels reguliers api
     raise NotImplementedError()
 
 

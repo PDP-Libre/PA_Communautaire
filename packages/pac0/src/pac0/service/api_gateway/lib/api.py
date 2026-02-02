@@ -28,17 +28,32 @@ async def read_root():
     return {"Hello": "World"}
 
 
+@router.post("/v1/flows")
 @router.post("/flows")
 async def flows_post(
     broker: Annotated[NatsBroker, Depends(broker)],
     # la facture déposée
     file: UploadFile = File(...),
+    trackingId: str | None,
+    sha256: str | None,
     # L'authentification JWT est facultative pour cet appel
     # un autre PA peut nous appeler sans jwt
     jwt: str = Depends(get_token_optional),
 ):
+    """
+    La route POST /flows, de l’API publiée par le Fournisseur API doit permettre de déposer :
+    •Une facture constituée dans un format du socle (Syntaxe CII, UBL, Factur-X)
+    •Un cycle de vie sur une facture (Syntaxe CDAR)
+    •Une transmission de données de E-Reporting (Syntaxe FRR pour FRench Reporting)
+    •Un cycle de vie sur une transmission de données de E-reporting (Syntaxe CDAR)
+    Le body de la route POST/ Flows est un multi-part composé d’un objet ‘flowInfo’ et d’un fichier binaire.
+    """
     # calcule le hash sha256 de la facture déposée
     upload_hash = await store.compute_h256(file)
+
+    if sha256 and upload_hash != sha256:
+        #TODO: renvoyer une erreur HTTP
+        raise Exception('hash mismatch')
 
     # où stocker la facture déposée
     srv, bucket, file_key = store.get_srv_bucket_key_from_file_ctx(
@@ -70,8 +85,6 @@ async def flows_post(
     # upload the file to s3
     await store.put(store_post_presigned_url, file)
 
-    # Your file processing logic here
-    # TODO: get pre-signed URL
     flow_id = await flow_id_new()
     await broker.publish(
         MsgApiFlowsOutPayload(
@@ -90,6 +103,8 @@ async def flows_post(
         "filename": file.filename,
     }
 
+
+@router.get("/v1/flows/{flowId}")
 @router.get("/flows/{flowId}")
 async def flows_get(
     # On doit être authentifié pour cet appel
@@ -97,6 +112,8 @@ async def flows_get(
 ):
     return {"Hello": "World"}
 
+
+@router.get("/healthcheck")
 
 @router.get("/healthcheck")
 async def healthcheck(
