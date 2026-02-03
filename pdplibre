@@ -98,6 +98,11 @@ test_auth_registry_pdplibre() {
 init_docker() {
     cd docker
     test_auth_registry_pdplibre
+
+    if [ ! -f secret ]; then
+        echo "Init du fichier d'environnement secret"
+        cp secret.example secret
+    fi
 }
 
 cmd=$1
