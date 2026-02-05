@@ -4,7 +4,10 @@
 
 from typing import Any
 from pac0.shared.esb import init_esb_app
-from .models import MsgAnnuaireLocalInPayload, MsgAnnuaireLocalOutPayload
+from pac0.service.annuaire_local.models import (
+    MsgAnnuaireLocalInPayload,
+    MsgAnnuaireLocalOutPayload,
+)
 
 
 ctx, broker, app = init_esb_app("annuaire-local")

@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# dummy fastapi service to test BaseServiceContext
 # cf https://fastapi.tiangolo.com/#example
 
 from fastapi import FastAPI

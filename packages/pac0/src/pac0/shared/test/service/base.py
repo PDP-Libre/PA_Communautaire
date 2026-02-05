@@ -208,17 +208,25 @@ class BaseServiceContext:
         """Wait for service to be ready via TCP and HTTP health check."""
         start_time = time.time()
 
-        while time.time() - start_time < timeout:
-            logger.debug(f"wait_for_ready {self.config.name} ...")
-            # First check TCP connectivity
-            if self._check_tcp_connectivity():
-                # Then check HTTP health endpoint if applicable
-                if self.config.health_check_path is None:
-                    return True
-                elif await self._check_http_health():
-                    return True
-
-            await asyncio.sleep(1.0)
+        if self.config.health_check_path or self.config.port > 0:
+            while time.time() - start_time < timeout:
+                logger.debug(f"wait_for_ready {self.config.name} ...")
+                if self.config.health_check_path:
+                    if await self._check_http_health():
+                        return True
+                else:
+                    if self._check_tcp_connectivity():
+                        return True
+                """
+                # First check TCP connectivity
+                if self._check_tcp_connectivity():
+                    # Then check HTTP health endpoint if applicable
+                    if self.config.health_check_path is None:
+                        return True
+                    elif await self._check_http_health():
+                        return True
+                """
+                await asyncio.sleep(1.0)
 
         return False
 
@@ -244,7 +252,10 @@ class BaseServiceContext:
     async def _check_http_health(self) -> bool:
         """Check HTTP health endpoint."""
         try:
-            url = f"http://{self.config.host}:{self.config.port}{self.config.health_check_path}"
+            if self.config.external_svc is None:
+                url = f"http://{self.config.host}:{self.config.port}{self.config.health_check_path}"
+            else:
+                url = f"{self.config.external_svc}{self.config.health_check_path}"
             print("_check_http_health", url)
             async with httpx.AsyncClient(
                 timeout=self.config.health_check_timeout
@@ -254,7 +265,6 @@ class BaseServiceContext:
                 )
                 return response.status_code == 200
         except Exception as e:
-            print("cccccc", e)
             return False
 
     @contextmanager
