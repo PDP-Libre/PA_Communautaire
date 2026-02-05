@@ -2,9 +2,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pac0.shared.test.service.bae import BaseServiceContext
+from pac0.shared.test.service.base import BaseServiceContext
 
-from pac0.shared.test.tools.api import (
+from pac0.shared.tools.api import (
     find_available_port,
     is_port_available,
 )

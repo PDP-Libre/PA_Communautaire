@@ -14,10 +14,10 @@ class FastApiServiceContext(BaseServiceContext):
         self,
         name: str = "api_gateway",
         nats_url: str = "nats://localhost:4222",
+        external_svc: str | None = None,
     ) -> None:
         config = ServiceConfig(
             name=name,
-            # command=["uv", "fastapi", "dev", "app1/main.py"],
             command=[
                 "uv",
                 "run",
@@ -26,11 +26,12 @@ class FastApiServiceContext(BaseServiceContext):
                 "src/pac0/service/api_gateway/main.py",
             ],
             port=0,
-            allow_ConnectionRefusedError=True,
+            # allow_ConnectionRefusedError=True,
             health_check_path="/healthcheck",
             env_var_extra={
                 "NATS_URL": nats_url,
             },
+            external_svc=external_svc,
         )
         super().__init__(config)
 

@@ -84,7 +84,7 @@ Voici les routes dédiées à la gestion des clés API:
 
 ## stockage
 
-- `<PACID>/<EID>/<IID>/upload` : fichier déposé
+- `<PACID>/<EID>/<IID>/upload` : fichier déposé 
 
 
 ## communication externe

@@ -33,6 +33,12 @@ logger.setLevel(logging.DEBUG)
 # Note: "je dépose la facture #{invoice_id}" is now defined in peppol.py
 
 
+@when(parsers.parse("je dépose la facture #{invoice} sur #{pa}"))
+def submit_invoice_on_pa(invoice, pa):
+    # POST /
+    raise NotImplementedError()
+
+
 @when(parsers.parse("je dépose la facture {invoice}"))
 def submit_invoice(
     world1: WorldContext,
@@ -54,13 +60,6 @@ def submit_invoice(
 def submit_invoice_simple():
     # POST /
     raise NotImplementedError()
-
-
-@when(parsers.parse("je dépose la facture #{invoice} sur #{pa}"))
-def submit_invoice_on_pa(invoice, pa):
-    # POST /
-    raise NotImplementedError()
-
 
 @when(
     parsers.parse("je dépose pour contrôle la facture @{invoice}"),

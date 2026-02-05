@@ -8,10 +8,17 @@ from pac0.service.api_gateway.lib.api import router as router_api
 from pac0.service.api_gateway.lib.bus import router as router_bus
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # see https://fastapi.tiangolo.com/advanced/events/?h=#lifespan
+    # we use lifespan to differ broker connexion
+    # the API must start even if the broker is not available
+    app.include_router(router_bus)
+    app.state.broker = router_bus.broker
+    yield
+    # nothing to do at shutdown
 
-app.include_router(router_bus)
+
+app = FastAPI(lifespan=lifespan)
 app.include_router(router_api)
-
 app.state.rank = "dev"
-app.state.broker = router_bus.broker

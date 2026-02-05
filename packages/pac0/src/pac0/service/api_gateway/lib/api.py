@@ -32,10 +32,10 @@ async def read_root():
 @router.post("/flows")
 async def flows_post(
     broker: Annotated[NatsBroker, Depends(broker)],
-    # la facture déposée
-    file: UploadFile = File(...),
     trackingId: str | None,
     sha256: str | None,
+    # la facture déposée
+    file: UploadFile = File(...),
     # L'authentification JWT est facultative pour cet appel
     # un autre PA peut nous appeler sans jwt
     jwt: str = Depends(get_token_optional),

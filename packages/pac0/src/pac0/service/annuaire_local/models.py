@@ -8,7 +8,10 @@ from pac0.shared.payload import MsgPayloadBase
 class MsgAnnuaireLocalInPayload(MsgPayloadBase):
     # l'identifiant court de l'entreprise
     company_id: str
+    # ...
+    # ...
 
 
 class MsgAnnuaireLocalOutPayload(MsgPayloadBase):
     local_directory: bool
+    # ...

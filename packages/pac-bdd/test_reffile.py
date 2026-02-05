@@ -1,7 +1,14 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import pytest
+from pytest.mark import skip
 from pac_bdd.lib import reffile
 
 
 
+"""
 @parametize???
 ( "source",  "resolved")
 (
@@ -11,10 +18,16 @@ from pac_bdd.lib import reffile
     "~doc/UC4b_F202500010_00-INVCORR_20250702.pdf",
     "docs/norme/XP_Z12-012_Annexes_A_V1.2_et_B_EXEMPLES_V1.2/XP_Z12-012_Annexe_B_EXEMPLES_V1.2/Factures/Facture et Facture Rectificative/UC4b_F202500010_00-INVCORR_20250702.pdf",
 )
+"""
+
+
+# @skip("not yet implemented")
 def test_pdf_files(source: str, resolved: str):
     '''test pdf files'''
-    pass
+    assert False
 
+
+"""
 
 @parametize???
 ( "source",  "resolved")
@@ -25,6 +38,10 @@ def test_pdf_files(source: str, resolved: str):
     "~doc/F202500001_INV_20250201_UBL.xml",
     "docs/docs/norme/XP_Z12-012_Annexes_A_V1.2_et_B_EXEMPLES_V1.2/XP_Z12-012_Annexe_B_EXEMPLES_V1.2/Factures/F202500001/F202500001_INV_20250201_UBL.xml",
 )
+"""
+
+
+# @skip("not yet implemented")
 def test_xml_files(source: str, resolved: str):
     '''test pdf files'''
-    pass
+    assert False

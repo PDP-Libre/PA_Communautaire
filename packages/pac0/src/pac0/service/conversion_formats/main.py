@@ -11,4 +11,11 @@ ctx, broker, app = init_esb_app("conversion-formats")
 @broker.subscriber(ctx.subject_in, ctx.queue)
 async def process(message):
     #TODO: faire qq chose ...
+
+    # BAD: company / facture / fichier
+    get_file("/334/4444/facture.xml")
+
+    # BAD: facture / fichier  (company est déduit du JWT)
+    get_file("4444/facture.xml")
+
     await ctx.publisher_out.publish(message)

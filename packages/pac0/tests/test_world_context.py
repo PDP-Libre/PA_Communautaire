@@ -1,0 +1,98 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+from pathlib import Path
+import pytest
+
+from pac0.shared.test.world import WorldContext
+from pac0.shared.test.service.pac import PacServiceContext
+from pac0.shared.test.service.fastapi import FastApiServiceContext
+from pac0.shared.test.service.base import BaseServiceContext, ServiceConfig
+
+# =============================================================================
+# Level 5: WorldContext Basic Tests
+# =============================================================================
+
+# logging.getLogger().setLevel('DEBUG')
+
+async def test_world_default_0pa():
+    """Default WorldContext has no PA."""
+    async with WorldContext() as world:
+        assert len(world.pas) == 0
+
+
+async def test_world_with_1pa():
+    """WorldContext with 1 PA instance."""
+    async with WorldContext() as world:
+        await world.pa_new()  # default is 1
+        assert len(world.pas) == 1
+
+    async with WorldContext() as world:
+        await world.pa_new(1)
+        assert len(world.pas) == 1
+
+
+async def test_world_with_4pa():
+    """WorldContext with 4 PA instances."""
+    async with WorldContext() as world:
+        await world.pa_new(4)
+        assert len(world.pas) == 4
+
+
+# TODO: move to its own file
+async def test_pac_ctx():
+    # PacServiceContext
+    assert False
+
+
+# TODO: move to its own file
+async def test_brique_01_ctx1():
+    """service ephémère"""
+    async with FastApiServiceContext() as svc:
+        assert svc.config.port != 0
+
+
+# TODO: move to its own file
+@pytest.mark.slow
+async def test_brique_01_ctx2():
+    """service localhost absent"""
+    with pytest.raises(TimeoutError):
+        async with FastApiServiceContext(external_svc="http://localhost:4588"):
+            assert False, "You Shall Not Pass !"
+
+
+# TODO: move to its own file
+async def test_brique_01_ctx3():
+    """service localhost présent"""
+    # start an ephemeral service
+    async with FastApiServiceContext() as svc1:
+        # get the port
+        port = svc1.config.port
+
+        # use it as an external service
+        async with FastApiServiceContext(external_svc=f"http://localhost:¨{port}") as svc:
+            # TODO: query /healthcheck ??
+            assert False
+
+
+# BaseServiceContext
+async def test_base_svc_ctx():
+    """
+    service ephémère
+    Démarre un service api sur un port aléatoire
+    """
+    cfg = ServiceConfig(
+        command=[
+            "uv",
+            "run",
+            "fastapi",
+            "run",
+            "--port={PORT}",
+            "tests/dummy.py",
+        ],
+        port=0,
+        health_check_path="/alive",
+    )
+    async with BaseServiceContext(cfg) as svc:
+        assert svc.config.port != 0

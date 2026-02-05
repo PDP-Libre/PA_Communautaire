@@ -106,6 +106,10 @@ class ServiceConfig:
     stdout: int = subprocess.PIPE
     stderr: int = subprocess.PIPE
     env_var_extra: dict[str, str] | None = None
+    # external_svc = None : create internal ephemeral service
+    # external_svc = "http://localhost:6543" : don't create the service, use this to connect
+    # same as setting the envvar TEST_SVC_EXTERNAL
+    external_svc: str | None = None
 
 
 
@@ -140,32 +144,33 @@ class BaseServiceContext:
         # check if we use an already running external service
         # usefull for test cases where the service is started
         # outside of the test suit
-        external_svc = os.environ.get("TEST_SVC_EXTERNAL")
-        if external_svc is None:
+        external_svc = os.environ.get("TEST_SVC_EXTERNAL", self.config.external_svc)
+        if external_svc is not None:
             logger.info(f"Service  {self.config.name} using external")
 
-        # find an available port
-        if self.config.port == 0:
-            self.config.port = await find_available_port()
-        logger.info(
-            f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
-        )
+        if external_svc is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
 
-        env = os.environ.copy()
-        env["PORT"] = str(self.config.port)
-        if self.config.env_var_extra:
-            env.update(self.config.env_var_extra)
-        command = [c.format(**env) for c in self.config.command]
+            env = os.environ.copy()
+            env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
 
-        self._process = subprocess.Popen(
-            command,
-            # TODO: BUG, break if uncommented !
-            # stdout=subprocess.PIPE,  # self.config.stdout,
-            # stderr=subprocess.PIPE,  # self.config.stderr,
-            text=True,
-            env=env,
-            cwd=PACKAGE_BASE_FOLDER,
-        )
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
 
         # Wait for service to be ready
         self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
