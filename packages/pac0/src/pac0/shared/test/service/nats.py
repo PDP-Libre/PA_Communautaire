@@ -20,6 +20,7 @@ class NatsServiceContext(BaseServiceContext):
             port=0,
             allow_ConnectionRefusedError=True,
             health_check_path=None,
+            env_var="PAC0_ESB_URL",
         )
 
         super().__init__(config)

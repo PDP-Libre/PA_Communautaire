@@ -14,9 +14,22 @@ from faststream.nats import NatsBroker, NatsRouter
 QUEUE = "q"
 
 
+class SettingsServeur(BaseSettings):
+    """
+    les settings du serveur 02-esb
+    """
+
+    # répertoire des data NATS
+    # Si None on utilise un répertoire temporaire unique
+    data_path: str | None = None
+
+
 class SettingsService(BaseSettings):
-    # any_flag: bool
-    ...
+    """
+    les settings d'un service de base (brique)
+    """
+
+    nats_url: str = "nats://localhost:4222"
 
 
 @dataclass
@@ -97,6 +110,7 @@ def init_esb_app(prefix):
 
 
 def get_nats_url():
+    # TODO: deprecate in favor of SettingsService
     url = os.environ.get("NATS_URL", "nats://localhost:4222")
     print(f"Connecting to NATS {url} ...")
     return url

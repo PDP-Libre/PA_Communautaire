@@ -3,7 +3,7 @@ Fonctionnalité: boucle métier
     Tester la boucle métier complète avec la dépose d'une facture
     et le parcours des briques.
 
-
+        
     Scénario: flow des messages
         S'assurer que les messages circulent bien entre les différentes briques
         via la brique `gestion-cycle-vie`.

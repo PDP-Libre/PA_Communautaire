@@ -3,9 +3,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI
+import yaml
 from pac0.service.api_gateway.lib.api import router as router_api
 from pac0.service.api_gateway.lib.bus import router as router_bus
+import logging
 
 
 @asynccontextmanager
@@ -22,3 +25,4 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(router_api)
 app.state.rank = "dev"
+

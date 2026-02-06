@@ -32,6 +32,7 @@ class FastApiServiceContext(BaseServiceContext):
                 "NATS_URL": nats_url,
             },
             external_svc=external_svc,
+            env_var="PAC0_API_URL",
         )
         super().__init__(config)
 

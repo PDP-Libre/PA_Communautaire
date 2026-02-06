@@ -5,7 +5,9 @@
 import subprocess
 from pathlib import Path
 
+from pydantic_settings import BaseSettings
 import typer
+
 
 from .. import utils
 from ..lib.conf import DEFAULT_BRANCH, DEFAULT_REPO
@@ -13,6 +15,22 @@ from . import setup
 
 app = typer.Typer()
 
+class SettingsCLI(BaseSettings):
+    """
+    les settings CLI
+    """
+
+    api_url: str | None = None
+    esb_url: str | None = None
+    store_url: str | None = None
+    store_data: str = "/data"
+    uv_publish_token: str
+
+
+settings = SettingsCLI(
+    _env_file=".env",
+    _env_prefix="PAC0_",
+)
 
 def _run_service(
     service: str,
@@ -44,7 +62,9 @@ def _call(
     elif service == "02-esb-central":
         cmd = ["nats-server", "-V", "-js"]
     elif service == "10-stockage":
-        cmd = ["weed", "mini", "-dir=/data"]
+        # cmd = ["weed", "mini", "-dir=/tmp/data"]
+        cmd = ["weed", "mini", f"-dir={settings.store_data}"]
+
     else:
         # full_path = f"src/pac0/service/{service_folder}/main:app"
         full_path = f"pac0.service.{service_folder}.main:app"

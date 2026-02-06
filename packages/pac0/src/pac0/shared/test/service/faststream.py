@@ -15,19 +15,17 @@ class FastStreamServiceContext(BaseServiceContext):
         nats_url: str = "nats://localhost:4222",
     ) -> None:
         config = ServiceConfig(
-            name=name,
+            name=name or "faststream",
             # uv run faststream run src/pac0/service/validation_metier/main:app
-            # command=["uv", "fastapi", "dev", "app1/main.py"],
-            # command=["uv", "run", "faststream", "run", "src/pac0/service/validation_metier/main:app"],
             command=[
                 "uv",
                 "run",
                 "faststream",
                 "run",
                 app_file,
-                "--port={PORT}",
+                # "--port={PORT}",
             ],
-            port=0,
+            port=-1,
             allow_ConnectionRefusedError=True,
             health_check_path=None,
             env_var_extra={

@@ -110,6 +110,8 @@ class ServiceConfig:
     # external_svc = "http://localhost:6543" : don't create the service, use this to connect
     # same as setting the envvar TEST_SVC_EXTERNAL
     external_svc: str | None = None
+    # variable d'environnement qui indique le service externe
+    env_var: str | None = None
 
 
 
@@ -122,8 +124,13 @@ class BaseServiceContext:
     Set TEST_SVC_EXTERNAL env vat to use an existing external service
 
     Set config.port = 0 to find an available port
-    Set config.port = -! to tell you don't need a port (pure convention)
+    Set config.port = -1 to tell you don't need a port (pure convention)
 
+
+    TIPS: The command.config is one of:
+    - the service executable (uv run fastapi ...)
+    - the docker command (docker run ...)
+    - the CLI or script to start the service ... which can start a docker ...
     """
 
     def __init__(self, config: ServiceConfig) -> None:
@@ -144,11 +151,11 @@ class BaseServiceContext:
         # check if we use an already running external service
         # usefull for test cases where the service is started
         # outside of the test suit
-        external_svc = os.environ.get("TEST_SVC_EXTERNAL", self.config.external_svc)
-        if external_svc is not None:
+        external_url = self._external_url()
+        if external_url is not None:
             logger.info(f"Service  {self.config.name} using external")
 
-        if external_svc is None:
+        if external_url is None:
             # find an available port
             if self.config.port == 0:
                 self.config.port = await find_available_port()
@@ -157,7 +164,8 @@ class BaseServiceContext:
             )
 
             env = os.environ.copy()
-            env["PORT"] = str(self.config.port)
+            if self.config.port > 0:
+                env["PORT"] = str(self.config.port)
             if self.config.env_var_extra:
                 env.update(self.config.env_var_extra)
             command = [c.format(**env) for c in self.config.command]
@@ -227,8 +235,19 @@ class BaseServiceContext:
                         return True
                 """
                 await asyncio.sleep(1.0)
+            return False
+        return True
 
-        return False
+    def _external_url(self) -> str | None:
+        """
+        Renvoie l'URL externe du service.
+        Renvoie None si l'url externe n'est pas définie
+        Elle peut être définie soit directement via config.external_svc
+        soit via la variable d'environnement config.env_var
+        """
+        url = os.environ.get(self.config.env_var) if self.config.env_var else None
+        url = url or self.config.external_svc
+        return url
 
     def _check_tcp_connectivity(
         self,
@@ -251,12 +270,13 @@ class BaseServiceContext:
 
     async def _check_http_health(self) -> bool:
         """Check HTTP health endpoint."""
+        external_url = self._external_url()
+        if external_url is None:
+            url = f"http://{self.config.host}:{self.config.port}{self.config.health_check_path}"
+        else:
+            url = f"{external_url}{self.config.health_check_path}"
+        logger.debug("_check_http_health", url)
         try:
-            if self.config.external_svc is None:
-                url = f"http://{self.config.host}:{self.config.port}{self.config.health_check_path}"
-            else:
-                url = f"{self.config.external_svc}{self.config.health_check_path}"
-            print("_check_http_health", url)
             async with httpx.AsyncClient(
                 timeout=self.config.health_check_timeout
             ) as client:
@@ -265,6 +285,7 @@ class BaseServiceContext:
                 )
                 return response.status_code == 200
         except Exception as e:
+            print(e)
             return False
 
     @contextmanager

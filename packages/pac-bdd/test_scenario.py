@@ -5,9 +5,11 @@
 from pac_bdd.steps import *
 from pytest_bdd import scenarios
 import glob
-import logging
 
-logging.getLogger().setLevel(logging.DEBUG)
+# warning: don't touch logging here it may cause errors
+# import logging
+# logging.basicConfig()
+# logging.root.setLevel(logging.DEBUG)
 
 
 # loop over all *.feature files

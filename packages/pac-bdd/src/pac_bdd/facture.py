@@ -11,7 +11,7 @@ from pac_bdd.lib import reffile
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+
 
 
 ## local BDD context class
@@ -33,10 +33,10 @@ logger.setLevel(logging.DEBUG)
 # Note: "je dépose la facture #{invoice_id}" is now defined in peppol.py
 
 
-@when(parsers.parse("je dépose la facture #{invoice} sur #{pa}"))
-def submit_invoice_on_pa(invoice, pa):
-    # POST /
-    raise NotImplementedError()
+# @when(parsers.parse("je dépose la facture #{invoice} sur #{pa}"))
+# def submit_invoice_on_pa(invoice, pa):
+#    # POST /
+#    raise NotImplementedError()
 
 
 @when(parsers.parse("je dépose la facture {invoice}"))
@@ -53,7 +53,7 @@ def submit_invoice(
         # TODO: recuperer le numero de job
         assert response.status_code == 200
     # TODO: attendre la fin du job via des appels reguliers api
-    raise NotImplementedError()
+    # raise NotImplementedError()
 
 
 @when("je dépose une facture")
