@@ -48,9 +48,12 @@ def submit_invoice(
     invoice = reffile.resolve(invoice)
     with world1.pa1.api_gateway.get_client() as client:
         # TODO: attacher le fichier
-        files = {"upload-file": invoice}
+        files = {"upload_file": invoice}
+        # response = client.post("/flows")
         response = client.post("/flows", files=files)
+
         # TODO: recuperer le numero de job
+        print(response.status_code)
         assert response.status_code == 200
     # TODO: attendre la fin du job via des appels reguliers api
     # raise NotImplementedError()

@@ -32,10 +32,10 @@ async def read_root():
 @router.post("/flows")
 async def flows_post(
     broker: Annotated[NatsBroker, Depends(broker)],
-    trackingId: str | None,
-    sha256: str | None,
+    trackingId: str | None = None,
+    sha256: str | None = None,
     # la facture déposée
-    file: UploadFile = File(...),
+    upload_file: UploadFile = File(...),
     # L'authentification JWT est facultative pour cet appel
     # un autre PA peut nous appeler sans jwt
     jwt: str = Depends(get_token_optional),
@@ -48,12 +48,13 @@ async def flows_post(
     •Un cycle de vie sur une transmission de données de E-reporting (Syntaxe CDAR)
     Le body de la route POST/ Flows est un multi-part composé d’un objet ‘flowInfo’ et d’un fichier binaire.
     """
+
     # calcule le hash sha256 de la facture déposée
-    upload_hash = await store.compute_h256(file)
+    upload_hash = await store.compute_h256(upload_file)
 
     if sha256 and upload_hash != sha256:
-        #TODO: renvoyer une erreur HTTP
-        raise Exception('hash mismatch')
+        # TODO: renvoyer une erreur HTTP
+        raise Exception("hash mismatch")
 
     # où stocker la facture déposée
     srv, bucket, file_key = store.get_srv_bucket_key_from_file_ctx(
@@ -83,7 +84,9 @@ async def flows_post(
     )
 
     # upload the file to s3
-    await store.put(store_post_presigned_url, file)
+    await store.put(store_post_presigned_url, upload_file)
+
+    return "ok"
 
     flow_id = await flow_id_new()
     await broker.publish(
@@ -93,14 +96,14 @@ async def flows_post(
             jwt=jwt,
             store_presigned_url=store_get_presigned_url,
             upload_hash=upload_hash,
-            upload_filename=file.filename,
+            upload_filename=upload_file.filename,
         ),
         SUBJECT_01_OUT,
     )
 
     return {
         "flow_id": flow_id,
-        "filename": file.filename,
+        "filename": upload_file.filename,
     }
 
 

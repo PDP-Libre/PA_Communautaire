@@ -249,6 +249,19 @@ class BaseServiceContext:
         url = url or self.config.external_svc
         return url
 
+    @property
+    def url(self) -> str:
+        """
+        Renvoie l'URL de base du service.
+        """
+        external_url = self._external_url()
+        # TODO: add self.protocol to avoid overridding
+        if external_url is None:
+            url = f"http://{self.config.host}:{self.config.port}"
+        else:
+            url = external_url
+        return url
+
     def _check_tcp_connectivity(
         self,
     ) -> bool:
@@ -270,29 +283,24 @@ class BaseServiceContext:
 
     async def _check_http_health(self) -> bool:
         """Check HTTP health endpoint."""
-        external_url = self._external_url()
-        if external_url is None:
-            url = f"http://{self.config.host}:{self.config.port}{self.config.health_check_path}"
-        else:
-            url = f"{external_url}{self.config.health_check_path}"
-        logger.debug("_check_http_health", url)
-        try:
-            async with httpx.AsyncClient(
-                timeout=self.config.health_check_timeout
-            ) as client:
-                response = await client.get(
-                    url
-                )
-                return response.status_code == 200
-        except Exception as e:
-            print(e)
-            return False
+        if self.config.health_check_path:
+            url = self.url + self.config.health_check_path
+            logger.debug("_check_http_health", url)
+            try:
+                async with httpx.AsyncClient(
+                    timeout=self.config.health_check_timeout
+                ) as client:
+                    response = await client.get(url)
+                    return response.status_code == 200
+            except Exception as e:
+                print(e)
+                return False
 
     @contextmanager
     def get_client(self) -> Generator[httpx.Client, None, None]:
         """Get a synchronous HTTP client."""
         client = httpx.Client(
-            base_url=f"http://{self.config.host}:{self.config.port}",
+            base_url=self.url,
             timeout=self.config.health_check_timeout,
         )
         try:
@@ -304,12 +312,8 @@ class BaseServiceContext:
     async def get_client_async(self) -> AsyncGenerator[httpx.AsyncClient, None]:
         """Get an asynchronous HTTP client."""
         async with httpx.AsyncClient(
-            base_url=f"http://{self.config.host}:{self.config.port}",
+            base_url=self.url,
             timeout=self.config.health_check_timeout,
         ) as client:
             yield client
 
-    @property
-    def url(self) -> str:
-        # TODO: add self.protocol to avoid overridding
-        return f"http://{self.config.host}:{self.config.port}"
