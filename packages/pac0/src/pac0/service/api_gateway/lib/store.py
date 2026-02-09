@@ -14,14 +14,14 @@ from fastapi import UploadFile
 import httpx
 import s3fs
 from botocore.config import Config
+import os
 
 
-# TODO: move to conf
-# ENDPOINT_URL = "http://localhost:8333"
-ENDPOINT_URL = "https://store.document.legal"
-REGION_NAME = "fr-par"
-AWS_ACCESS_KEY_ID = "pdplibrekey"
-AWS_SECRET_ACCESS_KEY = "Sup3rCl3"
+ENDPOINT_URL = os.environ.get("S3_URL", "http://localhost:8333")
+REGION_NAME = os.environ.get("S3_REGION", "fr-par")
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "pdplibrekey")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "Sup3rCl3")
+BUCKET = os.environ.get("S3_BUCKET", "pac0-bucket")
 
 
 async def put(
@@ -54,13 +54,12 @@ def get_srv_bucket_key_from_file_ctx(
         key=AWS_ACCESS_KEY_ID,
         secret=AWS_SECRET_ACCESS_KEY,
         endpoint_url=ENDPOINT_URL,
-        # endpoint_url="http://192.168.12.50:8333",
-        # endpoint_url="https://store.document.legal/",
         client_kwargs={"region_name": REGION_NAME},
         asynchronous=True,
     )
 
-    bucket = "my-bucket"
+    bucket = BUCKET
+    # TODO: construit la clé en fonction du hash et de l'entreprise
     file_key = "xxxxxx.pdf"
     return (server, bucket, file_key)
 

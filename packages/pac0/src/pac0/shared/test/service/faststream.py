@@ -28,6 +28,7 @@ class FastStreamServiceContext(BaseServiceContext):
             port=-1,
             allow_ConnectionRefusedError=True,
             health_check_path=None,
+            env_var="BRIQUE_EXTERNE",
             env_var_extra={
                 "NATS_URL": nats_url,
             },

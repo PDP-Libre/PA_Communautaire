@@ -83,11 +83,10 @@ async def flows_post(
         method="get_object",
     )
 
-    # upload the file to s3
+    # stocke la facture déposée
     await store.put(store_post_presigned_url, upload_file)
 
-    return "ok"
-
+    # génère un identifiant de suivi (flow_id)
     flow_id = await flow_id_new()
     await broker.publish(
         MsgApiFlowsOutPayload(
@@ -97,7 +96,7 @@ async def flows_post(
             store_presigned_url=store_get_presigned_url,
             upload_hash=upload_hash,
             upload_filename=upload_file.filename,
-        ),
+        ).model_dump_json(),
         SUBJECT_01_OUT,
     )
 

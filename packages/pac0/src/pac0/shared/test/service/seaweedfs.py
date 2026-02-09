@@ -57,6 +57,7 @@ class SeaweedfsServiceContext(BaseServiceContext):
             allow_ConnectionRefusedError=True,
             health_check_path="/",
             data_dir=data_dir,
+            env_var="S3_URL",
         )
         super().__init__(config)
 

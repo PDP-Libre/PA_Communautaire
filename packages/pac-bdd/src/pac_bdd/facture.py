@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 
 
 @when(parsers.parse("je dépose la facture {invoice}"))
-def submit_invoice(
+def _(
     world1: WorldContext,
     invoice: str,
 ):
@@ -60,7 +60,7 @@ def submit_invoice(
 
 
 @when("je dépose une facture")
-def submit_invoice_simple():
+def _():
     # POST /
     raise NotImplementedError()
 
@@ -68,4 +68,13 @@ def submit_invoice_simple():
     parsers.parse("je dépose pour contrôle la facture @{invoice}"),
 )
 def control_invoice():
+    raise NotImplementedError()
+
+
+@then(parsers.parse("""un message arrive sur le {canal}"""))
+def _(
+    world1: WorldContext,
+    canal: str,
+):
+    logger.debug(f"{canal=}")
     raise NotImplementedError()

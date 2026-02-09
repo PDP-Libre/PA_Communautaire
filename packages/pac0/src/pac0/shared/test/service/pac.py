@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class PacServiceContext(BaseServiceContext):
     """Test context for a PA service."""
 
-    external_url: str | None = None
+    # external_url: str | None = None
     api_gateway: FastApiServiceContext | None = None
     esb_central: NatsServiceContext | None = None
     # stockage service is **always** external
@@ -42,23 +42,18 @@ class PacServiceContext(BaseServiceContext):
 
     def _services(self) -> list[FastApiServiceContext]:
         """returns internal services (except esb service)"""
-        return (
-            [
-                # self.esb_central,
-                self.api_gateway,
-                self.controle_formats,
-                self.validation_metier,
-                self.conversion_formats,
-                self.annuaire_local,
-                self.routage,
-                self.transmission_fiscale,
-                self.gestion_cycle_vie,
-            ]
-            if self.external_url is None
-            else []
-        )
-        # TODO: add all briques  ...
-        # return []
+        return [
+            # self.esb_central,
+            self.api_gateway,
+            self.controle_formats,
+            self.validation_metier,
+            self.conversion_formats,
+            self.annuaire_local,
+            self.routage,
+            self.transmission_fiscale,
+            self.gestion_cycle_vie,
+        ]
+
 
     async def __aenter__(self) -> Self:
         """Enter the context manager (start the services if not external)"""

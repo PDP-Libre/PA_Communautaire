@@ -22,7 +22,10 @@ async def lifespan(app: FastAPI):
     # nothing to do at shutdown
 
 
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 app.include_router(router_api)
+app.include_router(router_bus)
+app.state.broker = router_bus.broker
 app.state.rank = "dev"
 

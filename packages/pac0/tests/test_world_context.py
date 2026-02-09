@@ -80,7 +80,7 @@ async def test_brique_01_ctx4():
         port = svc1.config.port
         external_svc = f"http://localhost:{port}"
 
-        with patch.dict(os.environ, {"PAC0_API_URL": external_svc}):
+        with patch.dict(os.environ, {"API_URL": external_svc}):
             # use it as an external service
             async with FastApiServiceContext():
                 ...
@@ -88,7 +88,7 @@ async def test_brique_01_ctx4():
 
 async def test_brique_01_ctx5():
     """service localhost absent envar"""
-    with patch.dict(os.environ, {"PAC0_API_URL": "http://localhost:4588"}):
+    with patch.dict(os.environ, {"API_URL": "http://localhost:4588"}):
         with pytest.raises(TimeoutError):
             async with FastApiServiceContext():
                 ...
