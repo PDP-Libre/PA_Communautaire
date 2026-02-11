@@ -13,20 +13,20 @@ broker = NatsBroker("nats://localhost:4222")
 app = FastStream(broker)
 
 
-@broker.subscriber(">")  # subject name
+@broker.subscriber(">")  # subject name!
 async def handle_msg(
     msg_body,
-    #m: str = Context("message"),
+    # m: str = Context("message"),
     s: str = Context("message.raw_message.subject"),
 ):
     print("test recieved ....", s)
-    await broker.publish("xxxx", "test2")
+    # await broker.publish("xxxx", "test2")
 
 
 async def main():
     await broker.start()
     await broker.publish("hello", "test2")
-    await asyncio.sleep(2)
+    await asyncio.sleep(20)
     await broker.stop()
 
 

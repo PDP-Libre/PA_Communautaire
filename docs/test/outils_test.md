@@ -42,3 +42,30 @@ uv run pytest -v
 
 
 TODO: décrire comment surcharger la conf pour pointer vers des briques 01/02/10 spécifiées par leur FQDN
+
+
+```shell
+cd packages/pac0
+# variable d'environnement pour indiquer aux tests de ne pas instancier les services
+# mais d'utiliser les services locaux déjà lancés
+export API_URL=http://localhost:8000
+export AWS_ACCESS_KEY_ID=pdplibrekey
+export AWS_SECRET_ACCESS_KEY=xxxxxx
+export BRIQUE_EXTERNE=1
+export NATS_URL=nats://localhost:4222
+export S3_URL=http://localhost:8333
+
+uv run pytest -v
+```
+
+## capture des messages
+
+La brique `02-esb-central` assure la communication entre **toutes** les briques.
+Les messages envoyées doivent pouvoir être testés.
+
+La capture de ces messages au sein des tests est délicate : les tests BDD sont fondamentalement synchrone
+alors que la diffusion et l'écoute des messages sont asynchrones.
+
+Nous utilisons donc la brique `01-api-gateway` pour cpaturer les messages.
+La fonctionnalité de capture est activée par la présence de la variable d'environnement `API_CAPTURE`.
+

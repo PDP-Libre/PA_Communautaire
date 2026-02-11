@@ -2,13 +2,14 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import pytest
-from pytest_bdd import given, parsers, scenario, then, when
-from pac0.shared.test.world import WorldContext, world, world1
-from pac_bdd.lib import reffile
-
-
+import asyncio
 import logging
+
+import pytest
+from pac0.shared.test.world import WorldContext, world, world1
+from pytest_bdd import given, parsers, scenario, then, when
+
+from pac_bdd.lib import reffile
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +46,8 @@ def _(
     invoice: str,
 ):
     logger.debug(f"{invoice=}")
+    print(f"xxxxxxxxxxxxxxxxxxxxxxx1 {len(world1.pa.esb_central.spy_log)=}")
+
     invoice = reffile.resolve(invoice)
     with world1.pa1.api_gateway.get_client() as client:
         # TODO: attacher le fichier
@@ -57,6 +60,7 @@ def _(
         assert response.status_code == 200
     # TODO: attendre la fin du job via des appels reguliers api
     # raise NotImplementedError()
+    print(f"xxxxxxxxxxxxxxxxxxxxxxx2 {len(world1.pa.esb_central.spy_log)=}")
 
 
 @when("je dépose une facture")
@@ -76,5 +80,6 @@ def _(
     world1: WorldContext,
     canal: str,
 ):
-    logger.debug(f"{canal=}")
+    logger.debug(f"xxxx {canal=}")
+    print(f"xxxxxxxxxxxxxxxxxxxxxxx3 {len(world1.pa.esb_central.spy_log)=}")
     raise NotImplementedError()

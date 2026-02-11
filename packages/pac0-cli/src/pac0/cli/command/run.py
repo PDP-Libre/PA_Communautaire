@@ -7,6 +7,7 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings
 import typer
+import os
 
 
 from .. import utils
@@ -15,21 +16,23 @@ from . import setup
 
 app = typer.Typer()
 
+
 class SettingsCLI(BaseSettings):
     """
     les settings CLI
+    via .env ou variables d'environnement
     """
 
     api_url: str | None = None
-    esb_url: str | None = None
-    store_url: str | None = None
-    store_data: str = "/data"
+    nats_url: str | None = None
+    s3_url: str | None = None
+    s3_data: str = "/data"
     uv_publish_token: str
 
 
 settings = SettingsCLI(
     _env_file=".env",
-    _env_prefix="PAC0_",
+    # _env_prefix="PAC0_",
 )
 
 def _run_service(
@@ -63,7 +66,7 @@ def _call(
         cmd = ["nats-server", "-V", "-js"]
     elif service == "10-stockage":
         # cmd = ["weed", "mini", "-dir=/tmp/data"]
-        cmd = ["weed", "mini", f"-dir={settings.store_data}"]
+        cmd = ["weed", "mini", f"-dir={settings.s3_data}"]
 
     else:
         # full_path = f"src/pac0/service/{service_folder}/main:app"

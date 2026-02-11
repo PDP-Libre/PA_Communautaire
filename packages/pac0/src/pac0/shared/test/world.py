@@ -21,6 +21,8 @@ import asyncio
 import logging
 from dataclasses import dataclass
 from typing import Any, AsyncContextManager, Self
+from faststream.nats import NatsBroker
+from faststream import FastStream, Context
 
 import pytest
 from pac0.shared.test.service.dns import DNSServiceContext
@@ -106,17 +108,45 @@ async def world():
         yield ctx
 
 
+broker = NatsBroker("nats://localhost:4222")
+
+
+@broker.subscriber(">")  # subject name!
+async def handle_msg(
+    msg_body,
+    # m: str = Context("message"),
+    s: str = Context("message.raw_message.subject"),
+):
+    print("xxxxxxxxx test recieved ....", s)
+    # await broker.publish("xxxx", "test2")
+
+
 @pytest.fixture
 async def world1():
     """Fixture: World"""
-    # if len(world.pas) == 0:
-    #    await world.pa_new()
-    # yield world
-
     async with WorldContext() as world:
         if len(world.pas) == 0:
             await world.pa_new()
+        print(f"xxxxxxxxxxxxxxxxxxxxxxx00 {len(world.pa.esb_central.spy_log)=}")
+        await asyncio.sleep(2)
+
+        await broker.start()
+        await broker.publish("hello", "test2")
+        print(f"xxxxxxxxxxxxxxxxxxxxxxx02 {len(world.pa.esb_central.spy_log)=}")
+        await asyncio.sleep(2)
+
         yield world
+        print(f"xxxxxxxxxxxxxxxxxxxxxxx96 {len(world.pa.esb_central.spy_log)=}")
+        await asyncio.sleep(2)
+        nb = len(world.pa.esb_central.spy_log)
+
+        await asyncio.sleep(2)
+        await broker.stop()
+
+    # ici les actions du test sont terminées
+    # ici les actions du WorldContext sont terminées
+    await asyncio.sleep(5)
+    print(f"xxxxxxxxxxxxxxxxxxxxxxx99 {nb=}")
 
 
 # TODO: usefull for async/sync BDD step ??

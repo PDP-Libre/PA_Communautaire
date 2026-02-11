@@ -13,7 +13,7 @@ Fonctionnalité: boucle métier
         Alors un message arrive sur le canal "api-gateway-OUT"
 
         Et un message arrive sur le canal "controle-formats-IN"
-        Et un message arrive sur le canal "controle-formats-OUT"
+        Et un message arrive sur le canal "controle-formats-OUT"paxpar
 
         Et un message arrive sur le canal "validation-metier-IN"
         Et un message arrive sur le canal "validation-metier-OUT"

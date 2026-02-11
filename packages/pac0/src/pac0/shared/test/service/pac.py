@@ -37,7 +37,6 @@ class PacServiceContext(BaseServiceContext):
     transmission_fiscale: FastStreamServiceContext | None = None
     gestion_cycle_vie: FastStreamServiceContext | None = None
 
-    # TODO: add all briques  ...
     client_async: httpx.AsyncClient | None = None
 
     def _services(self) -> list[FastApiServiceContext]:

@@ -35,6 +35,8 @@ from pac0.shared.tools.api import find_available_port
 
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 
 PACKAGE_BASE_FOLDER = (
     Path(__file__)
@@ -98,6 +100,7 @@ class ServiceConfig:
     name: str = "unknown"
     host: str = "localhost"
     port: int = 8000
+    protocol: str = "http"
     health_check_path: str | None = "/health"
     health_check_timeout: float = 5.0
     startup_timeout: float = 30.0
@@ -257,9 +260,12 @@ class BaseServiceContext:
         external_url = self._external_url()
         # TODO: add self.protocol to avoid overridding
         if external_url is None:
-            url = f"http://{self.config.host}:{self.config.port}"
+            # url = f"http://{self.config.host}:{self.config.port}"
+            url = f"{self.config.protocol}://{self.config.host}:{self.config.port}"
+
         else:
             url = external_url
+        logger.debug(f"{url=}")
         return url
 
     def _check_tcp_connectivity(
@@ -285,7 +291,7 @@ class BaseServiceContext:
         """Check HTTP health endpoint."""
         if self.config.health_check_path:
             url = self.url + self.config.health_check_path
-            logger.debug("_check_http_health", url)
+            logger.debug(f"_check_http_health {url}")
             try:
                 async with httpx.AsyncClient(
                     timeout=self.config.health_check_timeout
@@ -295,6 +301,7 @@ class BaseServiceContext:
             except Exception as e:
                 print(e)
                 return False
+        return True
 
     @contextmanager
     def get_client(self) -> Generator[httpx.Client, None, None]:
