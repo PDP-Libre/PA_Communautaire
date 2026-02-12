@@ -77,9 +77,52 @@ URL: http://localhost:8000/openapi.json
 | `0` | Conforme |
 | `1` | Non conforme |
 
+## Via BDD (pytest-bdd)
+
+Les tests de conformité sont également disponibles en tant que scénarios BDD Gherkin :
+
+```bash
+cd packages/pac-bdd
+
+# Lancer les tests BDD de conformité swagger
+uv run pytest test_scenario.py -k "conformit" -v
+
+# Lancer les tests directs (sans BDD)
+uv run pytest test_openapi.py -v
+```
+
+### Démarche de constitution du test BDD
+
+1. **Identification de l'exigence** : La norme XP Z12-013 définit les API REST que chaque PA doit exposer (Flow Service + Directory Service)
+2. **Fichiers de référence** : Les swaggers AFNOR (Annexes A et B) servent de référentiel de conformité
+3. **Rédaction du scénario Gherkin** : Scénario en français dans `docs/briques/01-api-gateway/openapi_conformite.feature`
+4. **Implémentation des steps** : Les steps (`packages/pac-bdd/src/pac_bdd/openapi.py`) valident directement contre les swaggers de référence AFNOR, sans dépendance à pac0-cli
+5. **Exécution** : Le test peut être lancé via BDD (`pytest test_scenario.py -k conformit`) ou via CLI (`pac test swagger <URL>`)
+6. **Interprétation** : Chaque endpoint manquant ou non conforme est listé individuellement dans le rapport
+
+### Scénario Gherkin
+
+```gherkin
+# language: fr
+Fonctionnalité: Conformité API XP Z12-013
+
+    Scénario: Conformité Flow Service
+        Soit une pa communautaire
+        Quand je vérifie la conformité swagger "flow"
+        Alors le swagger est conforme
+
+    Scénario: Conformité Directory Service
+        Soit une pa communautaire
+        Quand je vérifie la conformité swagger "directory"
+        Alors le swagger est conforme
+```
+
 ## Fichiers source
 
 | Fichier | Description |
 |---------|-------------|
 | `packages/pac0-cli/src/pac0/cli/command/test.py` | Commande CLI |
 | `packages/pac0-cli/src/pac0/cli/lib/swagger_validator.py` | Module de validation |
+| `docs/briques/01-api-gateway/openapi_conformite.feature` | Scénarios BDD |
+| `packages/pac-bdd/src/pac_bdd/openapi.py` | Step definitions BDD |
+| `packages/pac-bdd/test_openapi.py` | Tests directs (sans BDD) |

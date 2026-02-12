@@ -5,6 +5,7 @@
 from .api import *
 from .demo import *
 from .esb import *
+from .openapi import *
 from .peppol import *
 from .service import *
 from .tobeimplemented import *
