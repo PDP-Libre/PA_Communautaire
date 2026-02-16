@@ -56,6 +56,8 @@ class PacServiceContext(BaseServiceContext):
 
     async def __aenter__(self) -> Self:
         """Enter the context manager (start the services if not external)"""
+        print("KKKKKKKKKKKKKKKKKKKKK 2")
+
         # start the esb service first (api dependency)
         self.esb_central = NatsServiceContext(name="esb_central")
         await self.esb_central.__aenter__()

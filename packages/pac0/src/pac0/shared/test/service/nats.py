@@ -53,14 +53,18 @@ class NatsServiceContext(BaseServiceContext):
     #    return f"nats://{self.config.host}:{self.config.port}"
 
     async def __aenter__(self) -> Self:
+        print("KKKKKKKKKKKKKKKKKKKKK 3")
+
         result = await super().__aenter__()
 
         if self.spy:
             # self.spy_broker = NatsBroker(self.url)
-            broker = self.spy_broker = NatsBroker("nats://localhost:4222")
-            await asyncio.sleep(2)
+            # broker = self.spy_broker = NatsBroker("nats://localhost:4222")
+            broker = NatsBroker(f"nats://localhost:{self.config.port}")
+            self.spy_broker = broker
+            print(f"iiiiiiiii00 {self.config.port=}")
 
-            await broker.start()
+            await asyncio.sleep(2)
 
             # on écoute tout
             # @self.spy_broker.subscriber(">")
@@ -70,7 +74,7 @@ class NatsServiceContext(BaseServiceContext):
                 # m: str = Context("message"),
                 s: str = Context("message.raw_message.subject"),
             ):
-                logger.debug(f"yyyyyyyyyyyyy spy recieved a msg on subject {s}....")
+                print(f"yyyyyyyyyyyyy spy recieved a msg on subject {s}....")
                 if len(self.spy_log) >= self.spy_log_max:
                     self.spy_log = self.spy_log[-(self.spy_log_max + 1) :]
                 self.spy_log.append(
@@ -79,6 +83,8 @@ class NatsServiceContext(BaseServiceContext):
                         "body": "???",
                     }
                 )
+
+            await broker.start()
 
         return result
 

@@ -76,6 +76,7 @@ class WorldContext:
         return self.pas[-1]
 
     async def __aenter__(self) -> Self:
+        print("KKKKKKKKKKKKKKKKKKKKK 1")
         services: list[AsyncContextManager] = [self.peppol, *self.pas]
         await asyncio.gather(*[s.__aenter__() for s in services])
         logger.info("WorldContext: enter context ...")
@@ -108,32 +109,53 @@ async def world():
         yield ctx
 
 
-broker = NatsBroker("nats://localhost:4222")
+# broker = NatsBroker("nats://localhost:4222")
 
 
-@broker.subscriber(">")  # subject name!
-async def handle_msg(
-    msg_body,
-    # m: str = Context("message"),
-    s: str = Context("message.raw_message.subject"),
-):
-    print("xxxxxxxxx test recieved ....", s)
-    # await broker.publish("xxxx", "test2")
+# @broker.subscriber(">")  # subject name!
+# async def handle_msg(
+#    msg_body,
+#    # m: str = Context("message"),
+#    s: str = Context("message.raw_message.subject"),
+# ):
+#    print("XXXXXX test recieved ....", s)
+#    # await broker.publish("xxxx", "test2")
 
 
 @pytest.fixture
 async def world1():
     """Fixture: World"""
+    global broker
+
     async with WorldContext() as world:
         if len(world.pas) == 0:
             await world.pa_new()
-        print(f"xxxxxxxxxxxxxxxxxxxxxxx00 {len(world.pa.esb_central.spy_log)=}")
+
+        spy_log = []
+        print(
+            f"xxxxxxxxxxxxxxxxxxxxxxx00 {len(world.pa.esb_central.spy_log)=} {world.pa.esb_central.config.port=}"
+        )
+        # broker = NatsBroker(f"nats://localhost:{world.pa.esb_central.config.port}")
+
+        # @broker.subscriber(">")  # subject name!
+        # async def handle_msg(
+        #    msg_body,
+        #    # m: str = Context("message"),
+        #    s: str = Context("message.raw_message.subject"),
+        # ):
+        #    print("++++++++++++++++++++++++++++++++++ test recieved ....", s)
+        #    # await broker.publish("xxxx", "test2")
+        #    spy_log.append({"body": msg_body})
+
         await asyncio.sleep(2)
 
-        await broker.start()
-        await broker.publish("hello", "test2")
+        # await broker.start()
+        # await broker.publish("hello", "test2")
         print(f"xxxxxxxxxxxxxxxxxxxxxxx02 {len(world.pa.esb_central.spy_log)=}")
+        await world.pa.esb_central.spy_broker.publish("hello", "test2")
+        # await broker.publish("hello", "test2")
         await asyncio.sleep(2)
+
 
         yield world
         print(f"xxxxxxxxxxxxxxxxxxxxxxx96 {len(world.pa.esb_central.spy_log)=}")
@@ -141,7 +163,7 @@ async def world1():
         nb = len(world.pa.esb_central.spy_log)
 
         await asyncio.sleep(2)
-        await broker.stop()
+        # await broker.stop()
 
     # ici les actions du test sont terminées
     # ici les actions du WorldContext sont terminées

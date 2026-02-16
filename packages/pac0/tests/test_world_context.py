@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import asyncio
 import os
 import pytest
 from unittest.mock import patch, AsyncMock
@@ -202,3 +203,20 @@ def test_fixture_world1(
     avec tous les services lancés
     """
     ...
+
+
+async def test_world_spy(
+    world1: WorldContext,
+):
+    """
+    world spy
+    Vérifie que l'on peut *capter* les messages
+    """
+    # nb de message déjà reçu
+    nb_msg = len(world1.pa.esb_central.spy_log)
+    # si on poste un nouveau message
+    await world1.pa.esb_central.spy_broker.publish("hello", "test2")
+    # et que l'on attends qu'il arrive
+    await asyncio.sleep(1)
+    # alors on a bien capturé un message de plus
+    assert len(world1.pa.esb_central.spy_log) == nb_msg + 1
