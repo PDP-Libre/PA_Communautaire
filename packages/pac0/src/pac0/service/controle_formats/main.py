@@ -2,12 +2,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pac0.shared.esb import init_esb_app
 from pac0.service.controle_formats.models import (
     MsgControleFormatsInPayload,
     MsgControleFormatsOutPayload,
 )
-
+from pac0.shared.esb import init_esb_app
 
 ctx, broker, app = init_esb_app("controle-formats")
 

@@ -2,9 +2,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from starlette.types import Message
+
+from pac0.service.api_gateway.lib.models import MsgApiFlowsOutPayload
+from pac0.service.controle_formats.models import MsgControleFormatsInPayload
 from pac0.shared.esb import init_esb_app
 from pac0.shared.subjects import *
-
 
 ctx, broker, app = init_esb_app("gestion-cycle-vie")
 
@@ -20,8 +23,19 @@ publisher_err = broker.publisher(SUBJECT_09_ERR)
 
 
 @broker.subscriber(SUBJECT_01_OUT, ctx.queue)
-async def process_01_to_03(message):
-    await publisher_03_IN.publish(message)
+async def process_01_to_03(message: MsgApiFlowsOutPayload):
+    await publisher_03_IN.publish(
+        MsgControleFormatsInPayload(
+            # MsgPayloadBase props
+            version=message.version,
+            flow_id=message.flow_id,
+            jwt=message.jwt,
+            # specific props
+            store_presigned_url=message.store_presigned_url,
+            upload_hash=message.upload_hash,
+            upload_filename=message.upload_filename,
+        ).model_dump_json()
+    )
 
 
 @broker.subscriber(SUBJECT_03_OUT, ctx.queue)

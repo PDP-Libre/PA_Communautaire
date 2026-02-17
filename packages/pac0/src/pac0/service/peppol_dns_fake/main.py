@@ -10,13 +10,16 @@ This script creates a DNS service that responds to dig queries.
 Supports A, AAAA, TXT, and NAPTR records.
 """
 
+import logging
+import os
 import socket
 import struct
 import threading
+import time
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
-import time
-import os
+
+logger = logging.getLogger(__name__)
 
 # DNS Constants
 DNS_PORT = 53
@@ -444,19 +447,19 @@ class DNSServer:
         self, data: bytes, client_addr: Tuple[str, int]
     ) -> Optional[bytes]:
         """Handle incoming DNS query and return response."""
-        
+
         try:
             # Parse the query
             query = DNSMessage()
             if not query.parse(data):
-                print(f"Failed to parse DNS query from {client_addr[0]}")
+                logger.error(f"Failed to parse DNS query from {client_addr[0]}")
                 return None
 
             # Log the query
             if query.questions:
                 question = query.questions[0]
                 qtype_str = self._qtype_to_string(question.qtype)
-                print(
+                logger.info(
                     f"Query from {client_addr[0]}:{client_addr[1]} - "
                     f"{question.name} {qtype_str} (ID: {query.id})"
                 )
@@ -493,7 +496,7 @@ class DNSServer:
             return response.build_response()
 
         except Exception as e:
-            print(f"Error handling query from {client_addr}: {e}")
+            logger.error(f"Error handling query from {client_addr}: {e}")
             return None
 
     def _qtype_to_string(self, qtype: int) -> str:
@@ -526,12 +529,11 @@ class DNSServer:
             self.socket.bind((self.host, self.port))
 
         self.running = True
-        print(f"DNS Server started on {self.host}:{self.port}")
-        print("Supported domains:")
+        logger.info(f"DNS Server started on {self.host}:{self.port}")
+        logger.info("Supported domains:")
         for domain in sorted(self.records.keys()):
             for record in self.records[domain]:
-                print(f"  {domain} ({self._qtype_to_string(record.rtype)})")
-        print("\nUse Ctrl+C to stop the server.\n")
+                logger.info(f"  {domain} ({self._qtype_to_string(record.rtype)})")
 
     def run(self):
         """Run the DNS server main loop."""

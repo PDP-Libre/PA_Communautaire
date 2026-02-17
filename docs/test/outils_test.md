@@ -63,9 +63,7 @@ uv run pytest -v
 La brique `02-esb-central` assure la communication entre **toutes** les briques.
 Les messages envoyées doivent pouvoir être testés.
 
-La capture de ces messages au sein des tests est délicate : les tests BDD sont fondamentalement synchrone
+La capture de ces messages au sein des tests est délicate : les tests BDD sont fondamentalement synchrones
 alors que la diffusion et l'écoute des messages sont asynchrones.
 
-Nous utilisons donc la brique `01-api-gateway` pour cpaturer les messages.
-La fonctionnalité de capture est activée par la présence de la variable d'environnement `API_CAPTURE`.
-
+Nous utilisons un object `SpyNats` pour capturer les messages.

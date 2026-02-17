@@ -31,16 +31,13 @@ Variables à déclarer par brique (✅) et par environnement (✔️):
 | variable \ brique       | 01 | 02 | 03..09 | 10 | prod | dev | test |
 |-------------------------|----|----|--------|----|------|-----|------|
 | API_URL                 |    |    |        |    |      | ✔️  |  ✔️  |
-| API_CAPTURE             | ✅ |    |        |    |      | ✔️  |  ✔️  |
-| AWS_ACCESS_KEY_ID       |    |    |        | ✅ |  ✔️  | ✔️  |  ✔️  |
-| AWS_SECRET_ACCESS_KEY   |    |    |        | ✅ |  ✔️  | ✔️  |  ✔️  |
+| AWS_ACCESS_KEY_ID       | ✅ |    |        | ✅ |  ✔️  | ✔️  |  ✔️  |
+| AWS_SECRET_ACCESS_KEY   | ✅ |    |        | ✅ |  ✔️  | ✔️  |  ✔️  |
 | BRIQUE_EXTERNE          |    |    |   ✅   |    |      | ✔️  |  ✔️  |
 | NATS_URL                | ✅ |    |   ✅   |    |  ✔️  | ✔️  |  ✔️  |
 | S3_BUCKET               | ✅ |    |        |    |      | ✔️  |  ✔️  |
-| S3_DATA                 | ✅ |    |        |    |      | ✔️  |  ✔️  |
+| S3_DATA                 |    |    |        | ✅ |      | ✔️  |  ✔️  |
 | S3_REGION               | ✅ |    |        |    |      | ✔️  |  ✔️  |
 | S3_URL                  | ✅ |    |        |    |  ✔️  | ✔️  |  ✔️  |
 | UV_PUBLISH_TOKEN        |    |    |        |    |      | ✔️  |      |
 | NAMESPACE               |    |    |        |    |      | ✔️  |      |
-
-

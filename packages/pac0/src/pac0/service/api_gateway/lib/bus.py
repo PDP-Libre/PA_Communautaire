@@ -6,6 +6,7 @@ from typing import Any
 
 from fastapi import FastAPI
 from faststream.nats.fastapi import NatsMessage, NatsRouter
+
 from pac0.service.api_gateway.lib import trace
 from pac0.service.api_gateway.lib.common import global_state
 from pac0.shared.esb import get_nats_url
@@ -13,14 +14,14 @@ from pac0.shared.esb import get_nats_url
 router = NatsRouter(get_nats_url())
 
 
-#@router.on_startup()
-#def _():
+# @router.on_startup()
+# def _():
 #    print("@router.on_startup ...")
 #    #await app.broker.publish("startup api-gateway", "service")
 #    #await app.broker.publish("shutdown api-gateway", "service")
 
 
-#TODO: pour une meilleure "mémorisation" des messages reçus
+# TODO: pour une meilleure "mémorisation" des messages reçus
 # voir https://docs.nats.io/using-nats/developer/receiving/wildcards#python-1
 if trace.TESTING:
 
@@ -57,7 +58,7 @@ if trace.TESTING:
         )
         """
 
-        #TODO: pour une meilleure "mémorisation" des messages reçus
+        # TODO: pour une meilleure "mémorisation" des messages reçus
         # voir https://docs.nats.io/using-nats/developer/receiving/wildcards#python-1
         # print("****** all_sub ...", body, msg)
         trace.add(
@@ -81,6 +82,6 @@ async def healthcheck_sub():
 
 @router.subscriber("healthcheck_resp")
 async def healthcheck_resp_sub():
-    #TODO: pour une meilleure "mémorisation" des messages reçus
+    # TODO: pour une meilleure "mémorisation" des messages reçus
     # voir https://docs.nats.io/using-nats/developer/receiving/wildcards#python-1
     global_state["healthcheck_resp"].append("xx")

@@ -2,12 +2,17 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
+import os
 from dataclasses import dataclass
 from typing import Any
-from pydantic_settings import BaseSettings
-from faststream import FastStream, ContextRepo
-import os
+
+from faststream import ContextRepo, FastStream
 from faststream.nats import NatsBroker, NatsRouter
+from pydantic_settings import BaseSettings
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 # TODO: we will use NATS queue to have pool of instances
@@ -76,18 +81,15 @@ def init_esb_app(prefix):
     #    settings = SettingsService(_env_file=env)
     #    context.set_global("settings", settings)
 
-
-
-    #@app.on_startup
+    # @app.on_startup
     @app.after_startup
     async def _():
         await broker.publish(f"startup {prefix}", "service")
-        
+
     @app.on_shutdown
-    #@app.after_shutdown
+    # @app.after_shutdown
     async def _():
         await broker.publish(f"shutdown {prefix}", "service")
-        
 
     @router.subscriber("healthcheck")
     async def healthcheck_sub():
@@ -96,14 +98,12 @@ def init_esb_app(prefix):
         """
         await broker.publish(f"{prefix} is alive", "healthcheck_resp")
 
-
     @router.subscriber("ping", "ping-pong")
     async def ping(message):
         """
         respond to ping with a pong
         """
         await broker.publish(f"Pong from {prefix}", "pong")
-
 
     # You MUST return broker and app separatly
     return ctx, _broker, app
@@ -112,6 +112,7 @@ def init_esb_app(prefix):
 def get_nats_url():
     # TODO: deprecate in favor of SettingsService
     url = os.environ.get("NATS_URL", "nats://localhost:4222")
+    # TODO: logger.info() ne marche pas ici
     print(f"Connecting to NATS {url} ...")
     return url
 
@@ -123,6 +124,3 @@ router = NatsRouter(prefix="")
 
 # will be set by when you import this module
 broker = None
-
-
-

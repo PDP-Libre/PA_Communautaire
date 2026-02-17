@@ -14,7 +14,6 @@ from pac_bdd.lib import reffile
 logger = logging.getLogger(__name__)
 
 
-
 ## local BDD context class
 # class LocalTestCtx(BaseModel):
 #    result: Any | None = None
@@ -46,7 +45,6 @@ def _(
     invoice: str,
 ):
     logger.debug(f"{invoice=}")
-    print(f"xxxxxxxxxxxxxxxxxxxxxxx1 {len(world1.pa.esb_central.spy_log)=}")
 
     invoice = reffile.resolve(invoice)
     with world1.pa1.api_gateway.get_client() as client:
@@ -60,13 +58,13 @@ def _(
         assert response.status_code == 200
     # TODO: attendre la fin du job via des appels reguliers api
     # raise NotImplementedError()
-    print(f"xxxxxxxxxxxxxxxxxxxxxxx2 {len(world1.pa.esb_central.spy_log)=}")
 
 
 @when("je dépose une facture")
 def _():
     # POST /
     raise NotImplementedError()
+
 
 @when(
     parsers.parse("je dépose pour contrôle la facture @{invoice}"),
@@ -81,5 +79,5 @@ def _(
     canal: str,
 ):
     logger.debug(f"xxxx {canal=}")
-    print(f"xxxxxxxxxxxxxxxxxxxxxxx3 {len(world1.pa.esb_central.spy_log)=}")
+    # print(f"xxxxxxxxxxxxxxxxxxxxxxx3 {len(world1.pa.esb_central.spy_log)=}")
     raise NotImplementedError()

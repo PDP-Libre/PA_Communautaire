@@ -2,13 +2,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import os
 import subprocess
 from pathlib import Path
 
-from pydantic_settings import BaseSettings
 import typer
-import os
-
+from pydantic_settings import BaseSettings
 
 from .. import utils
 from ..lib.conf import DEFAULT_BRANCH, DEFAULT_REPO
@@ -25,15 +24,20 @@ class SettingsCLI(BaseSettings):
 
     api_url: str | None = None
     nats_url: str | None = None
+    s3_bucket: str | None = None
+    s3_region: str | None = None
     s3_url: str | None = None
-    s3_data: str = "/data"
-    uv_publish_token: str
+    s3_data: str | None = None
+    uv_publish_token: str | None = None
+    aws_access_key_id: str | None = None
+    aws_secret_access_key: str | None = None
 
 
 settings = SettingsCLI(
     _env_file=".env",
     # _env_prefix="PAC0_",
 )
+
 
 def _run_service(
     service: str,
@@ -42,19 +46,19 @@ def _run_service(
     tools: list[str],
     install_tools: bool,
     install_src: bool,
+    envvar: dict[str, str | None],
 ):
     if install_tools:
         setup.tool(tools)
     if install_src:
         setup.source(repo=repo_url, branch=branch)
-    _call(service)
+    _ = _call(service, envvar)
 
 
 def _call(
     service: str,
-    run: bool = True,
-    check: bool = False,
-):
+    envvar: dict[str, str | None],
+) -> int:
     # service folder: "05-conversion-formats" -> "conversion_formats"
     service_folder = "_".join(service.split("-")[1:])
     base_folder = utils.get_app_base_folder()
@@ -73,18 +77,22 @@ def _call(
         full_path = f"pac0.service.{service_folder}.main:app"
         cmd = ["uv", "run", "faststream", "run", str(full_path)]
 
-    if service != "02-esb-central":
-        if check and not Path(full_path).exists():
-            typer.echo(f"Erreur: Le service {service} n'existe pas ({full_path})")
-            raise typer.Exit(code=1)
-
     pac0_package_base_folder = base_folder / "packages" / "pac0"
     typer.echo(f"Lancement du service {service}...")
     typer.echo(f"Commande: {' '.join(cmd)}")
     typer.echo(f"pac0_package_base_folder: {pac0_package_base_folder}")
 
-    if run:
-        subprocess.call(cmd, cwd=pac0_package_base_folder)
+    envvar_not_none = {
+        # les variables actuelles
+        **os.environ.copy(),
+        # uniquement les variables d'environnement non-nulles
+        **{k: v for k, v in envvar.items() if v is not None},
+    }
+    return subprocess.call(
+        cmd,
+        cwd=pac0_package_base_folder,
+        env=envvar_not_none,
+    )
 
 
 @app.command(name="1", help="lance le service 01-api-gateway ...")
@@ -101,9 +109,18 @@ def _(
         ["git"],
         install_tools=install_tools,
         install_src=install_src,
+        envvar={
+            "AWS_ACCESS_KEY_ID": settings.aws_access_key_id,
+            "AWS_SECRET_ACCESS_KEY": settings.aws_secret_access_key,
+            "NATS_URL": settings.nats_url,
+            "S3_BUCKET": settings.s3_bucket,
+            "S3_REGION": settings.s3_region,
+            "S3_URL": settings.s3_url,
+        },
     )
 
-@app.command(name='2', help='lance le service 02-esb-central ...')
+
+@app.command(name="2", help="lance le service 02-esb-central ...")
 def _(
     repo: str = DEFAULT_REPO,
     branch: str = DEFAULT_BRANCH,
@@ -119,7 +136,8 @@ def _(
         install_src=install_src,
     )
 
-@app.command(name='3', help='lance le service 03-controle-formats ...')
+
+@app.command(name="3", help="lance le service 03-controle-formats ...")
 def _(
     repo: str = DEFAULT_REPO,
     branch: str = DEFAULT_BRANCH,
@@ -135,7 +153,8 @@ def _(
         install_src=install_src,
     )
 
-@app.command(name='4', help='lance le service 04-validation-metier ...')
+
+@app.command(name="4", help="lance le service 04-validation-metier ...")
 def _(
     repo: str = DEFAULT_REPO,
     branch: str = DEFAULT_BRANCH,
@@ -151,7 +170,8 @@ def _(
         install_src=install_src,
     )
 
-@app.command(name='5', help='lance le service 05-conversion-formats ...')
+
+@app.command(name="5", help="lance le service 05-conversion-formats ...")
 def _(
     repo: str = DEFAULT_REPO,
     branch: str = DEFAULT_BRANCH,
@@ -167,7 +187,8 @@ def _(
         install_src=install_src,
     )
 
-@app.command(name='6', help='lance le service 06-annuaire-local ...')
+
+@app.command(name="6", help="lance le service 06-annuaire-local ...")
 def _(
     repo: str = DEFAULT_REPO,
     branch: str = DEFAULT_BRANCH,
@@ -183,7 +204,8 @@ def _(
         install_src=install_src,
     )
 
-@app.command(name='7', help='lance le service 07-routage") ...')
+
+@app.command(name="7", help='lance le service 07-routage") ...')
 def _(
     repo: str = DEFAULT_REPO,
     branch: str = DEFAULT_BRANCH,
@@ -199,7 +221,8 @@ def _(
         install_src=install_src,
     )
 
-@app.command(name='8', help='lance le service 08-transmission-fiscale ...')
+
+@app.command(name="8", help="lance le service 08-transmission-fiscale ...")
 def _(
     repo: str = DEFAULT_REPO,
     branch: str = DEFAULT_BRANCH,
@@ -215,7 +238,8 @@ def _(
         install_src=install_src,
     )
 
-@app.command(name='9', help='lance le service 09-gestion-cycle ...')
+
+@app.command(name="9", help="lance le service 09-gestion-cycle ...")
 def _(
     repo: str = DEFAULT_REPO,
     branch: str = DEFAULT_BRANCH,
@@ -230,6 +254,7 @@ def _(
         install_tools=install_tools,
         install_src=install_src,
     )
+
 
 @app.command(name="10", help="lance le service 09-stockage ...")
 def _(
