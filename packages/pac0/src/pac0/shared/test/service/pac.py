@@ -3,11 +3,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import asyncio
-from dataclasses import dataclass
 import logging
+from dataclasses import dataclass
 from typing import Any, AsyncContextManager, Self
 
 import httpx
+
 from pac0.shared.test.service.base import (
     BaseServiceContext,
 )
@@ -53,10 +54,8 @@ class PacServiceContext(BaseServiceContext):
             self.gestion_cycle_vie,
         ]
 
-
     async def __aenter__(self) -> Self:
         """Enter the context manager (start the services if not external)"""
-        print("KKKKKKKKKKKKKKKKKKKKK 2")
 
         # start the esb service first (api dependency)
         self.esb_central = NatsServiceContext(name="esb_central")

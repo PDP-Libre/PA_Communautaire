@@ -213,10 +213,11 @@ async def test_world_spy(
     Vérifie que l'on peut *capter* les messages
     """
     # nb de message déjà reçu
-    nb_msg = len(world1.pa.esb_central.spy_log)
-    # si on poste un nouveau message
-    await world1.pa.esb_central.spy_broker.publish("hello", "test2")
-    # et que l'on attends qu'il arrive
-    await asyncio.sleep(1)
+    nb_msg = len(world1.pa.esb_central.spy.log)
+    # si on poste 2 nouveaux messages
+    await world1.pa.esb_central.spy.broker.publish("hello", "msg1")
+    await world1.pa.esb_central.spy.broker.publish("hello", "msg2")
+    # et que l'on attends qu'ils arrivent
+    await world1.pa.esb_central.spy.wait_for(nb_message=2)
     # alors on a bien capturé un message de plus
-    assert len(world1.pa.esb_central.spy_log) == nb_msg + 1
+    assert len(world1.pa.esb_central.spy.log) == nb_msg + 2

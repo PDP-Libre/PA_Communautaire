@@ -6,13 +6,74 @@ import asyncio
 import logging
 from typing import Any, Self
 
-from faststream import FastStream, Context
-
+from faststream import Context, FastStream
 from faststream.nats import NatsBroker
+
 from pac0.shared.test.service.base import BaseServiceContext, ServiceConfig
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+
+
+class NatsSpy:
+    def __init__(
+        self,
+        url: str | None,
+        spy_log_max=1000,
+    ):
+        self.url = url
+        self.log: list[Any] = []
+        self.log_max = spy_log_max
+        self.broker: NatsBroker | None = None
+
+    async def __aenter__(self) -> Self:
+        # broker = NatsBroker(f"nats://localhost:{self.config.port}")
+        broker = NatsBroker(self.url)
+        self.broker = broker
+
+        await asyncio.sleep(2)
+
+        # on écoute tout
+        @broker.subscriber(">")
+        async def handle_msg(
+            msg_body,
+            # m: str = Context("message"),
+            s: str = Context("message.raw_message.subject"),
+        ):
+            if len(self.log) >= self.log_max:
+                self.log = self.log[-(self.log_max + 1) :]
+            self.log.append(
+                {
+                    "subject": s,
+                    "body": "???",
+                }
+            )
+
+        await broker.start()
+        return self
+
+    async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        if self.broker:
+            await self.broker.stop()
+
+    async def wait_for(
+        self,
+        nb_message: int,
+        timeout: float = 2.0,
+    ) -> None:
+        """
+        Wait for broker recieving `nb_message` new messages
+        Raise an Exception if timeout is execeeded
+        """
+        nb_start = len(self.log)
+        start_time = asyncio.get_event_loop().time()
+        while len(self.log) < nb_start + nb_message:
+            if asyncio.get_event_loop().time() - start_time > timeout:
+                raise asyncio.TimeoutError(
+                    f"Timeout waiting for {nb_message} messages. "
+                    f"Only received {len(self.log)} messages."
+                )
+            await asyncio.sleep(0.3)
 
 
 # TODO: remove the spy feature
@@ -36,13 +97,10 @@ class NatsServiceContext(BaseServiceContext):
         )
         super().__init__(config)
 
-        logger.info(f"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx {self.url=}")
-        print(f"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx {self.url=}")
-
-        self.spy = spy
-        self.spy_log = []
-        self.spy_log_max = spy_log_max
-        self.spy_broker: NatsBroker | None = None
+        self.spy: NatsSpy | None = None
+        if spy:
+            # l'url sera indiqué plus tard
+            self.spy = NatsSpy(url=None, spy_log_max=spy_log_max)
 
     # @property
     # def url(self) -> str:
@@ -53,45 +111,19 @@ class NatsServiceContext(BaseServiceContext):
     #    return f"nats://{self.config.host}:{self.config.port}"
 
     async def __aenter__(self) -> Self:
-        print("KKKKKKKKKKKKKKKKKKKKK 3")
-
         result = await super().__aenter__()
 
         if self.spy:
-            # self.spy_broker = NatsBroker(self.url)
-            # broker = self.spy_broker = NatsBroker("nats://localhost:4222")
-            broker = NatsBroker(f"nats://localhost:{self.config.port}")
-            self.spy_broker = broker
-            print(f"iiiiiiiii00 {self.config.port=}")
-
-            await asyncio.sleep(2)
-
-            # on écoute tout
-            # @self.spy_broker.subscriber(">")
-            @broker.subscriber(">")
-            async def handle_msg(
-                msg_body,
-                # m: str = Context("message"),
-                s: str = Context("message.raw_message.subject"),
-            ):
-                print(f"yyyyyyyyyyyyy spy recieved a msg on subject {s}....")
-                if len(self.spy_log) >= self.spy_log_max:
-                    self.spy_log = self.spy_log[-(self.spy_log_max + 1) :]
-                self.spy_log.append(
-                    {
-                        "subject": s,
-                        "body": "???",
-                    }
-                )
-
-            await broker.start()
+            # url = f"nats://localhost:{self.config.port}"
+            self.spy.url = self.url
+            await self.spy.__aenter__()
 
         return result
 
     async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         try:
-            if self.spy_broker:
-                await self.spy_broker.stop()
+            if self.spy:
+                await self.spy.stop()
         finally:
             return await super().__aexit__(exc_type, exc_val, exc_tb)
 
