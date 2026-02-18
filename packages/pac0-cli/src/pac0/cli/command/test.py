@@ -3,9 +3,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import subprocess
+from ast import Not
+from typing import Optional
 
 import typer
 
+from .. import utils
 from ..lib.conf import DEFAULT_BRANCH, DEFAULT_REPO
 from ..lib.process import install_run
 from ..lib.settings import settings
@@ -17,7 +20,8 @@ app = typer.Typer()
 def all():
     """Lance tous les tests"""
     typer.echo("Lancement de tous les tests...")
-    subprocess.call(["pytest", "-v"])
+    # subprocess.call(["pytest", "-v"])
+    raise NotImplementedError()
 
 
 @app.command()
@@ -26,8 +30,8 @@ def bdd(
     branch: str = typer.Option(DEFAULT_BRANCH, help="Branche du dépôt git"),
     install_tools: bool = typer.Option(False, help="Installation des outils"),
     install_src: bool = typer.Option(False, help="Installation des sources"),
-    pytest_args: list[str] = typer.Option(
-        None, "--", help="Arguments supplémentaires pour pytest"
+    pytest_args: Optional[list[str]] = typer.Argument(
+        None, help="Arguments pytest après --"
     ),
 ):
     """
@@ -39,7 +43,10 @@ def bdd(
         uv run pytest -vs test_scenario.py::test_flow_des_messages
     """
     typer.echo("Lancement des tests BDD...")
-    pytest_cmd = ["pytest"] + (pytest_args or [])
+    pytest_cmd = ["uv", "run", "pytest"] + (pytest_args or [])
+
+    base_folder = utils.get_app_base_folder()
+    cwd = base_folder / "packages" / "pac-bdd"
 
     install_run(
         cmd=pytest_cmd,
@@ -59,4 +66,5 @@ def bdd(
             "S3_REGION": settings.s3_region,
             "S3_URL": settings.s3_url,
         },
+        cwd=cwd,
     )

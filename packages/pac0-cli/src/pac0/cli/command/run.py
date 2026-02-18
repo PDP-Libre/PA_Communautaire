@@ -48,6 +48,9 @@ def _(
     command_name = ctx.info_name or "1"
 
     # Get the service name based on the command
+    print(f"{SERVICES=}")
+    print(f"{command_name=}")
+
     service = SERVICES[int(command_name) - 1]
     # get the envvar for this service
     envvar = BRIQUE_ENVARS[service]

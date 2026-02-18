@@ -19,14 +19,13 @@ def _call(
     cmd: list[str] | None = None,
     cwd: Path | None = None,
 ) -> int:
-    if cmd is None and service is None:
-        raise ValueError("Either cmd or service must be provided")
 
     if cmd is None:
+        if service is None:
+            raise ValueError("Either cmd or service must be provided")
+
         # service folder: "05-conversion-formats" -> "conversion_formats"
         service_folder = "_".join(service.split("-")[1:])
-        base_folder = utils.get_app_base_folder()
-        print(f"{base_folder=}")
 
         if service == "01-api-gateway":
             full_path = f"src/pac0/service/{service_folder}/main.py"
@@ -42,9 +41,12 @@ def _call(
             full_path = f"pac0.service.{service_folder}.main:app"
             cmd = ["uv", "run", "faststream", "run", str(full_path)]
 
-        cwd = base_folder / "packages" / "pac0"
         typer.echo(f"Lancement du service {service}...")
-        typer.echo(f"pac0_package_base_folder: {cwd}")
+
+    if cwd is None:
+        base_folder = utils.get_app_base_folder()
+        cwd = base_folder / "packages" / "pac0"
+    typer.echo(f"pac0_package_base_folder: {cwd}")
 
     typer.echo(f"Commande: {' '.join(cmd)}")
     envvar_not_none = {
@@ -69,6 +71,7 @@ def install_run(
     envvar: dict[str, str | None],
     service: str | None = None,
     cmd: list[str] | None = None,
+    cwd: Path | None = None,
 ):
     if install_tools and tools:
         setup.tool(tools)
@@ -78,4 +81,5 @@ def install_run(
         service=service,
         envvar=envvar,
         cmd=cmd,
+        cwd=cwd,
     )

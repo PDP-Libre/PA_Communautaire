@@ -25,5 +25,18 @@ type Brique = Literal[
     "10-stockage",
 ]
 
-SERVICES = get_args(Brique)
-Briques: tuple[Brique, ...] = get_args(Brique)
+# SERVICES = get_args(Brique)
+SERVICES: tuple[Brique, ...] = (
+    "01-api-gateway",
+    "02-esb-central",
+    "03-controle-formats",
+    "04-validation-metier",
+    "05-conversion-formats",
+    "06-annuaire-local",
+    "07-routage",
+    "08-transmission-fiscale",
+    "09-gestion-cycle-vie",
+    "10-stockage",
+)
+
+# Briques: tuple[Brique, ...] = get_args(Brique)

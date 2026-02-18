@@ -9,13 +9,13 @@ pac0.service.api_gateway.lib.store handles all s3 storage interaction.
 """
 
 import hashlib
+import os
+
 import aiobotocore
-from fastapi import UploadFile
 import httpx
 import s3fs
 from botocore.config import Config
-import os
-
+from fastapi import UploadFile
 
 ENDPOINT_URL = os.environ.get("S3_URL", "http://localhost:8333")
 REGION_NAME = os.environ.get("S3_REGION", "fr-par")
@@ -34,6 +34,7 @@ async def put(
     async with httpx.AsyncClient() as client:
         filename = (file.filename or "document").split("/")[-1]
         files = {"file": (filename, file.file, "application/octet-stream")}
+        print(f"{url=}")
         response = await client.put(url, files=files)
         response.raise_for_status()
 
@@ -166,8 +167,8 @@ IGNORE: ce qui suit:
     - company_id
     - invoice_id
     - s3fs.S3FileSystem
-    - pre-signed URL 
-    - 
+    - pre-signed URL
+    -
        to get server/bucket/path
 
 -
