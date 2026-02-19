@@ -80,4 +80,6 @@ def _(
 ):
     logger.debug(f"xxxx {canal=}")
     # print(f"xxxxxxxxxxxxxxxxxxxxxxx3 {len(world1.pa.esb_central.spy_log)=}")
-    raise NotImplementedError()
+    # await world1.pa.esb_central.spy.wait_for(nb_message=2)
+    await world1.pa.esb_central.spy.wait_for(message_subject=canal)
+    # raise NotImplementedError()

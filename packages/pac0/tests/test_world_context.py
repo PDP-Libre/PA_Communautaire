@@ -4,12 +4,13 @@
 
 import asyncio
 import os
-import pytest
-from unittest.mock import patch, AsyncMock
+from unittest.mock import AsyncMock, patch
 
-from pac0.shared.test.service.pac import PacServiceContext
-from pac0.shared.test.service.fastapi import FastApiServiceContext
+import pytest
+
 from pac0.shared.test.service.base import BaseServiceContext, ServiceConfig
+from pac0.shared.test.service.fastapi import FastApiServiceContext
+from pac0.shared.test.service.pac import PacServiceContext
 from pac0.shared.test.world import WorldContext, world, world1
 
 # logging.getLogger().setLevel('DEBUG')
@@ -221,3 +222,9 @@ async def test_world_spy(
     await world1.pa.esb_central.spy.wait_for(nb_message=2)
     # alors on a bien capturé un message de plus
     assert len(world1.pa.esb_central.spy.log) == nb_msg + 2
+
+    await world1.pa.esb_central.spy.broker.publish("subject1", "msg2")
+    await world1.pa.esb_central.spy.broker.publish("subject2", "msg2")
+
+    await world1.pa.esb_central.spy.wait_for_subject("subject1")
+    await world1.pa.esb_central.spy.wait_for_subject("subject2")

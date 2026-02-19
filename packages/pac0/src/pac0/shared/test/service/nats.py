@@ -58,7 +58,7 @@ class NatsSpy:
 
     async def wait_for(
         self,
-        nb_message: int,
+        nb_message: int = 1,
         timeout: float = 2.0,
     ) -> None:
         """
@@ -73,6 +73,27 @@ class NatsSpy:
                     f"Timeout waiting for {nb_message} messages. "
                     f"Only received {len(self.log)} messages."
                 )
+            await asyncio.sleep(0.3)
+
+    async def wait_for_subject(
+        self,
+        message_subject: str,
+        timeout: float = 2.0,
+    ) -> None:
+        """
+        Wait for broker recieving a new message in a given subject
+        Raise an Exception if timeout is execeeded
+        """
+        nb_pos = len(self.log)
+        found = False
+        start_time = asyncio.get_event_loop().time()
+        while not found:
+            if asyncio.get_event_loop().time() - start_time > timeout:
+                raise asyncio.TimeoutError(
+                    f"Timeout waiting for message subject {message_subject}. "
+                )
+            found = any(msg.subject == message_subject for msg in self.log[nb_pos:])
+            nb_pos = len(self.log)
             await asyncio.sleep(0.3)
 
 

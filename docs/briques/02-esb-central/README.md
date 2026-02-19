@@ -48,3 +48,5 @@ Les canaux sont donc:
 1. `transmission-fiscale-IN`
 1. `transmission-fiscale-OUT`
 1. `transmission-fiscale-ERR`
+
+Les messages sont plus ou moins éphémères et sont donc plus ou moins [persistants](persistence).
