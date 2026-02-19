@@ -17,12 +17,16 @@ voir:
 """
 
 import asyncio
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from nats import connect
+from nats.js import JetStreamContext
+from nats.server import run
+
+STREAM_NAME = "my-stream"
 
 
-async def connect_js(nats_url: str):
+async def connect_js(nats_url: str) -> JetStreamContext:
     # Connect to NATS
     nc = await connect(nats_url)
 
@@ -31,17 +35,17 @@ async def connect_js(nats_url: str):
 
     # Ensure stream exists (create if it doesn't)
     try:
-        stream_info = await js.stream_info(stream_name)
-        print(f"Stream '{stream_name}' already exists")
+        stream_info = await js.stream_info(STREAM_NAME)
+        print(f"Stream '{STREAM_NAME}' already exists")
     except Exception:
         # Create the stream
         await js.add_stream(
-            name=stream_name,
+            name=STREAM_NAME,
             # subjects=[subject.replace(">", "*")] if ">" in subject else [subject],
             # subjects=["events.>"],
-            subjects=[">"],
+            subjects=[f"{STREAM_NAME}.>"],
         )
-        print(f"Created stream '{stream_name}'")
+        print(f"Created stream '{STREAM_NAME}'")
 
     return js
 
@@ -57,7 +61,9 @@ def run_async(coro):
 
 
 def read_all_messages_simple(
-    stream_name: str, subject: str, nats_url: str = "nats://localhost:4222"
+    stream_name: str,
+    subject: str,
+    nats_url: str,
 ) -> List[Dict[str, Any]]:
     """Simpler version to read all messages from a stream"""
 
@@ -66,7 +72,9 @@ def read_all_messages_simple(
 
         # Create a consumer to read from the beginning
         sub = await js.pull_subscribe(
-            subject=subject, stream=stream_name, durable=f"temp-consumer-{stream_name}"
+            subject=subject,
+            stream=stream_name,
+            durable=f"temp-consumer-{stream_name}",
         )
 
         messages = []
@@ -89,7 +97,7 @@ def read_all_messages_simple(
                     )
                     await msg.ack()
 
-            except Exception as e:
+            except Exception:
                 # No more messages or timeout
                 break
 
@@ -108,4 +116,24 @@ def main():
 def create_data(): ...
 
 
-def test_0010(): ...
+async def test_js_simple():
+    """NATS JS in context manager"""
+    async with await run(port=0, jetstream=True) as server:
+        assert server.is_running is True
+        assert server.port > 0
+
+        # nats_url = f"nats://localhost:{server.port}"
+        nats_url = f"nats://localhost:4222"
+
+        js = await connect_js(nats_url)
+
+        await js.publish("toto", b"Hello world !")
+        await js.publish(f"{STREAM_NAME}.sub1", b"Hello world !")
+        await js.publish(f"{STREAM_NAME}.sub2", b"Hello world !")
+
+        messages = read_all_messages_simple("mystream", f"{STREAM_NAME}.>", nats_url)
+        for msg in messages:
+            print(msg)
+
+    # Server should be shutdown after context exit
+    assert server.is_running is False
