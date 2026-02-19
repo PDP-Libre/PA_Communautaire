@@ -68,7 +68,7 @@ build() {
 push() {
     # Mettre un message attention avec une attente de réponse yes
 
-    echo "ATTENTION: Vous êtes sur le point de partager les images docker à tous le monde"
+    echo "ATTENTION: Vous êtes sur le point de partager les images docker à tout le monde"
     echo "Êtes-vous sûr de vouloir continuer? (yes/NO)"
     read -r response
     if [[ "$response" != "yes" ]]; then
