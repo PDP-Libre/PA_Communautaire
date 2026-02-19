@@ -30,3 +30,9 @@ Les sources fournies ne spécifient pas de durée légale de conservation (comme
     L'existence d'un statut spécifique « ArchiveOnly » recommandé pour les flux (comme des avoirs internes annulant une facture rejetée) qui ne doivent pas faire l'objet d'un traitement fiscal mais uniquement d'un archivage.
 
 En résumé, la PA assure l'extraction et la transmission quasi-immédiate pour le e-invoicing (UBL/CII) et périodique pour le e-reporting (FRR), tout en notifiant systématiquement les rejets techniques via des messages CDAR.
+
+
+## Questions / TODO
+
+* Dans le cas du e-reporting quel est le format du attendu par le PPF (z  de caisse ) ? ?
+* porjet/librairies opensource qui gère ce format

@@ -10,5 +10,7 @@ ctx, broker, app = init_esb_app("transmission-fiscale")
 
 @broker.subscriber(ctx.subject_in, ctx.queue)
 async def process(message):
+    # TODO: distinguer e-invoicing / e-reporting
+
     await ctx.publisher_out.publish(message, correlation_id=message.correlation_id)
     # await publisher_err.publish(message, correlation_id=message.correlation_id)
