@@ -57,7 +57,7 @@ Les sous-projets sont dans le répertoire `/packages`:
 Nous allons trouver l'arborescence suivante :
 
 * /docker  
-  Les fichiers de configuration de la version DOCKER
+  Les fichiers de configuration de la version DOCKER de production et de développement
 * /docs  
   les documentations diverses : métier et développeur
   * /docs/briques:  

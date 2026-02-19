@@ -9,58 +9,65 @@
 > Attention sous Ubuntu 24.04: les paquets APT sont trop anciens.  
 > Préférez `snap install docker` ou la version depuis les dépots Docker.
 
-## Activation du projet
-
-Docker va monter l'infrastructure complète avec chacun des services du projet:
+Pour éviter de passé en root pour lancer les containers, il faut rajouter l'utilisateur courant dans le groupe docker :
 
 ```Bash
-cd docker
-sudo docker compose up -d
-# ou avec podman
-sudo podman compose -f docker-compose.yml up -d
+ sudo usermod -aG docker $USER
 ```
+*Il faut se déconnecter, reconnecter pour que la modification prenne effet*
+
+## Lancement des containers
+
+Docker va monter l'infrastructure complète avec chacun des services du projet :
+
+```Bash
+docker compose up -d
+```
+ou avec podman :
+```Bash
+podman compose -f docker-compose.yml up -d
+```
+
 
 Une fois les conteneurs actifs, l'application devrait maintenant être accessible sur http://localhost:8000/docs.
 
 Vous pouvez [lancer les tests](BDD_Guide_Developpeur.md) et commencer à developper.
 
-# Vérifications
+## Vérifications
 
-## Vérification du lancement
-
-```
+Permet de voir l'état des containers :
+```Bash
 docker compose ps
 ```
 
-Aller sur http://localhost:8000/docs pour découvrir FastApi
-
-
-
-## git clone automatique
-Le container Docker va cloner le repository à chaque lancement pour avoir la dernière version du projet. 
-
-Si vous voulez tester que le clonage fonctionne par exemple dans le container 01-api-gateway : 
-
-```
-docker compose exec 01-api-gateway git clone https://git.pdplibre.org/Construction_PA/PA_Communautaire.git pl
+Commande permet de vérifier que les 10 containers tourne :
+```Bash
+count=$(docker compose ps | grep Up | wc -l); if [ "$count" -eq 10 ]; then echo -e "\033[32mOK ✅ Tous les conteneurs sont en cours d'exécution.\033[0m"; else echo -e "\033[31mKO ❌ $count conteneurs sont en cours d'exécution. Attendu : 10.\033[0m"; fi
 ```
 
-## Lancement et test du serveur S3
+Pour vérifier que la brique api fonctionne, aller sur http://localhost:8000/docs  
+Les fichiers du serveur S3 sont vissible ici : http://localhost:8888/buckets  
+
+### Test du serveur S3
 
 S3 est un serveur de fichier qui va stocker les factures. On peut utiliser une version dans le cloud ou utiliser sa propre instance en local.
 
-Pour utiliser le serveur S3 local.
+Test du fonctionnement du serveur S3 local en lancant le test test_s3fs 
+```
+docker compose exec 01-api-gateway uv run pytest tests/test_s3fs.py
+```
+Le fichier est visible ici : http://localhost:8888/buckets/my-bucket/my-file.txt
 
-* lancement du serveur S3 local
-  ```
-  cd ????
-  docker compose up
-  docker compose logs -f
-  ```
-* test du fonctionnement du serveur S3 local 
-  ```
-  cd packages/pac0
-  uv sync
-  uv run pytest tests/test_s3fs.py
-  ```
-* les fichiers sont visible dans le dossier xxx
+
+## Arret des containers
+
+```Bash
+docker compose stop
+```
+
+## Purge des containers
+
+```Bash
+docker compose down -v
+```
+*Ça supprime tous les containers et leurs volumes*
