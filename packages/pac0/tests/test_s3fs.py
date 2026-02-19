@@ -8,11 +8,12 @@
 
 
 import s3fs
+import os
 
 s3 = s3fs.S3FileSystem(
-    key="pdplibrekey",
-    secret="Sup3rCl3",
-    endpoint_url="http://localhost:8333/",
+    key=os.environ.get("STOCKAGE_KEY", "pdplibrekey"),
+    secret=os.environ.get("STOCKAGE_SECRET", "Sup3rCl3"),
+    endpoint_url=os.environ.get("STOCKAGE_URL", "http://localhost:8333/"),
     client_kwargs={"region_name": "fr-par"},
 )
 
