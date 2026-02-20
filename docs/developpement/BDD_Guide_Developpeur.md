@@ -1,5 +1,10 @@
 # Implémenter un test BDD - Guide pour le développeur
 
+Comment faire pour programmer un test à partir des tests BDD rédigés par un expert métier.
+
+Pré-requis: Avoir lu la doc [BDD_Guide_Expert_Metier.md](BDD_Guide_Expert_Metier)
+
+
 ## Architecture des tests BDD
 
 ```
@@ -166,6 +171,8 @@ def _(world1: WorldContext, verb: str, path: str):
 ```
 
 ### Contexte local - données du scénario
+
+Quand on doit manipuler des données diverses, au lieu de balancer à l'arrache un tableau, on peut structurer les données en utilisant pyDantic. On va regrouper et typer nos données dans une class qui sera plus facile à manipuler. 
 
 Créez un contexte Pydantic pour partager des données entre steps :
 
