@@ -138,7 +138,7 @@ def _(
     assert getattr(PeppolScheme, facon).value == code
 
 
-@when(parsers.parse('''je calcule l'empreinte {facon} "{id}"'''))
+@when(parsers.parse('''je calcule l'empreinte d'un numéro de {facon} "{id}"'''))
 def _(
     peppol_context: PeppolContext,
     facon: str,
