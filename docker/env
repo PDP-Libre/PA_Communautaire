@@ -1,0 +1,2 @@
+NATS_URL=nats://02-esb-central:4222
+STOCKAGE_URL=http://10-stockage:8333
