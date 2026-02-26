@@ -34,13 +34,13 @@ Fonctionnalité: Requêtes PEPPOL
     Scénario: Empreinte participant
         L'empreinte participant dépends de l'identifiant et de son code
 
-        Quand je calcule l'empreinte SIREN "222222222"
+        Quand je calcule l'empreinte d'un numéro de SIREN "222222222"
         Alors j'obtiens "3ddb2999105b666703fc700e14885016"
 
-        Quand je calcule l'empreinte SIRET "222222222"
+        Quand je calcule l'empreinte d'un numéro de SIRET "222222222"
         Alors j'obtiens "6dbdf4f29451b37456ca48b550bdbaee"
 
-        Quand je calcule l'empreinte TVA_FR "222222222"
+        Quand je calcule l'empreinte d'un numéro de TVA_FR "222222222"
         Alors j'obtiens "d0d6bafc0317e3e8baa9504a9a022f9c"
 
 
