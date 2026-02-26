@@ -1,1 +1,1219 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="5" tests="26" time="28.357" timestamp="2026-01-15T12:34:26.008055+01:00" hostname="gpd"><testcase classname="tests.test_asyncio" name="test_0010" time="3.007" /><testcase classname="tests.test_asyncio" name="test_0020" time="2.005" /><testcase classname="tests.test_asyncio" name="test_0030" time="1.004" /><testcase classname="tests.test_faststream" name="test_validation_str_ok" time="0.014" /><testcase classname="tests.test_faststream" name="test_validation_str_err" time="0.009" /><testcase classname="tests.test_faststream" name="test_connect_only" time="0.004" /><testcase classname="tests.test_faststream" name="test_sub_embed" time="0.009" /><testcase classname="tests.test_faststream" name="test_sub_embed_fixture" time="0.005" /><testcase classname="tests.test_faststream" name="test_pubsub_nats" time="0.014" /><testcase classname="tests.test_faststream" name="test_pubsub_nats_fixture" time="0.015" /><testcase classname="tests.test_fixture" name="test_world1pac" time="2.433" /><testcase classname="tests.test_fixture" name="test_world4pac" time="7.478" /><testcase classname="tests.test_nats" name="test_nats" time="0.013" /><testcase classname="tests.test_nats" name="test_nats_context_manager" time="0.010" /><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_01_nats_server_manual_lifecycle" time="0.010" /><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_02_nats_server_context_manager" time="0.010" /><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_02b_nats_server_context_wrapper" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:55: not implemented</skipped></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_03_broker_connection" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:81: not implemented</skipped></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_03b_broker_context_wrapper" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:93: not implemented</skipped></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_04_broker_pubsub_basic" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:102: not implemented</skipped></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_04b_broker_pubsub_wildcard" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:135: not implemented</skipped></testcase><testcase classname="tests.test_test" name="test_dummy_async" time="0.019" /><testcase classname="tests.test_test" name="test_dummy" time="0.001" /><testcase classname="tests.test_world" name="test_world_default_0pa" time="0.003" /><testcase classname="tests.test_world" name="test_world_with_1pa" time="4.602" /><testcase classname="tests.test_world" name="test_world_with_4pa" time="7.333" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="2" failures="17" skipped="5" tests="47" time="177.774" timestamp="2026-02-19T17:24:43.134823+01:00" hostname="gpd"><testcase classname="tests.test_asyncio" name="test_0010" time="3.006" /><testcase classname="tests.test_asyncio" name="test_0020" time="2.005" /><testcase classname="tests.test_asyncio" name="test_0030" time="1.004" /><testcase classname="tests.test_baseservice" name="test_svc_internal" time="0.002"><failure message="TypeError: BaseServiceContext.__init__() missing 1 required positional argument: 'config'">async def test_svc_internal():
+        # start the service (default behaviour)
+&gt;       BaseServiceContext()
+E       TypeError: BaseServiceContext.__init__() missing 1 required positional argument: 'config'
+
+tests/test_baseservice.py:15: TypeError</failure></testcase><testcase classname="tests.test_baseservice" name="test_svc_external" time="0.001"><failure message="TypeError: BaseServiceContext.__init__() missing 1 required positional argument: 'config'">async def test_svc_external():
+        # use an already started service (default behaviour)
+        #TODO: subprocess ...
+&gt;       BaseServiceContext()
+E       TypeError: BaseServiceContext.__init__() missing 1 required positional argument: 'config'
+
+tests/test_baseservice.py:22: TypeError</failure></testcase><testcase classname="tests.test_baseservice" name="test_find_port" time="0.001"><failure message="assert False">async def test_find_port():
+        # find 3 different ports
+        find_available_port
+    
+        is_port_available
+    
+&gt;       assert False
+E       assert False
+
+tests/test_baseservice.py:31: AssertionError</failure></testcase><testcase classname="tests.test_faststream" name="test_validation_str_ok" time="0.012" /><testcase classname="tests.test_faststream" name="test_validation_str_err" time="0.009" /><testcase classname="tests.test_faststream" name="test_connect_only" time="0.005" /><testcase classname="tests.test_faststream" name="test_sub_embed" time="0.005" /><testcase classname="tests.test_faststream" name="test_sub_embed_fixture" time="0.005" /><testcase classname="tests.test_faststream" name="test_pubsub_nats" time="0.014" /><testcase classname="tests.test_faststream" name="test_pubsub_nats_fixture" time="0.014" /><testcase classname="tests.test_fixture" name="test_world1pac" time="12.547"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">world = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x788f4a6496a0&gt;, pas=[])
+
+    async def test_world1pac(
+        world,
+    ) -&gt; None:
+        """
+        world1pac fixture
+        """
+&gt;       await world.pa_new()
+
+tests/test_fixture.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/pac0/shared/test/world.py:74: in pa_new
+    await asyncio.gather(*tasks)
+src/pac0/shared/test/service/pac.py:103: in __aenter__
+    await asyncio.gather(*[s.__aenter__() for s in self._services()])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f49c357f0&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_fixture" name="test_world4pac" time="12.299"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">world = WorldContext(peppol=&lt;pac0.shared.test.service.dns.DNSServiceContext object at 0x788f4af8b110&gt;, pas=[])
+
+    @pytest.mark.asyncio
+    async def test_world4pac(
+        world,
+    ) -&gt; None:
+        """
+        world with pas fixture
+        """
+&gt;       await world.pa_new(4)
+
+tests/test_fixture.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/pac0/shared/test/world.py:74: in pa_new
+    await asyncio.gather(*tasks)
+src/pac0/shared/test/service/pac.py:103: in __aenter__
+    await asyncio.gather(*[s.__aenter__() for s in self._services()])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f49b19220&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_nats" name="test_nats" time="0.042" /><testcase classname="tests.test_nats" name="test_nats_context_manager" time="0.014" /><testcase classname="tests.test_natsjs" name="test_js_simple" time="0.023"><failure message="nats.js.errors.NoStreamResponseError: nats: no response from stream">self = &lt;nats.js.client.JetStreamContext object at 0x788f49b20050&gt;, subject = 'toto', payload = b'Hello world !', timeout = 5
+stream = None, headers = None, msg_ttl = None
+
+    async def publish(
+        self,
+        subject: str,
+        payload: bytes = b"",
+        timeout: Optional[float] = None,
+        stream: Optional[str] = None,
+        headers: Optional[Dict[str, Any]] = None,
+        msg_ttl: Optional[float] = None,
+    ) -&gt; api.PubAck:
+        """
+        publish emits a new message to JetStream and waits for acknowledgement.
+    
+        :param subject: Subject to publish to.
+        :param payload: Message payload.
+        :param timeout: Request timeout in seconds.
+        :param stream: Expected stream name.
+        :param headers: Message headers.
+        :param msg_ttl: Per-message TTL in seconds (requires NATS Server 2.11+).
+        """
+        hdr = headers
+        if timeout is None:
+            timeout = self._timeout
+        if stream is not None:
+            hdr = hdr or {}
+            hdr[api.Header.EXPECTED_STREAM] = stream
+        if msg_ttl is not None:
+            hdr = hdr or {}
+            # TTL header accepts seconds as integer or duration string
+            hdr[api.Header.MSG_TTL] = str(int(msg_ttl))
+    
+        try:
+&gt;           msg = await self._nc.request(
+                subject,
+                payload,
+                timeout=timeout,
+                headers=hdr,
+            )
+
+.venv/lib/python3.13/site-packages/nats/js/client.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nats client v2.12.0&gt;, subject = 'toto', payload = b'Hello world !', timeout = 5, old_style = False, headers = None
+
+    async def request(
+        self,
+        subject: str,
+        payload: bytes = b"",
+        timeout: float = 0.5,
+        old_style: bool = False,
+        headers: Optional[Dict[str, Any]] = None,
+    ) -&gt; Msg:
+        """
+        Implements the request/response pattern via pub/sub
+        using a single wildcard subscription that handles
+        the responses.
+    
+        """
+        if old_style:
+            # FIXME: Support headers in old style requests.
+            return await self._request_old_style(
+                subject, payload, timeout=timeout
+            )
+        else:
+            msg = await self._request_new_style(
+                subject, payload, timeout=timeout, headers=headers
+            )
+        if (msg.headers and msg.headers.get(nats.js.api.Header.STATUS)
+                == NO_RESPONDERS_STATUS):
+&gt;           raise errors.NoRespondersError
+E           nats.errors.NoRespondersError: nats: no responders available for request
+
+.venv/lib/python3.13/site-packages/nats/aio/client.py:1068: NoRespondersError
+
+During handling of the above exception, another exception occurred:
+
+    async def test_js_simple():
+        """NATS JS in context manager"""
+        async with await run(port=0, jetstream=True) as server:
+            assert server.is_running is True
+            assert server.port &gt; 0
+    
+            # nats_url = f"nats://localhost:{server.port}"
+            nats_url = f"nats://localhost:4222"
+    
+            js = await connect_js(nats_url)
+    
+&gt;           await js.publish("toto", b"Hello world !")
+
+tests/test_natsjs.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nats.js.client.JetStreamContext object at 0x788f49b20050&gt;, subject = 'toto', payload = b'Hello world !', timeout = 5
+stream = None, headers = None, msg_ttl = None
+
+    async def publish(
+        self,
+        subject: str,
+        payload: bytes = b"",
+        timeout: Optional[float] = None,
+        stream: Optional[str] = None,
+        headers: Optional[Dict[str, Any]] = None,
+        msg_ttl: Optional[float] = None,
+    ) -&gt; api.PubAck:
+        """
+        publish emits a new message to JetStream and waits for acknowledgement.
+    
+        :param subject: Subject to publish to.
+        :param payload: Message payload.
+        :param timeout: Request timeout in seconds.
+        :param stream: Expected stream name.
+        :param headers: Message headers.
+        :param msg_ttl: Per-message TTL in seconds (requires NATS Server 2.11+).
+        """
+        hdr = headers
+        if timeout is None:
+            timeout = self._timeout
+        if stream is not None:
+            hdr = hdr or {}
+            hdr[api.Header.EXPECTED_STREAM] = stream
+        if msg_ttl is not None:
+            hdr = hdr or {}
+            # TTL header accepts seconds as integer or duration string
+            hdr[api.Header.MSG_TTL] = str(int(msg_ttl))
+    
+        try:
+            msg = await self._nc.request(
+                subject,
+                payload,
+                timeout=timeout,
+                headers=hdr,
+            )
+        except nats.errors.NoRespondersError:
+&gt;           raise nats.js.errors.NoStreamResponseError
+E           nats.js.errors.NoStreamResponseError: nats: no response from stream
+
+.venv/lib/python3.13/site-packages/nats/js/client.py:220: NoStreamResponseError</failure></testcase><testcase classname="tests.test_s3fs" name="test_upload_file" time="0.003"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'my-file.txt'">def test_upload_file():
+&gt;       s3.put_file('my-file.txt', 'my-bucket/my-file.txt')
+
+tests/test_s3fs.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/fsspec/asyn.py:118: in wrapper
+    return sync(self.loop, func, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/fsspec/asyn.py:103: in sync
+    raise return_result
+.venv/lib/python3.13/site-packages/fsspec/asyn.py:56: in _runner
+    result[0] = await coro
+                ^^^^^^^^^^
+.venv/lib/python3.13/site-packages/s3fs/core.py:1274: in _put_file
+    size = os.path.getsize(lpath)
+           ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+filename = 'my-file.txt'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'my-file.txt'
+
+&lt;frozen genericpath&gt;:86: FileNotFoundError</failure></testcase><testcase classname="tests.test_s3fs" name="test_10" time="4.609"><failure message="botocore.exceptions.EndpointConnectionError: Could not connect to the endpoint URL: &quot;http://localhost:8333/my-bucket?list-type=2&amp;prefix=&amp;delimiter=%2F&amp;encoding-type=url&quot;">self = &lt;aiohttp.connector.TCPConnector object at 0x788f4897c590&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x788f4898cd60&gt;
+timeout = ClientTimeout(total=None, connect=None, sock_read=15, sock_connect=5, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=True closed=False debug=False&gt;),)
+kwargs = {'server_hostname': None, 'ssl': None}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+&gt;               sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+
+.venv/lib/python3.13/site-packages/aiohttp/connector.py:1298: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/aiohappyeyeballs/impl.py:122: in start_connection
+    raise first_exception
+.venv/lib/python3.13/site-packages/aiohappyeyeballs/impl.py:73: in start_connection
+    sock = await _connect_sock(
+.venv/lib/python3.13/site-packages/aiohappyeyeballs/impl.py:208: in _connect_sock
+    await loop.sock_connect(sock, address)
+../../../../.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/asyncio/selector_events.py:641: in sock_connect
+    return await fut
+           ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_UnixSelectorEventLoop running=True closed=False debug=False&gt;, fut = None
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;, address = ('127.0.0.1', 8333)
+
+    def _sock_connect_cb(self, fut, sock, address):
+        if fut.done():
+            return
+    
+        try:
+            err = sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+            if err != 0:
+                # Jump to any except clause below.
+&gt;               raise OSError(err, f'Connect call failed {address}')
+E               ConnectionRefusedError: [Errno 111] Connect call failed ('127.0.0.1', 8333)
+
+../../../../.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/asyncio/selector_events.py:681: ConnectionRefusedError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;aiobotocore.httpsession.AIOHTTPSession object at 0x788f48c29940&gt;
+request = &lt;AWSPreparedRequest stream_output=False, method=GET, url=http://localhost:8333/my-bucket?list-type=2&amp;prefix=&amp;delimiter...5403863f64', 'amz-sdk-invocation-id': b'6c19bb39-6032-41a4-aac7-5cae006cc046', 'amz-sdk-request': b'attempt=5; max=5'}&gt;
+
+    async def send(self, request):
+        try:
+            proxy_url = self._proxy_config.proxy_url_for(request.url)
+            proxy_headers = self._proxy_config.proxy_headers_for(request.url)
+            url = request.url
+            headers = request.headers
+            data = request.body
+    
+            if ensure_boolean(
+                os.environ.get('BOTO_EXPERIMENTAL__ADD_PROXY_HOST_HEADER', '')
+            ):
+                # This is currently an "experimental" feature which provides
+                # no guarantees of backwards compatibility. It may be subject
+                # to change or removal in any patch version. Anyone opting in
+                # to this feature should strictly pin botocore.
+                host = urlparse(request.url).hostname
+                proxy_headers['host'] = host
+    
+            headers_ = CIMultiDict(
+                (z[0], _text(z[1], encoding='utf-8')) for z in headers.items()
+            )
+    
+            # https://github.com/boto/botocore/issues/1255
+            headers_['Accept-Encoding'] = 'identity'
+    
+            if isinstance(data, io.IOBase):
+                data = _IOBaseWrapper(data)
+    
+            url = URL(url, encoded=True)
+            session = await self._get_session(proxy_url)
+&gt;           response = await session.request(
+                request.method,
+                url=url,
+                chunked=self._chunked(headers_),
+                headers=headers_,
+                data=data,
+                proxy=proxy_url,
+                proxy_headers=proxy_headers,
+            )
+
+.venv/lib/python3.13/site-packages/aiobotocore/httpsession.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.13/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.13/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x788f4897c590&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x788f4898cd60&gt;
+timeout = ClientTimeout(total=None, connect=None, sock_read=15, sock_connect=5, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=True closed=False debug=False&gt;),)
+kwargs = {'server_hostname': None, 'ssl': None}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+            raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+        except ssl_errors as exc:
+            raise ClientConnectorSSLError(req.connection_key, exc) from exc
+        except OSError as exc:
+            if exc.errno is None and isinstance(exc, asyncio.TimeoutError):
+                raise
+&gt;           raise client_error(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host localhost:8333 ssl:default [Connect call failed ('127.0.0.1', 8333)]
+
+.venv/lib/python3.13/site-packages/aiohttp/connector.py:1321: ClientConnectorError
+
+During handling of the above exception, another exception occurred:
+
+    def test_10():
+&gt;       s3.ls("my-bucket")
+
+tests/test_s3fs.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/fsspec/asyn.py:118: in wrapper
+    return sync(self.loop, func, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/fsspec/asyn.py:103: in sync
+    raise return_result
+.venv/lib/python3.13/site-packages/fsspec/asyn.py:56: in _runner
+    result[0] = await coro
+                ^^^^^^^^^^
+.venv/lib/python3.13/site-packages/s3fs/core.py:1065: in _ls
+    files = await self._lsdir(path, refresh, versions=versions)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/s3fs/core.py:768: in _lsdir
+    async for c in self._iterdir(
+.venv/lib/python3.13/site-packages/s3fs/core.py:819: in _iterdir
+    async for i in it:
+.venv/lib/python3.13/site-packages/aiobotocore/paginate.py:39: in __anext__
+    response = await self._make_request(current_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/context.py:36: in wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/paginate.py:19: in _make_request
+    return await self._method(**current_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/context.py:36: in wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/client.py:406: in _make_api_call
+    http, parsed_response = await self._make_request(
+.venv/lib/python3.13/site-packages/aiobotocore/client.py:432: in _make_request
+    return await self._endpoint.make_request(
+.venv/lib/python3.13/site-packages/aiobotocore/endpoint.py:120: in _send_request
+    while await self._needs_retry(
+.venv/lib/python3.13/site-packages/aiobotocore/endpoint.py:280: in _needs_retry
+    responses = await self._event_emitter.emit(
+.venv/lib/python3.13/site-packages/aiobotocore/hooks.py:68: in _emit
+    response = await resolve_awaitable(handler(**kwargs))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/_helpers.py:6: in resolve_awaitable
+    return await obj
+           ^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/retryhandler.py:107: in _call
+    if await resolve_awaitable(self._checker(**checker_kwargs)):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/_helpers.py:6: in resolve_awaitable
+    return await obj
+           ^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/retryhandler.py:126: in _call
+    should_retry = await self._should_retry(
+.venv/lib/python3.13/site-packages/aiobotocore/retryhandler.py:165: in _should_retry
+    return await resolve_awaitable(
+.venv/lib/python3.13/site-packages/aiobotocore/_helpers.py:6: in resolve_awaitable
+    return await obj
+           ^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/retryhandler.py:174: in _call
+    checker(attempt_number, response, caught_exception)
+.venv/lib/python3.13/site-packages/botocore/retryhandler.py:247: in __call__
+    return self._check_caught_exception(
+.venv/lib/python3.13/site-packages/botocore/retryhandler.py:416: in _check_caught_exception
+    raise caught_exception
+.venv/lib/python3.13/site-packages/aiobotocore/endpoint.py:201: in _do_get_response
+    http_response = await self._send(request)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/aiobotocore/endpoint.py:303: in _send
+    return await self.http_session.send(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiobotocore.httpsession.AIOHTTPSession object at 0x788f48c29940&gt;
+request = &lt;AWSPreparedRequest stream_output=False, method=GET, url=http://localhost:8333/my-bucket?list-type=2&amp;prefix=&amp;delimiter...5403863f64', 'amz-sdk-invocation-id': b'6c19bb39-6032-41a4-aac7-5cae006cc046', 'amz-sdk-request': b'attempt=5; max=5'}&gt;
+
+    async def send(self, request):
+        try:
+            proxy_url = self._proxy_config.proxy_url_for(request.url)
+            proxy_headers = self._proxy_config.proxy_headers_for(request.url)
+            url = request.url
+            headers = request.headers
+            data = request.body
+    
+            if ensure_boolean(
+                os.environ.get('BOTO_EXPERIMENTAL__ADD_PROXY_HOST_HEADER', '')
+            ):
+                # This is currently an "experimental" feature which provides
+                # no guarantees of backwards compatibility. It may be subject
+                # to change or removal in any patch version. Anyone opting in
+                # to this feature should strictly pin botocore.
+                host = urlparse(request.url).hostname
+                proxy_headers['host'] = host
+    
+            headers_ = CIMultiDict(
+                (z[0], _text(z[1], encoding='utf-8')) for z in headers.items()
+            )
+    
+            # https://github.com/boto/botocore/issues/1255
+            headers_['Accept-Encoding'] = 'identity'
+    
+            if isinstance(data, io.IOBase):
+                data = _IOBaseWrapper(data)
+    
+            url = URL(url, encoded=True)
+            session = await self._get_session(proxy_url)
+            response = await session.request(
+                request.method,
+                url=url,
+                chunked=self._chunked(headers_),
+                headers=headers_,
+                data=data,
+                proxy=proxy_url,
+                proxy_headers=proxy_headers,
+            )
+    
+            # botocore converts keys to str, so make sure that they are in
+            # the expected case. See detailed discussion here:
+            # https://github.com/aio-libs/aiobotocore/pull/116
+            # aiohttp's CIMultiDict camel cases the headers :(
+            headers = {
+                k.decode('utf-8').lower(): v.decode('utf-8')
+                for k, v in response.raw_headers
+            }
+    
+            http_response = aiobotocore.awsrequest.AioAWSResponse(
+                str(response.url), response.status, headers, response
+            )
+    
+            if not request.stream_output:
+                # Cause the raw stream to be exhausted immediately. We do it
+                # this way instead of using preload_content because
+                # preload_content will never buffer chunked responses
+                await http_response.content
+    
+            return http_response
+        except ClientSSLError as e:
+            raise SSLError(endpoint_url=request.url, error=e)
+        except (ClientProxyConnectionError, ClientHttpProxyError) as e:
+            raise ProxyConnectionError(
+                proxy_url=mask_proxy_url(proxy_url), error=e
+            )
+        except (
+            ServerDisconnectedError,
+            aiohttp.ClientPayloadError,
+            aiohttp.http_exceptions.BadStatusLine,
+        ) as e:
+            raise ConnectionClosedError(
+                error=e, request=request, endpoint_url=request.url
+            )
+        except ServerTimeoutError as e:
+            if str(e).lower().startswith('connect'):
+                raise ConnectTimeoutError(endpoint_url=request.url, error=e)
+            else:
+                raise ReadTimeoutError(endpoint_url=request.url, error=e)
+        except (
+            ClientConnectorError,
+            ClientConnectionError,
+            socket.gaierror,
+        ) as e:
+&gt;           raise EndpointConnectionError(endpoint_url=request.url, error=e)
+E           botocore.exceptions.EndpointConnectionError: Could not connect to the endpoint URL: "http://localhost:8333/my-bucket?list-type=2&amp;prefix=&amp;delimiter=%2F&amp;encoding-type=url"
+
+.venv/lib/python3.13/site-packages/aiobotocore/httpsession.py:284: EndpointConnectionError</failure></testcase><testcase classname="tests.test_s3fs" name="test_presignedurl" time="0.001"><failure message="assert False">def test_presignedurl():
+        # TODO: add some test about pre-signed url (basic and with store module)
+&gt;       assert False
+E       assert False
+
+tests/test_s3fs.py:35: AssertionError</failure></testcase><testcase classname="tests.test_s3fs" name="test_store_put" time="0.000"><failure message="assert False">def test_store_put():
+        # TODO: add some test about pre-signed url (basic and with store module)
+&gt;       assert False
+E       assert False
+
+tests/test_s3fs.py:40: AssertionError</failure></testcase><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_01_nats_server_manual_lifecycle" time="0.012" /><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_02_nats_server_context_manager" time="0.010" /><testcase classname="tests.test_service_lifecycle.TestNatsServerLifecycle" name="test_02b_nats_server_context_wrapper" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:55: not implemented</skipped></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_03_broker_connection" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:81: not implemented</skipped></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_03b_broker_context_wrapper" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:93: not implemented</skipped></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_04_broker_pubsub_basic" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:102: not implemented</skipped></testcase><testcase classname="tests.test_service_lifecycle.TestBrokerConnection" name="test_04b_broker_pubsub_wildcard" time="0.000"><skipped type="pytest.skip" message="not implemented">/home/philippe/src/PA_Communautaire/packages/pac0/tests/test_service_lifecycle.py:135: not implemented</skipped></testcase><testcase classname="tests.test_test" name="test_dummy_async" time="0.001" /><testcase classname="tests.test_test" name="test_dummy" time="0.000" /><testcase classname="tests.test_world_context" name="test_world_with_0pa" time="0.004" /><testcase classname="tests.test_world_context" name="test_world_with_1pa_default" time="12.469"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">async def test_world_with_1pa_default():
+        """WorldContext with 1 PA instance."""
+        async with WorldContext() as world:
+&gt;           await world.pa_new()  # default is 1
+            ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_context.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/pac0/shared/test/world.py:74: in pa_new
+    await asyncio.gather(*tasks)
+src/pac0/shared/test/service/pac.py:103: in __aenter__
+    await asyncio.gather(*[s.__aenter__() for s in self._services()])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f4cf02570&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_world_context" name="test_world_with_1pa" time="12.503"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">async def test_world_with_1pa():
+        async with WorldContext() as world:
+&gt;           await world.pa_new(1)
+
+tests/test_world_context.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/pac0/shared/test/world.py:74: in pa_new
+    await asyncio.gather(*tasks)
+src/pac0/shared/test/service/pac.py:103: in __aenter__
+    await asyncio.gather(*[s.__aenter__() for s in self._services()])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f4879f9b0&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_world_context" name="test_world_with_4pa" time="12.707"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">async def test_world_with_4pa():
+        """WorldContext with 4 PA instances."""
+        async with WorldContext() as world:
+&gt;           await world.pa_new(4)
+
+tests/test_world_context.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/pac0/shared/test/world.py:74: in pa_new
+    await asyncio.gather(*tasks)
+src/pac0/shared/test/service/pac.py:103: in __aenter__
+    await asyncio.gather(*[s.__aenter__() for s in self._services()])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f48c97680&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_world_context" name="test_pac_ctx" time="12.611"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">async def test_pac_ctx():
+        """pac service context"""
+&gt;       async with PacServiceContext():
+                   ^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_context.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/pac0/shared/test/service/pac.py:103: in __aenter__
+    await asyncio.gather(*[s.__aenter__() for s in self._services()])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f33ecd400&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_world_context" name="test_brique_01_ctx1" time="10.383"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">async def test_brique_01_ctx1():
+        """service ephémère"""
+&gt;       async with FastApiServiceContext() as svc:
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_context.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f33ed6b30&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_world_context" name="test_brique_01_ctx2" time="10.393" /><testcase classname="tests.test_world_context" name="test_brique_01_ctx3" time="10.399"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">async def test_brique_01_ctx3():
+        """service localhost présent"""
+        # start an ephemeral service
+&gt;       async with FastApiServiceContext() as svc1:
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_context.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f33ff1980&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_world_context" name="test_brique_01_ctx4" time="10.384"><failure message="TimeoutError: Service api_gateway failed to start within 10.0s">async def test_brique_01_ctx4():
+        """service localhost présent envar"""
+        # start an ephemeral service
+&gt;       async with FastApiServiceContext() as svc1:
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_world_context.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f33edeb10&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</failure></testcase><testcase classname="tests.test_world_context" name="test_brique_01_ctx5" time="10.388" /><testcase classname="tests.test_world_context" name="test_base_svc_ctx" time="1.241" /><testcase classname="tests.test_world_context" name="test_base_svc_var" time="1.264" /><testcase classname="tests.test_world_context" name="test_base_svc_var_ko" time="10.174" /><testcase classname="tests.test_world_context" name="test_base_svc_var_ok" time="1.173" /><testcase classname="tests.test_world_context" name="test_fixture_world1" time="12.258"><error message="failed on setup with &quot;TimeoutError: Service api_gateway failed to start within 10.0s&quot;">fixturedef = &lt;FixtureDef argname='world1' scope='function' baseid='tests/test_world_context.py'&gt;
+request = &lt;SubRequest 'world1' for &lt;Function test_fixture_world1&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+                return (yield)
+            if not _is_coroutine_or_asyncgen(fixturedef.func):
+                return (yield)
+        default_loop_scope = request.config.getini("asyncio_default_fixture_loop_scope")
+        loop_scope = (
+            getattr(fixturedef.func, "_loop_scope", None)
+            or default_loop_scope
+            or fixturedef.scope
+        )
+        runner_fixture_id = f"_{loop_scope}_scoped_runner"
+        runner = request.getfixturevalue(runner_fixture_id)
+        synchronizer = _fixture_synchronizer(fixturedef, runner, request)
+        _make_asyncio_fixture_function(synchronizer, loop_scope)
+        with MonkeyPatch.context() as c:
+            c.setattr(fixturedef, "func", synchronizer)
+&gt;           hook_result = yield
+                          ^^^^^
+
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:743: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
+    result = runner.run(setup(), context=context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../../.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../../.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:309: in setup
+    res = await gen_obj.__anext__()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/pac0/shared/test/world.py:133: in world1
+    await world.pa_new()
+src/pac0/shared/test/world.py:74: in pa_new
+    await asyncio.gather(*tasks)
+src/pac0/shared/test/service/pac.py:103: in __aenter__
+    await asyncio.gather(*[s.__aenter__() for s in self._services()])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f33efb800&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</error></testcase><testcase classname="tests.test_world_context" name="test_world_spy" time="12.251"><error message="failed on setup with &quot;TimeoutError: Service api_gateway failed to start within 10.0s&quot;">self = &lt;Coroutine test_world_spy&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:743: in pytest_fixture_setup
+    hook_result = yield
+                  ^^^^^
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
+    result = runner.run(setup(), context=context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../../.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../../.local/share/uv/python/cpython-3.13.2-linux-x86_64-gnu/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+.venv/lib/python3.13/site-packages/pytest_asyncio/plugin.py:309: in setup
+    res = await gen_obj.__anext__()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+src/pac0/shared/test/world.py:133: in world1
+    await world.pa_new()
+src/pac0/shared/test/world.py:74: in pa_new
+    await asyncio.gather(*tasks)
+src/pac0/shared/test/service/pac.py:103: in __aenter__
+    await asyncio.gather(*[s.__aenter__() for s in self._services()])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pac0.shared.test.service.fastapi.FastApiServiceContext object at 0x788f33f3c050&gt;
+
+    async def __aenter__(self) -&gt; Self:
+        """Start the service subprocess."""
+        # check if we use an already running external service
+        # usefull for test cases where the service is started
+        # outside of the test suit
+        external_url = self._external_url()
+        if external_url is not None:
+            logger.info(f"Service  {self.config.name} using external")
+    
+        if external_url is None:
+            # find an available port
+            if self.config.port == 0:
+                self.config.port = await find_available_port()
+            logger.info(
+                f"Starting service {self.config.name} on port {self.config.port} : {' '.join(self.config.command)}"
+            )
+    
+            env = os.environ.copy()
+            if self.config.port &gt; 0:
+                env["PORT"] = str(self.config.port)
+            if self.config.env_var_extra:
+                env.update(self.config.env_var_extra)
+            command = [c.format(**env) for c in self.config.command]
+    
+            self._process = subprocess.Popen(
+                command,
+                # TODO: BUG, break if uncommented !
+                # stdout=subprocess.PIPE,  # self.config.stdout,
+                # stderr=subprocess.PIPE,  # self.config.stderr,
+                text=True,
+                env=env,
+                cwd=PACKAGE_BASE_FOLDER,
+            )
+    
+        # Wait for service to be ready
+        self.is_ready = await self.wait_for_ready(self.config.startup_timeout)
+        if not self.is_ready:
+            await self._terminate()
+&gt;           raise TimeoutError(
+                f"Service {self.config.name} failed to start within {self.config.startup_timeout}s"
+            )
+E           TimeoutError: Service api_gateway failed to start within 10.0s
+
+src/pac0/shared/test/service/base.py:188: TimeoutError</error></testcase></testsuite></testsuites>

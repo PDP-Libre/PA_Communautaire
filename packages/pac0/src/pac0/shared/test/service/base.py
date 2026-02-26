@@ -17,22 +17,21 @@ in docstring and comment.
 
 """
 
-from abc import abstractmethod
 import asyncio
-from contextlib import asynccontextmanager, contextmanager
-from dataclasses import dataclass
 import logging
 import os
-from pathlib import Path
 import socket
 import subprocess
 import time
+from abc import abstractmethod
+from contextlib import asynccontextmanager, contextmanager
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, AsyncGenerator, Generator, Protocol, Self, runtime_checkable
 
 import httpx
 
 from pac0.shared.tools.api import find_available_port
-
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -103,7 +102,7 @@ class ServiceConfig:
     protocol: str = "http"
     health_check_path: str | None = "/health"
     health_check_timeout: float = 5.0
-    startup_timeout: float = 30.0
+    startup_timeout: float = 10.0
     shutdown_timeout: float = 10.0
     allow_ConnectionRefusedError: bool = False
     stdout: int = subprocess.PIPE
@@ -115,7 +114,6 @@ class ServiceConfig:
     external_svc: str | None = None
     # variable d'environnement qui indique le service externe
     env_var: str | None = None
-
 
 
 # TODO: move to BaseModel
@@ -272,7 +270,7 @@ class BaseServiceContext:
         self,
     ) -> bool:
         """Check if we can connect to the service via TCP."""
-        #print("tcp ...", self.config.host, self.config.port)
+        # print("tcp ...", self.config.host, self.config.port)
 
         try:
             sock = socket.create_connection(
@@ -285,7 +283,6 @@ class BaseServiceContext:
         except (socket.timeout, OSError) as e:
             # print(e)
             return False
-        
 
     async def _check_http_health(self) -> bool:
         """Check HTTP health endpoint."""
@@ -323,4 +320,3 @@ class BaseServiceContext:
             timeout=self.config.health_check_timeout,
         ) as client:
             yield client
-

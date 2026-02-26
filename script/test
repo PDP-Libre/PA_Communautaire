@@ -53,7 +53,9 @@ def parse_junit_xml(xml_path: Path) -> tuple[int, int]:
     return passed, failed
 
 
-def run_tests(package_name: str, package_path: Path, report_dir: Path) -> tuple[int, int, int]:
+def run_tests(
+    package_name: str, package_path: Path, report_dir: Path
+) -> tuple[int, int, int]:
     """Run pytest for a package and generate reports.
 
     Args:
@@ -108,6 +110,7 @@ def main() -> int:
     packages = [
         ("pac0", root_dir / "packages" / "pac0"),
         ("pac-bdd", root_dir / "packages" / "pac-bdd"),
+        ("pac0-cli", root_dir / "packages" / "pac0-cli"),
     ]
 
     # Track exit codes and test counts
