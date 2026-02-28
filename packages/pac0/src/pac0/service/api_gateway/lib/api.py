@@ -6,25 +6,31 @@ import asyncio
 import os
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, File, Request, UploadFile
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import RedirectResponse
 from faststream.nats import NatsBroker
+
 from pac0.service.api_gateway.lib import trace
 from pac0.service.api_gateway.lib.common import broker, global_state
-from pac0.shared.subjects import *
 from pac0.service.api_gateway.lib.models import MsgApiFlowsOutPayload
 from pac0.shared.payload import (
     VERSION,
+    flow_id_new,
     get_token_optional,
     get_token_required,
-    flow_id_new,
 )
+from pac0.shared.subjects import *
+
 from . import store
 
 router = APIRouter()
 
 
 @router.get("/")
-async def read_root():
+async def read_root(request: Request):
+    if "text/html" in request.headers.get("Accept", ""):
+        return RedirectResponse(url="/docs")
+
     return {"Hello": "World"}
 
 
@@ -116,7 +122,6 @@ async def flows_get(
 
 
 @router.get("/healthcheck")
-
 @router.get("/healthcheck")
 async def healthcheck(
     request: Request,
@@ -125,6 +130,7 @@ async def healthcheck(
         "status": "OK",
         "rank": request.app.state.rank,
     }
+
 
 @router.get("/healthcheck/deep")
 async def healthcheck_deep(
