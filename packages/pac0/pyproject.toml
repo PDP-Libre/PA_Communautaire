@@ -14,7 +14,7 @@ requires-python = ">=3.13"
 dependencies = [
     "factur-x>=3.15",
     "fastapi[standard]>=0.128.7",
-    "faststream[cli,nats]>=0.6.6",
+    "faststream[cli,nats]>=0.6.7",
     "nats-py[nkeys]>=2.12.0",
     "s3fs>=2026.1.0",
 ]

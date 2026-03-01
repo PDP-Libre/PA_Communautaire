@@ -24,28 +24,10 @@ def _call(
         if service is None:
             raise ValueError("Either cmd or service must be provided")
 
-        # service folder: "05-conversion-formats" -> "conversion_formats"
-        service_folder = "_".join(service.split("-")[1:])
-
-        if service == "01-api-gateway":
-            full_path = f"src/pac0/service/{service_folder}/main.py"
-            cmd = ["uv", "run", "fastapi", "dev", "--host=0.0.0.0", str(full_path)]
-        elif service == "02-esb-central":
-            cmd = ["nats-server", "-V", "-js"]
-        elif service == "10-stockage":
-            # cmd = ["weed", "mini", "-dir=/tmp/data"]
-            cmd = ["weed", "mini", f"-dir={settings.s3_data}"]
-
-        else:
-            # full_path = f"src/pac0/service/{service_folder}/main:app"
-            full_path = f"pac0.service.{service_folder}.main:app"
-            cmd = ["uv", "run", "faststream", "run", str(full_path)]
-
-        typer.echo(f"Lancement du service {service}...")
-
     if cwd is None:
         base_folder = utils.get_app_base_folder()
         cwd = base_folder / "packages" / "pac0"
+
     typer.echo(f"pac0_package_base_folder: {cwd}")
 
     typer.echo(f"Commande: {' '.join(cmd)}")

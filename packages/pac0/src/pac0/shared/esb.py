@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from faststream import ContextRepo, FastStream
-from faststream.nats import NatsBroker, NatsRouter
+from faststream.nats import JStream, NatsBroker, NatsRouter
 from pydantic_settings import BaseSettings
 
 logger = logging.getLogger(__name__)
@@ -124,3 +124,6 @@ router = NatsRouter(prefix="")
 
 # will be set by when you import this module
 broker = None
+
+# https://natsbyexample.com/examples/jetstream/workqueue-stream/go
+stream = JStream(name="stream")

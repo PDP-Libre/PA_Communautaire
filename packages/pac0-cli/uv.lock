@@ -512,7 +512,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/71/c5/2564d917503fe8d68
 
 [[package]]
 name = "pac0-cli"
-version = "0.13.0"
+version = "0.24.0"
 source = { editable = "." }
 dependencies = [
     { name = "faststream", extra = ["nats"] },

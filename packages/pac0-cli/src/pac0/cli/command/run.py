@@ -2,10 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-
-from pathlib import Path
-
 import typer
+from pydantic import BaseModel
 
 from ..lib.conf import DEFAULT_BRANCH, DEFAULT_REPO, SERVICES, Brique
 from ..lib.process import install_run
@@ -14,16 +12,110 @@ from ..lib.settings import settings
 app = typer.Typer()
 
 
-BRIQUE_ENVARS: dict[Brique, dict[str, str | None]] = {
-    "01-api-gateway": {
-        "AWS_ACCESS_KEY_ID": settings.aws_access_key_id,
-        "AWS_SECRET_ACCESS_KEY": settings.aws_secret_access_key,
-        "NATS_URL": settings.nats_url,
-        "S3_BUCKET": settings.s3_bucket,
-        "S3_REGION": settings.s3_region,
-        "S3_URL": settings.s3_url,
-    },
+class BriqueRunDef(BaseModel):
+    envvars: dict[str, str | None]
+    cmd: list[str]
+    cwd: str | None = None
+
+
+BRIQUE_RUN_DEF: dict[Brique, BriqueRunDef] = {
+    "01-api-gateway": BriqueRunDef(
+        envvars={
+            "AWS_ACCESS_KEY_ID": settings.aws_access_key_id,
+            "AWS_SECRET_ACCESS_KEY": settings.aws_secret_access_key,
+            "NATS_URL": settings.nats_url,
+            "S3_BUCKET": settings.s3_bucket,
+            "S3_REGION": settings.s3_region,
+            "S3_URL": settings.s3_url,
+        },
+        cmd=[
+            "uv",
+            "run",
+            "fastapi",
+            "dev",
+            "--host=0.0.0.0",
+            "src/pac0/service/01-api-gateway/main.py",
+        ],
+    ),
     # TODO: ajouter les autres services
+    "02-esb-central": BriqueRunDef(
+        envvars={},
+        cmd=["nats-server", "-V", "-js"],
+    ),
+    "03-controle-formats": BriqueRunDef(
+        envvars={},
+        cmd=[
+            "uv",
+            "run",
+            "faststream",
+            "run",
+            "pac0.service.controle_formats.main:app",
+        ],
+    ),
+    "04-validation-metier": BriqueRunDef(
+        envvars={},
+        cmd=[
+            "uv",
+            "run",
+            "faststream",
+            "run",
+            "pac0.service.validation_metier.main:app",
+        ],
+    ),
+    "05-conversion-formats": BriqueRunDef(
+        envvars={},
+        cmd=[
+            "uv",
+            "run",
+            "faststream",
+            "run",
+            "pac0.service.conversion_formats.main:app",
+        ],
+    ),
+    "06-annuaire-local": BriqueRunDef(
+        envvars={},
+        cmd=[
+            "uv",
+            "run",
+            "faststream",
+            "run",
+            "pac0.service.annuaire_local.main:app",
+        ],
+    ),
+    "07-routage": BriqueRunDef(
+        envvars={},
+        cmd=[
+            "uv",
+            "run",
+            "faststream",
+            "run",
+            "pac0.service.routage.main:app",
+        ],
+    ),
+    "08-transmission-fiscale": BriqueRunDef(
+        envvars={},
+        cmd=[
+            "uv",
+            "run",
+            "faststream",
+            "run",
+            "pac0.service.transmission_fiscale.main:app",
+        ],
+    ),
+    "09-gestion-cycle-vie": BriqueRunDef(
+        envvars={},
+        cmd=[
+            "uv",
+            "run",
+            "faststream",
+            "run",
+            "pac0.service.gestion_cycle_vie.main:app",
+        ],
+    ),
+    "10-stockage": BriqueRunDef(
+        envvars={},
+        cmd=["weed", "mini", f"-dir={settings.s3_data}"],
+    ),
 }
 
 
@@ -46,14 +138,7 @@ def _(
 ):
     # Get the command name from the context
     command_name = ctx.info_name or "1"
-
-    # Get the service name based on the command
-    print(f"{SERVICES=}")
-    print(f"{command_name=}")
-
     service = SERVICES[int(command_name) - 1]
-    # get the envvar for this service
-    envvar = BRIQUE_ENVARS[service]
 
     install_run(
         service=service,
@@ -62,5 +147,7 @@ def _(
         tools=["git"],
         install_tools=install_tools,
         install_src=install_src,
-        envvar=envvar,
+        envvar=BRIQUE_RUN_DEF[service].envvars,
+        cmd=BRIQUE_RUN_DEF[service].cmd,
+        cwd=BRIQUE_RUN_DEF[service].cwd,
     )

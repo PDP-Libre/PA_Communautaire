@@ -305,15 +305,15 @@ wheels = [
 
 [[package]]
 name = "fast-depends"
-version = "3.0.5"
+version = "3.0.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/07/f3/41e955f5f0811de6ef9f00f8462f2ade7bc4a99b93714c9b134646baa831/fast_depends-3.0.5.tar.gz", hash = "sha256:c915a54d6e0d0f0393686d37c14d54d9ec7c43d7b9def3f3fc4f7b4d52f67f2a", size = 18235, upload-time = "2025-11-30T20:26:12.92Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4b/63/3524df7f936537481fafbe9c5428cc26cc06a30cce2810ce6994331a9a19/fast_depends-3.0.6.tar.gz", hash = "sha256:6a2a11645db40d4850f1300f98ffad93dc09fc95750009359930e8ff03299cc5", size = 18283, upload-time = "2026-02-26T16:03:50.331Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0a/dd/76697228ae63dcbaf0a0a1b20fc996433a33f184ac4f578382b681dcf5ea/fast_depends-3.0.5-py3-none-any.whl", hash = "sha256:38a3d7044d3d6d0b1bed703691275c870316426e8a9bfa6b1c89e979b15659e2", size = 25362, upload-time = "2025-11-30T20:26:10.96Z" },
+    { url = "https://files.pythonhosted.org/packages/4d/04/26ff5acc1804ecefd5ec8a351c43f23ba1c6315e9d4dbedd86bd16579e77/fast_depends-3.0.6-py3-none-any.whl", hash = "sha256:b793eee88061cf830679cdb42b5c26b39b0c5fd687d6112a17c46a9efb128a86", size = 25419, upload-time = "2026-02-26T16:03:49.165Z" },
 ]
 
 [package.optional-dependencies]
@@ -443,16 +443,16 @@ wheels = [
 
 [[package]]
 name = "faststream"
-version = "0.6.6"
+version = "0.6.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
     { name = "fast-depends", extra = ["pydantic"] },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a6/cc/26deefd97a3d51205554d4fe69ffc2a9144515cda20cb7185be27e11166e/faststream-0.6.6.tar.gz", hash = "sha256:de87502e22db0372131165221728c6993b29d42ba29aaaa0a27d1249803f2ddd", size = 302712, upload-time = "2026-02-03T18:08:35.747Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/19/7b/d02c069be0bc671b2eb8f805a1f824d2bfbe1852c9c3f4ad719a7ad3710b/faststream-0.6.7.tar.gz", hash = "sha256:c732eaf861c4cbddd9c7f9098608486a9f05dff67a72335686c3044039045346", size = 306185, upload-time = "2026-03-01T08:20:27.71Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ff/17/169728098799d4f5c4978f9b83d2dc41541eee02ec8547149a085acf11dd/faststream-0.6.6-py3-none-any.whl", hash = "sha256:4aca70628b526d8e27771f1f8edf9cd0a80a62f335a2721ddbbc863e6098f269", size = 507654, upload-time = "2026-02-03T18:08:34.347Z" },
+    { url = "https://files.pythonhosted.org/packages/ba/23/9d51f352fbb656f5345030f57e20737b1c88167f0eac354ac548d577808b/faststream-0.6.7-py3-none-any.whl", hash = "sha256:a904a4b1e3babeaa244a9460821f5b05dd71b00c959c816360b2acbbe267cd5c", size = 513454, upload-time = "2026-03-01T08:20:26.423Z" },
 ]
 
 [package.optional-dependencies]
@@ -905,11 +905,6 @@ nkeys = [
 ]
 
 [[package]]
-name = "nats-server"
-version = "0.0.0"
-source = { git = "https://github.com/nats-io/nats.py?subdirectory=nats-server#55059b7609e732fd3d8669555cddeb5671ec1a5f" }
-
-[[package]]
 name = "nkeys"
 version = "0.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -932,7 +927,6 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "nats-server" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-bdd" },
@@ -944,14 +938,13 @@ dev = [
 requires-dist = [
     { name = "factur-x", specifier = ">=3.15" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.128.7" },
-    { name = "faststream", extras = ["cli", "nats"], specifier = ">=0.6.6" },
+    { name = "faststream", extras = ["cli", "nats"], specifier = ">=0.6.7" },
     { name = "nats-py", extras = ["nkeys"], specifier = ">=2.12.0" },
     { name = "s3fs", specifier = ">=2026.1.0" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "nats-server", git = "https://github.com/nats-io/nats.py?subdirectory=nats-server" },
     { name = "pytest", specifier = ">=8.0.2" },
     { name = "pytest-asyncio", specifier = ">=1.3.0" },
     { name = "pytest-bdd", specifier = ">=8.1.0" },
