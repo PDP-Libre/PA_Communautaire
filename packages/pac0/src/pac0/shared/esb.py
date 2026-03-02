@@ -5,7 +5,7 @@
 import logging
 import os
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable, Optional
 
 from faststream import ContextRepo, FastStream
 from faststream.nats import JStream, NatsBroker, NatsRouter
@@ -49,7 +49,10 @@ class CtxService:
     publisher_err: Any
 
 
-def init_esb_app(prefix):
+def init_esb_app(
+    prefix: str,
+    process: Optional[Callable] = None,
+):
     global broker
 
     _broker = NatsBroker(get_nats_url())
@@ -126,4 +129,8 @@ router = NatsRouter(prefix="")
 broker = None
 
 # https://natsbyexample.com/examples/jetstream/workqueue-stream/go
-stream = JStream(name="stream")
+stream_cold = JStream(name="pac0-stream-cold")
+stream_hot = JStream(name="pac0-stream-hot")
+stream_external = JStream(name="pac0-stream-external")
+stream_log = JStream(name="pac0-stream-log")
+stream_store = JStream(name="pac0-stream-store")
