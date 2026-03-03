@@ -41,9 +41,41 @@ Voici les [consumers](https://docs.nats.io/nats-concepts/jetstream/consumers) à
 - `consumer status` pour pouvoir suivre l'avancement du flux normal (dispatch push, durable)
 - `consumer status1` pour pouvoir suivre l'avancement du flux normal pour un seule facture (dispatch push, durable)
 - `consumer test` pour pouvoir consulter les messages déjà consommés (dispatch pull, ordered, ephemeral)
--
+
 
 Propriétés d'un consumer:
 - [durable/ephemeral](https://docs.nats.io/nats-concepts/jetstream/consumers#persistence-durable-ephemeral))
 - [ordered](https://docs.nats.io/nats-concepts/jetstream/consumers#ordered-consumers)
 - [dispatch push/pull](https://docs.nats.io/nats-concepts/jetstream/consumers#dispatch-type-pull-push)
+
+
+## sujets -> streams -> consumers
+
+![](nats-consumers.svg)
+
+![](https://docs.nats.io/~gitbook/image?url=https%3A%2F%2F1487470910-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-LqMYcZML1bsXrN3Ezg0%252Fuploads%252Fgit-blob-dedcc17f082fa1e39497c54ed8191b6424ee7792%252Fstreams-and-consumers-75p.png%3Falt%3Dmedia%26token%3D3dc2026b-8ef1-4f5b-a844-b3dbce6abbd9&width=768&dpr=1&quality=100&sign=a3db84fb&sv=2)
+
+| subject                      | `stream-cold`     | `stream-hot`      | `stream-log`      |
+|------------------------------|-------------------|-------------------|-------------------|
+| `api-gateway-OUT`            |                   |                   |                   |
+| `api-gateway-ERR`            |                   |                   |                   |
+| `controle-formats-IN`        |                   |                   |                   |
+| `controle-formats-OUT`       |                   |                   |                   |
+| `controle-formats-ERR`       |                   |                   |                   |
+| `validation-metier-IN`       |                   |                   |                   |
+| `validation-metier-OUT`      |                   |                   |                   |
+| `validation-metier-ERR`      |                   |                   |                   |
+| `conversion-formats-IN`      |                   |                   |                   |
+| `conversion-formats-OUT`     |                   |                   |                   |
+| `conversion-formats-ERR`     |                   |                   |                   |
+| `annuaire-local-IN`          |                   |                   |                   |
+| `annuaire-local-OUT`         |                   |                   |                   |
+| `annuaire-local-ERR`         |                   |                   |                   |
+| `routage-IN`                 |                   |                   |                   |
+| `routage-OUT`                |                   |                   |                   |
+| `routage-ERR`                |                   |                   |                   |
+| `transmission-fiscale-IN`    |                   |                   |                   |
+| `transmission-fiscale-OUT`   |                   |                   |                   |
+| `transmission-fiscale-ERR`   |                   |                   |                   |
+
+*`pac0.` prefix removed
