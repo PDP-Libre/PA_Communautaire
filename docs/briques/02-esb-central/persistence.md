@@ -51,9 +51,8 @@ Propriétés d'un consumer:
 
 ## sujets -> streams -> consumers
 
-![](nats-consumers.svg)
+![](nats-consumers-editable.png)
 
-![](https://docs.nats.io/~gitbook/image?url=https%3A%2F%2F1487470910-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-LqMYcZML1bsXrN3Ezg0%252Fuploads%252Fgit-blob-dedcc17f082fa1e39497c54ed8191b6424ee7792%252Fstreams-and-consumers-75p.png%3Falt%3Dmedia%26token%3D3dc2026b-8ef1-4f5b-a844-b3dbce6abbd9&width=768&dpr=1&quality=100&sign=a3db84fb&sv=2)
 
 | subject                      | `stream-cold`     | `stream-hot`      | `stream-log`      |
 |------------------------------|-------------------|-------------------|-------------------|

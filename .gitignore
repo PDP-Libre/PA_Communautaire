@@ -5,5 +5,5 @@ __pycache__
 .env
 data/
 docker/secret
-# diagrams.net backup files
+# drawio backup files
 .$*.bkp
