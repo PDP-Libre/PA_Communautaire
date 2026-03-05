@@ -6,6 +6,7 @@ import asyncio
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
+from fastapi.responses import RedirectResponse
 from faststream.nats import NatsBroker
 from pac0.service.api_gateway.lib import trace
 from pac0.service.api_gateway.lib.common import broker, global_state
@@ -14,7 +15,10 @@ router = APIRouter()
 
 
 @router.get("/")
-async def read_root():
+async def read_root(request: Request):
+    if "text/html" in request.headers.get("Accept", ""):
+        return RedirectResponse(url='/docs')
+
     return {"Hello": "World"}
 
 

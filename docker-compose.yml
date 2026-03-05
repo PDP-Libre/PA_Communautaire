@@ -10,7 +10,7 @@ services:
       # - "7333:7333" # WebDAV:
       - "23646:23646" # Admin UI
     volumes:
-      - ./seaweedfs-config.json:/etc/seaweedfs/config.json
+      - ./docker/seaweedfs-config.json:/etc/seaweedfs/config.json
       - s3Data:/data
     command: "mini -s3 -s3.config /etc/seaweedfs/config.json"
 
@@ -23,15 +23,15 @@ services:
   01-api-gateway:
     build:
       context: .
-      dockerfile: Dockerfile.01-api-gateway
+      dockerfile: ./docker/Dockerfile.01-api-gateway
     image: git.pdplibre.org/construction_pa/01-api-gateway:dev
     container_name: pac01-api-gateway
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     ports:
       - "8000:8000"
     depends_on:
@@ -39,162 +39,162 @@ services:
       - 10-stockage
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../packages/pac0:/app
+      - ./packages/pac0:/app
       - venv_01_api_gateway:/app/.venv
 
   # Services de traitement (FastStream)
   03-controle-formats:
     build:
       context: .
-      dockerfile: Dockerfile.03-controle-formats
+      dockerfile: ./docker/Dockerfile.03-controle-formats
     image: git.pdplibre.org/construction_pa/03-controle-formats:dev
     container_name: pac03-controle-formats
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     depends_on:
       - 02-esb-central
       - 10-stockage
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../packages/pac0:/app
+      - ./packages/pac0:/app
       - venv_03_controle_formats:/app/.venv
 
   04-validation-metier:
     build:
       context: .
-      dockerfile: Dockerfile.04-validation-metier
+      dockerfile: ./docker/Dockerfile.04-validation-metier
     image: git.pdplibre.org/construction_pa/04-validation-metier:dev
     container_name: pac04-validation-metier
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     depends_on:
       - 02-esb-central
       - 10-stockage
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../packages/pac0:/app
+      - ./packages/pac0:/app
       - venv_04_validation_metier:/app/.venv
 
   05-conversion-formats:
     build:
       context: .
-      dockerfile: Dockerfile.05-conversion-formats
+      dockerfile: ./docker/Dockerfile.05-conversion-formats
     image: git.pdplibre.org/construction_pa/05-conversion-formats:dev
     container_name: pac05-conversion-formats
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     depends_on:
       - 02-esb-central
       - 10-stockage
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../packages/pac0:/app
+      - ./packages/pac0:/app
       - venv_05_conversion_formats:/app/.venv
 
   06-annuaire-local:
     build:
       context: .
-      dockerfile: Dockerfile.06-annuaire-local
+      dockerfile: ./docker/Dockerfile.06-annuaire-local
     image: git.pdplibre.org/construction_pa/06-annuaire-local:dev
     container_name: pac06-annuaire-local
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     depends_on:
       - 02-esb-central
       - 10-stockage
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../packages/pac0:/app
+      - ./packages/pac0:/app
       - venv_06_annuaire_local:/app/.venv
 
   07-routage:
     build:
       context: .
-      dockerfile: Dockerfile.07-routage
+      dockerfile: ./docker/Dockerfile.07-routage
     image: git.pdplibre.org/construction_pa/07-routage:dev
     container_name: pac07-routage
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     depends_on:
       - 02-esb-central
       - 10-stockage
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../packages/pac0:/app
+      - ./packages/pac0:/app
       - venv_07_routage:/app/.venv
 
   08-transmission-fiscale:
     build:
       context: .
-      dockerfile: Dockerfile.08-transmission-fiscale
+      dockerfile: ./docker/Dockerfile.08-transmission-fiscale
     image: git.pdplibre.org/construction_pa/08-transmission-fiscale:dev
     container_name: pac08-transmission-fiscale
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     depends_on:
       - 02-esb-central
       - 10-stockage
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../packages/pac0:/app
+      - ./packages/pac0:/app
       - venv_08_transmission_fiscale:/app/.venv
 
   09-gestion-cycle-vie:
     build:
       context: .
-      dockerfile: Dockerfile.09-gestion-cycle-vie
+      dockerfile: ./docker/Dockerfile.09-gestion-cycle-vie
     image: git.pdplibre.org/construction_pa/09-gestion-cycle-vie:dev
     container_name: pac09-gestion-cycle-vie
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     depends_on:
       - 02-esb-central
       - 10-stockage
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../packages/pac0:/app
+      - ./packages/pac0:/app
       - venv_09_gestion_cycle_vie:/app/.venv
 
   test-bdd:
     build:
       context: .
-      dockerfile: Dockerfile.bdd
+      dockerfile: ./docker/Dockerfile.bdd
     image: git.pdplibre.org/construction_pa/bdd:dev
     container_name: bdd
     environment:
       - HOST_UID=${UID:-1000}
       - HOST_GID=${GID:-1000}
     env_file:
-      - env
-      - secret
+      - ./docker/env
+      - ./docker/secret
     depends_on:
       - 02-esb-central
       - 10-stockage
@@ -208,7 +208,7 @@ services:
       - 09-gestion-cycle-vie
     volumes:
       - uv_cache:/home/appuser/.cache/uv
-      - ../:/app
+      - ./:/app
       - venv_bdd:/app/packages/pac-bdd/.venv
       - pytest_cache_bdd:/app/.pytest_cache
     profiles:
