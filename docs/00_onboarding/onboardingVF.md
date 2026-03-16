@@ -314,7 +314,7 @@ Accès navigateur : <https://git.pdplibre.org/Construction_PA/PA_Communautaire.g
 
 **Installation locale Linux :**
 
-- Python 3.13+, `uv` (pas pip !)
+- Python 3.12+, `uv` (pas pip !)
 - `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - `uv sync` dans chaque package
 
@@ -352,7 +352,7 @@ cd packages/pac-bdd && uv run pytest -v
 
 ### Conventions du code
 
-- Python 3.13+ avec `async/await` partout
+- Python 3.12+ avec `async/await` partout
 - Package manager : `uv` (jamais pip)
   - `uv sync` pour installer, `uv run` pour exécuter
 - `pytest-asyncio` avec `asyncio_mode = "auto"`

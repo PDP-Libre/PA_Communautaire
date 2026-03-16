@@ -157,7 +157,7 @@ graph LR
 
 ## Bloc 7 - Installation de l'environnement `[DEV]`
 
-- Prérequis : Git, Python 3.13+, uv (pas pip)
+- Prérequis : Git, Python 3.12+, uv (pas pip)
 - Installation avec Docker (recommandé pour démarrer) :
   - `docker compose up` depuis `docker/` (cible : branche dev_docker_v2)
   - Vérification : http://localhost:8000/docs
@@ -185,7 +185,7 @@ graph LR
   - Step definitions : `src/pac_bdd/` (api.py, peppol.py, service.py, esb.py...)
   - `steps.py` : import central de tous les modules de steps
 - `packages/pac0-cli/` : CLI pour setup et lancement des services (`uvx pac0-cli@latest`)
-- Conventions : async, SPDX headers, Python 3.13+
+- Conventions : async, SPDX headers, Python 3.12+
 - Ressources : `packages/pac0/README.md`, `packages/pac-bdd/README.md`
 
 ---

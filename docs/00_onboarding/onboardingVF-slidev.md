@@ -504,7 +504,7 @@ Accès navigateur : https://git.pdplibre.org/Construction_PA/PA_Communautaire.gi
 
 ### Linux natif
 
-- Python 3.13+, `uv` (pas pip !)
+- Python 3.12+, `uv` (pas pip !)
 - `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - `uv sync` dans chaque package
 - NATS Server : `nats-server -V -js`
@@ -559,7 +559,7 @@ cd packages/pac-bdd && uv run pytest -v
 <div style="position:absolute;top:0;left:0;right:0;height:5px;background:#4ecdc4;z-index:20;"></div>
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;"><h1 style="margin:0;flex:1;">Conventions du code</h1><img src="./LogoPDP.png" style="width:96px;height:48px;margin-left:1rem;" /></div>
 
-- Python 3.13+ avec `async/await` partout
+- Python 3.12+ avec `async/await` partout
 - Package manager : `uv` (jamais pip)
   - `uv sync` pour installer, `uv run` pour exécuter
 - `pytest-asyncio` avec `asyncio_mode = "auto"`
