@@ -1,0 +1,36 @@
+name: Demande de fonctionnalité
+about: Idées pour de nouvelles fonctionnalités et améliorations
+labels:
+  - type/enhancement
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Une description claire et concise de la nouvelle fonctionnalité
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Exemple
+      description: |
+        Un exemple simple de la nouvelle fonctionnalité en action.
+        Si possible, donnez des liens vers documentations, normes ou réglementations de référence.
+
+  - type: dropdown
+    id: brique
+    attributes:
+      label: Brique concernée (optionnel)
+      options:
+        - 01-api-gateway
+        - 02-esb-central
+        - 03-controle-formats
+        - 04-validation-metier
+        - 05-conversion-formats
+        - 06-annuaire-local
+        - 07-routage
+        - 08-transmission-fiscale
+        - 09-gestion-cycle-vie
+        - 10-stockage

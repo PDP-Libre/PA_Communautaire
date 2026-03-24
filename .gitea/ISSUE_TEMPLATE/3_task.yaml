@@ -1,0 +1,41 @@
+name: Tâche technique
+about: Tâche d'implémentation, refactoring, infra
+labels:
+  - type/task
+body:
+  - type: input
+    id: parent
+    attributes:
+      label: Issue parente (US ou Epic)
+      placeholder: "#numéro"
+
+  - type: dropdown
+    id: brique
+    attributes:
+      label: Brique concernée
+      options:
+        - 01-api-gateway
+        - 02-esb-central
+        - 03-controle-formats
+        - 04-validation-metier
+        - 05-conversion-formats
+        - 06-annuaire-local
+        - 07-routage
+        - 08-transmission-fiscale
+        - 09-gestion-cycle-vie
+        - 10-stockage
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critères d'acceptance
+      value: |
+        - [ ] ...
+        - [ ] ...

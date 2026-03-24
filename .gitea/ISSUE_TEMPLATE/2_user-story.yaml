@@ -1,0 +1,74 @@
+name: User Story
+about: User Story avec critères d'acceptance BDD (Gherkin)
+labels:
+  - type/story
+body:
+  - type: input
+    id: epic
+    attributes:
+      label: Epic parente
+      placeholder: "#numéro de l'epic"
+
+  - type: textarea
+    id: story
+    attributes:
+      label: Story
+      placeholder: "En tant que ... je veux ... afin de ..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: brique
+    attributes:
+      label: Brique
+      options:
+        - 01-api-gateway
+        - 02-esb-central
+        - 03-controle-formats
+        - 04-validation-metier
+        - 05-conversion-formats
+        - 06-annuaire-local
+        - 07-routage
+        - 08-transmission-fiscale
+        - 09-gestion-cycle-vie
+        - 10-stockage
+    validations:
+      required: true
+
+  - type: textarea
+    id: scenarios
+    attributes:
+      label: Scénarios BDD (Gherkin)
+      render: gherkin
+      value: |
+        # language: fr
+        Fonctionnalité: [titre]
+
+        Scénario: cas nominal
+          Soit ...
+          Quand ...
+          Alors ...
+
+        Scénario: cas d'erreur
+          Soit ...
+          Quand ...
+          Alors ...
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Décomposition technique
+      value: |
+        - [ ] ...
+        - [ ] ...
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Complexité
+      options:
+        - XS
+        - S
+        - M
+        - L
+        - XL

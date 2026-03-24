@@ -1,0 +1,68 @@
+name: Bug Report
+about: Signaler un dysfonctionnement
+labels:
+  - type/bug
+body:
+  - type: dropdown
+    id: brique
+    attributes:
+      label: Brique concernée
+      options:
+        - 01-api-gateway
+        - 02-esb-central
+        - 03-controle-formats
+        - 04-validation-metier
+        - 05-conversion-formats
+        - 06-annuaire-local
+        - 07-routage
+        - 08-transmission-fiscale
+        - 09-gestion-cycle-vie
+        - 10-stockage
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Une description claire et concise du problème
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Comment reproduire
+      description: |
+        Les étapes pour reproduire le problème.
+        La plupart du temps, inclure un scénario BDD est la meilleure façon de décrire le bug.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportement observé
+
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Scénario BDD de non-régression (optionnel)
+      render: gherkin
+      placeholder: |
+        # language: fr
+        Scénario: ...
+          Soit ...
+          Quand ...
+          Alors ...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Contexte supplémentaire
+      description: "Optionnel : messages de log, captures d'écran, etc."
