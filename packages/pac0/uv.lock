@@ -905,6 +905,11 @@ nkeys = [
 ]
 
 [[package]]
+name = "nats-server"
+version = "0.0.0"
+source = { git = "https://github.com/nats-io/nats.py?subdirectory=nats-server#6806c56c751a6da3e6384080d7ffde16a51184df" }
+
+[[package]]
 name = "nkeys"
 version = "0.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -927,6 +932,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "nats-server" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-bdd" },
@@ -945,6 +951,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "nats-server", git = "https://github.com/nats-io/nats.py?subdirectory=nats-server" },
     { name = "pytest", specifier = ">=8.0.2" },
     { name = "pytest-asyncio", specifier = ">=1.3.0" },
     { name = "pytest-bdd", specifier = ">=8.1.0" },

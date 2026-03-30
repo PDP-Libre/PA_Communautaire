@@ -22,6 +22,7 @@ from typing import Any, Dict, List
 from nats import connect
 from nats.js import JetStreamContext
 from nats.server import run
+from pytest import mark
 
 STREAM_NAME = "my-stream"
 
@@ -123,7 +124,7 @@ async def test_js_simple():
         assert server.port > 0
 
         # nats_url = f"nats://localhost:{server.port}"
-        nats_url = f"nats://localhost:4222"
+        nats_url = f"nats://localhost:{server.port}"
 
         js = await connect_js(nats_url)
 
@@ -137,3 +138,42 @@ async def test_js_simple():
 
     # Server should be shutdown after context exit
     assert server.is_running is False
+
+
+async def test_stream1():
+    """
+    Créer un stream, publier, relire
+    """
+    # lancer une instance nats js
+    async with await run(port=0, jetstream=True) as server:
+        assert server.is_running is True
+        assert server.port > 0
+
+        # Connect to NATS
+        nats_url = f"nats://localhost:{server.port}"
+        nc = await connect(nats_url)
+
+        # Create JetStream context
+        js = nc.jetstream()
+
+        # définir le stream si inexistant
+        # Create the stream
+        await js.add_stream(
+            name="S1",
+            # subjects=[subject.replace(">", "*")] if ">" in subject else [subject],
+            # subjects=["events.>"],
+            subjects=[".>"],
+        )
+
+        # publier quelques messages
+        await js.publish("toto", b"Hello world !")
+        await js.publish("toto", b"Hello world2 !")
+
+        # se deconnecter
+        # se connecter
+        # accéde au stream
+        # lire tous les messages
+        # comparer avec les messages publiés
+        #
+
+    # raise NotImplementedError()
