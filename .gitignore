@@ -5,3 +5,5 @@ __pycache__
 .env
 data/
 docker/secret
+# draw.io backup files
+.$*.bkp
