@@ -1,99 +1,240 @@
 # Brique 11 proxy
 
-Ce proxy devra être en lien avec l'instance Dolibarr de l'association qui va gérer la facturation.
-
-Quelques idées en vrac:
-
-* puisque le proxy doit présenter les mêmes API que la brique 01, je propose qu'il soit développé dans la brique 01 comme un mode proxy à activer globalement
-* les appels API dédiées au proxy seraient pré-fixés /proxy
-* POST /proxy/target pour définir le PA cible avec {"api_endpoint":"https://api.extrapdp.fr", "api_key":"XXXXXX"}
-* la partie journalisation des appels sera aussi utile à pac0, je propose donc de pré-fixer par /user pour la gestion des entreprises et /report pour récupérer les journaux
-* POST /user pour ajouter une nouvelle entreprise (payload à définir)
-* GET /user/jwt pour obtenir un token JWT pour authentifier les appels API utilisateur
-* GET /report pour récupérer le journal brut des accès
-* GET /report/stat pour récupérer des stats sur les accès (plus simple pour comptabiliser/facturer)
-* les appels API /proxy, /user, /report sont protégés par une clé API majeure (token JWT) qui sera généré par le CLI
-* pour les factures déposées au format PDF factur-x on pourrait se dispenser d'authentification et s'appuyer sur la signature électronique du PDF
+Vocabulaire:
+- **proxy** : nom du projet courant visant à regrouper et décompter les flux de plusieurs **membres** vers un seul **PA**
+- **membres** : membre de l'**association** qui vont utiliser le **proxy** pour la gestion de leur facturation
+- **association** : association PDP Libre (ou tout autre entité souhaitant aggréger l'usage d'un **PA** unique)
+- **PA** : Plateforme Agréé qui va recevoir les appels API du **proxy**
 
 
-## Approche grossière
+## Swagger / OpenAPI
 
-Je suggère que cette passerelle proxy pac <--> dolibarr soit un outil qui grossièrement:
+L’API du proxy doit respecter le SWAGGER décrit dans l’Annexe A de la norme XP_Z12-013.pdf.
+Le proxy va considérer **tous** les appels API comme des appels API au PA **sauf** ceux utiles à la gestion du proxy.
 
-* se connecte à Dolibarr via API
-* se connecte au proxy pac via API
-* récupère les clients Dolibarr éligibles et mettre à jour le proxy
-* récupérera les stats d'utilisation du proxy pour la période de facturation en cours
-* pour chaque client identifié dans ces stats (par son SIREN):
-  * crée une nouvelle facture dans Dolibarr si inexistante
-  * attache à la facture les stats d'utilisation (niveau de détail à définir)
-* *crée ou met-à-jour un ticket/page wiki dans dolibarr pour un rapport final
+Les tests utilisés pour vérifier le bon comportement d'un PA doivent pouvoir être utilisés avec le proxy.
 
-C'est donc un outil externe qui va dialoguer avec les API Dolibarr et proxy.
+Des tests dédiés aux fonctionnalités du proxy seront réalisés: gestion des membres, authorisation, 
+
+## v0 / v1 / v2
+
+On distingue 3 jalons pour la réalisation de ce projet:
+- v0 **contrainte faisabilité** : réaliser sous 8 jours une preuve de concept (POV) pour valider le concept et la cible fonctionnelle de la v1
+- v1 **contrainte déploiement** : déploiement au plus tard en septembre 2026, objectifs de sécurité
+- v2 **contrainte stabilité** : objectifs de volumétrie
+
+## Authentification amont
+
+**Cible v0:** appels non authentifiés en substitution
+
+**Cible v1:**
+
+L'authentification amont concerne les appels API des **membres** de l'**association**.
+Chaque **membre** diposera de sa clé API qu'il fournira à chaque requête au proxy.
+La clé API est un token JWT à chiffrement asymétrique.
+Le proxy disposera de la clé publique pour vérifier l'authenticité des tokens.
+
+Si le jeton est validé, l'appel est authentifié. Le jeton du **PA** est substitué au jeton du **membre** et l'appel est relayé au **PA**.
+
+**Cible v2:**
+
+Permettre de générer de nouveaux jetons JWT en indiquant:
+- la clé privé principale (qui ne sera jamais conservée par le **proxy**)
+- la durée de validité
+- le scope (non utilisé pour le moment)
+- le siren du **membre** (facultatif): mets-à-jour la conf automatiquement
+
+## Authentification aval
+
+Cible: v0
+
+L'authentification aval concerne les appels API du **proxy** vers le **PA**.
+Il s'agit d'une clé API sous forme d'un token JWT.
+Cette clé sera utilisé par le **proxy** dans chaque requête API relayée au **PA**.
+
+## Routes
+
+### Route * (*)
+
+**Cible v0** Toutes les routes non pré-définies sont captées, authentifiées et relayées par le proxy.
 
 
-## EPIC/US
+### Route /proxy/manage/report  (POST)
+
+**Cible >=v2:** Pour générer un rapport.
 
 
-EPIC/US à traiter dans le proxy:
+### Route /proxy/manage/access (POST)
 
-* Client = adhérant PDPLibre bénéficiant de la ou les PA partenaires
-* Système Compatible = proxy
-* Organisme de Dématérialisation = PDPLibre
+**Cible >=v2:** Pour ajouter/modifier un accès membre
 
 
-EPIC 1 : Connectivité, Sécurité et Délégation (XP Z12-013)
-Objectif : Garantir l'interopérabilité technique et le respect du mandat de tiers.
+### Route /proxy/metrics (GET)
 
-US 1.1 (Client) : En tant que Client, je souhaite m'authentifier auprès du Proxy pour déposer ou consulter mes factures en toute sécurité.
+**Cible v2:** Affiche les métriques courantes du proxy
 
-US 1.2 (Système Compatible) : En tant que Système Compatible, je souhaite gérer une connexion OAUTH2 unique avec chaque Plateforme Agréée (PA) en tant que Tiers référencé.
 
-US 1.3 (Système Compatible) : En tant que Système Compatible, je souhaite injecter systématiquement la balise Organisation-Id (SIREN du client) dans le header HTTP de chaque appel vers la PA pour agir légitimement sur son périmètre.
 
-US 1.4 (Système Compatible) : En tant que Système Compatible, je souhaite m'abonner aux Webhooks des PA pour relayer les notifications de nouveaux flux vers mes clients concernés.
+### Route /proxy/reload (POST)
 
-EPIC 2 : Émission et Transmission des Flux (Flux 2 / Flux 10)
-Objectif : Assurer le routage des factures de vente et du e-reporting.
+**Cible  v1:** Ordonne la recharge de la configuration du proxy.
+Toutes nouvelles requête sera traitée avec la nouvelle configuration.
 
-US 2.1 (Client) : En tant que Client, je souhaite pousser mes factures de vente (UBL, CII ou Factur-X) vers le Proxy pour qu'elles atteignent ma PA-E.
 
-US 2.2 (Système Compatible) : En tant que Système Compatible, je souhaite valider la recevabilité technique du flux (antivirus, XSD) avant de le transmettre à la PA via la route POST /flows.
+## stockage conf
 
-US 2.3 (Système Compatible) : En tant que Système Compatible, je souhaite associer un trackingId à chaque envoi pour permettre au client de suivre sa facture dans son propre SI.
+**Cible v0:** La conf est un fichier stocké sur le serveur **proxy**.
+Les valeurs sensibles (secrets) sont fixées par variables d'environnement.
 
-US 2.4 (Gestionnaire OD) : En tant que Gestionnaire OD, je souhaite que le Proxy trace chaque dépôt (type de flux, taille, SIREN émetteur) pour comptabiliser l'activité et facturer mon client.
+**Cible v1:** La conf est un fichier stocké sur un bucket s3 distant. L'URL d'accès à ce bucket est un URL pré-signé placé dans une variable d'environnement.
 
-EPIC 3 : Réception et Récupération des Factures (Flux 2)
-Objectif : Gérer l'arrivée des factures d'achat et des documents lisibles.
 
-US 3.1 (Système Compatible) : En tant que Système Compatible, je souhaite interroger périodiquement les PA (POST /flows/search) pour récupérer les factures d'achat reçues par mes clients.
+## stockage traffic
 
-US 3.2 (Client) : En tant que Client, je souhaite récupérer le fichier binaire d'une facture ou son lisible (PDF généré) depuis le Proxy pour traitement comptable.
+Pour chaque requête et sa réponse, on crée un fichier.
 
-US 3.3 (Gestionnaire OD) : En tant que Gestionnaire OD, je souhaite enregistrer le nombre de factures reçues par chaque client pour justifier les paiements collectés.
+**Cible v0:** Le traffic relayé par le proxy est stocké dans des fichiers locaux.
 
-EPIC 4 : Suivi du Cycle de Vie et Statuts (Flux 6 - CDAR)
-Objectif : Maîtriser la traçabilité métier et fiscale de bout en bout.
+**Cible v1:** Le traffic relayé par le proxy est stocké dans un bucket s3 distant. La politique du bucket assure la suppression automatiquement des fichiers après un durée définie.
 
-US 4.1 (Client) : En tant que Client, je souhaite émettre des statuts de traitement ("Refusée", "Approuvée", "Encaissée") via le Proxy pour informer mon partenaire et l'administration.
+**Cible v2:** Idem avec chiffrement des fichiers.
 
-US 4.2 (Système Compatible) : En tant que Système Compatible, je souhaite traduire les actions du client en messages CDAR (Flux 6) conformes au socle minimal pour les transmettre à la PA.
 
-US 4.3 (Client) : En tant que Client, je souhaite consulter l'historique des statuts d'une facture pour savoir si elle a été "Mise à disposition" ou "Rejetée" par la PA de réception.
+## stockage rapport
 
-US 4.4 (Gestionnaire OD) : En tant que Gestionnaire OD, je souhaite piloter les taux de rejets techniques pour améliorer la qualité de service fournie aux clients.
+Le rapport d'activité est généré pour une période donnée.
+Il s'agit normalement du mois calendaire passé.
 
-EPIC 5 : Annuaire et Adressage (Flux 11)
-Objectif : Garantir l'acheminement des flux vers les bonnes destinations.
 
-US 5.1 (Client) : En tant que Client, je souhaite vérifier l'existence et l'adresse électronique (SchemeID 0225) d'un destinataire avant de lui émettre une facture.
+**Cible v0:** Le rapport est généré localement
 
-US 5.2 (Système Compatible) : En tant que Système Compatible, je souhaite router les demandes de recherche SIREN du client vers les API Annuaire des PA concernées.
+**Cible v1:** Le rapport généré est stocké dans un bucket s3 distant. La politique du bucket assure la suppression automatiquement des fichiers après un durée définie.
 
-EPIC 6 : Pilotage Financier et Consommation Groupée
-Objectif : Assurer la rentabilité de l'organisme de dématérialisation.
+## CLI
 
-US 6.1 (Gestionnaire OD) : En tant que Gestionnaire OD, je souhaite consolider mensuellement les volumes de flux (Ventes, Achats, CDAR, Reporting) par PA pour payer la consommation groupée à mes fournisseurs PA.
+**Cible v0:** Disposer d'une interface en ligne de commande pour gérer le proxy:
 
-US 6.2 (Gestionnaire OD) : En tant que Gestionnaire OD, je souhaite éditer des rapports de consommation par client pour déclencher le recouvrement automatique de mes frais de service.
+```shell
+# lance le proxy localement avec la configuration dans `pac0_proxy.conf.yaml`
+pac0 proxy run
+# génère les stats pour le mois en cours
+pac0 proxy report
+```
+
+**Cible v2:**
+
+```shell
+# clé/secret pour accéder au proxy
+export PAC0_PROXY_URL=https://proxy.pac0.pdplibre.org
+export PAC0_PROXY_KEY=xxxxxxxxx
+# génère les stats pour le mois en cours
+pac0 proxy report
+# génère les stats pour une période donnée
+pac0 proxy report 20260312 20260324
+```
+
+## Console
+
+Cible: v2
+
+Disposer d'un suivi simple de l'activité du proxy:
+- nombre de requête
+- distribution durée des requêtes
+- volume stockage
+- infos des derniers appels: SIREN, numéro facture, ...
+
+## conf
+
+Fichier de configuration du **proxy**:
+
+Cible: v0
+```yaml
+# Fichier `pac0_proxy.conf.yaml` dans le répertoire local
+$schema: https://pdplibre.org/schema/proxy/0
+port: 8080
+upstream:
+  endpoint: https://api.pdplibre.fr
+  # secret envar à fixer PAC0_PROXY__UPSTREAM__API_KEY  
+  # api_key: XXXXXX
+store:
+  backend: file
+  path: /var/pac0/proxy/store/
+  
+```
+
+Cible: v1
+```yaml
+# Fichier `pac0_proxy.conf.yaml` dans le répertoire local
+$schema: https://pdplibre.org/schema/proxy/0
+port: 8080
+upstream:
+  endpoint: https://api.pdplibre.fr
+  # secret envar à fixer PAC0_PROXY__UPSTREAM__API_KEY
+  #api_key: XXXXXX
+store:
+  backend: s3
+  endpoint: https://s3.mon-fournisseur.fr
+  bucket: xxxxx
+  region: fr-par
+  access_key: xxxxxxxxxxxx
+  # secret envar à fixer PAC0_PROXY__STORE__SECRET_KEY
+  #secret_key: xxxxxxxxxxxx
+report:
+  backend: s3
+  endpoint: https://s3.mon-fournisseur.fr
+  bucket: xxxxx
+  region: fr-par
+  access_key: xxxxxxxxxxxx
+  # secret envar à fixer PAC0_PROXY__REPORT__SECRET_KEY
+  #secret_key: xxxxxxxxxxxx
+access:
+  - siren: '55555555'
+    jwt_pub: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  - siren: '11111111'
+    jwt_pub: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  - siren: '33333333'
+    jwt_pub: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+```
+
+Cible: v2
+```yaml
+# Ordre de recherche de la conf (premier trouvé):
+# - Variable d'environnement PAC0_PROXY_CONF
+# - Argument ligne de commande `__conf`
+# - Fichier `pac0_proxy.conf.yaml` dans `~/.conf/pac0/`
+# - Fichier `pac0_proxy.conf.yaml` dans `/etc/pac0/`
+# - Fichier `pac0_proxy.conf.yaml` dans le répertoire courant
+$schema: https://pdplibre.org/schema/proxy/2
+# ...
+```
+
+# TODO:
+
+points à détailler:
+- metriques (prom metrics ?)
+- tests
+- ré-utiliser les tests PA avec ou sans proxy
+- rate limit
+- load balancer (HA)
+- backend stockage initial : fichiers locaux
+- backend stockage optionel : bucket S3
+- backend proxy initial : intégré (python) (rapide à développer/déployer, peu importe les performances )
+- backend proxy optionel : traefik ou caddy (performance élevée, développement/déploiement plus complexe )
+- webhook : à supporter en v2
+- webhook : s'il ne passent pas par le proxy, ils peuvent fonctionner dès la v1 ?
+- première étape POC
+- sécurité via zero trust ?? données sensibles
+- sécurité stockage : externaliser le stockage, ne rien stocket localement, réduire la surface d'attaque
+- la partie rapport peut être sous forme d'un CLI et ne pas être installée sur le serveur (légéreté et sécurité accrue)
+- fichier de configuration du proxy
+- base externe des membres exerne (lien S3 ?), fichier YAML, appel API pour ré-actualiser
+- déploiement instance dev
+- déploiement instance test (même cible que prod)
+- déploiement instance prod
+- estimation volumétrie, durée de rétention
+- sécurité: pas de stockage local, chiffrement applicatif ? par instance ?
+- certificat SSL : derrière un proxy pour terminer le lien HTTPS, ou via caddy
+
+## divers
+
+Voir également les [notes initiales](notes_202603) et le [compte-rendu de la réunion du 31 mars 2026](notes_20260331).
