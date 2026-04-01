@@ -23,6 +23,24 @@ On distingue 3 jalons pour la réalisation de ce projet:
 - v1 **contrainte déploiement** : déploiement au plus tard en septembre 2026, objectifs de sécurité
 - v2 **contrainte stabilité** : objectifs de volumétrie
 
+
+![](proxy-archi-v0.png)
+
+Architecture v0 de base:
+- stockage des fichiers sur le serveur
+- génération du rapport via un CLI et des fichiers locaux
+
+
+![](proxy-archi-v1-2-3.png)
+
+Possibilité évolution architecture v1/v2/... :
+- stockage durable S3 pour la collecte
+- stockage durable S3 pour les rapports
+- purge automatique via politique S3
+- proxy haute performance pour la partie collecte : traefik, caddy
+- possibilité load balancing de la partie collecte
+- serveurs stateless
+
 ## Authentification amont
 
 **Cible v0:** appels non authentifiés en substitution
