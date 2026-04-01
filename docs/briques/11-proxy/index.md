@@ -228,7 +228,8 @@ $schema: https://pdplibre.org/schema/proxy/2
 
 # TODO:
 
-points à détailler:
+points à détailler plus tard:
+
 - metriques (prom metrics ?)
 - tests
 - ré-utiliser les tests PA avec ou sans proxy
