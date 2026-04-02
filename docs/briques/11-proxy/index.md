@@ -38,7 +38,7 @@ Possibilité évolution architecture v1/v2/... :
 - stockage durable S3 pour les rapports
 - purge automatique via politique S3
 - proxy haute performance pour la partie collecte : traefik, caddy
-- possibilité load balancing de la partie collecte
+- possibilité load balancing / HA de la partie collecte
 - serveurs stateless
 
 ## Authentification amont
@@ -226,33 +226,44 @@ $schema: https://pdplibre.org/schema/proxy/2
 # ...
 ```
 
-# TODO:
+## Tests
 
-points à détailler plus tard:
+Il faut ré-utiliser les tests PA du projet.
+Il faut prévoir un mécanisme pour lancer ces tests sur une PA avec ou sans proxy.
+Le résultat des tests consistant à comparer si les tests avec/sans proxy ont le même résultat/
 
-- metriques (prom metrics ?)
-- tests
-- ré-utiliser les tests PA avec ou sans proxy
-- rate limit
-- load balancer (HA)
-- backend stockage initial : fichiers locaux
-- backend stockage optionel : bucket S3
-- backend proxy initial : intégré (python) (rapide à développer/déployer, peu importe les performances )
-- backend proxy optionel : traefik ou caddy (performance élevée, développement/déploiement plus complexe )
-- webhook : à supporter en v2
-- webhook : s'il ne passent pas par le proxy, ils peuvent fonctionner dès la v1 ?
-- première étape POC
-- sécurité via zero trust ?? données sensibles
-- sécurité stockage : externaliser le stockage, ne rien stocket localement, réduire la surface d'attaque
-- la partie rapport peut être sous forme d'un CLI et ne pas être installée sur le serveur (légéreté et sécurité accrue)
-- fichier de configuration du proxy
-- base externe des membres exerne (lien S3 ?), fichier YAML, appel API pour ré-actualiser
+## Sécurité
+
+Idéalement, le proxy ne devrait rien conserver:
+- ne rien conserver localement: utiliser un stockage externalisée de type S3 pouvant offrir les garanties nécessaires
+- ne rien conserver indéfiniement: utiliser un mécanisme de purge automatique des données après un délai à configurer
+
+Le proxy doit présenter une surface d'attaque la plus réduite possible.
+D'où l'idée que la génération des rapports soit externe (sous forme d'un CLI qui n'a pas besoin d'être présent sur le serveur).
+Ce qui permets de réduire les droits du proxy qui ne pourrait qu'ajouter des données sans pouvoir lire les données déjà collectées.
+
+On peut même envisager un chiffrement des données stockées.
+
+Prévoir aussi un rate limit par **membre**.
+
+
+## Webhook
+
+à supporter en v2, s'il ne passent pas par le proxy, ils peuvent fonctionner dès la v1 ?
+
+# Déploiement
+
 - déploiement instance dev
 - déploiement instance test (même cible que prod)
 - déploiement instance prod
-- estimation volumétrie, durée de rétention
-- sécurité: pas de stockage local, chiffrement applicatif ? par instance ?
+- metriques (prom metrics ?)
 - certificat SSL : derrière un proxy pour terminer le lien HTTPS, ou via caddy
+
+
+# Volumetrie
+
+Estimation volumétrie, durée de rétention
+
 
 ## divers
 
