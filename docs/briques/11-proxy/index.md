@@ -31,7 +31,7 @@ Architecture v0 de base:
 - génération du rapport via un CLI et des fichiers locaux
 
 
-![](proxy-archi-v1-2-3.png)
+![](proxy-archi-v1-2.png)
 
 Possibilité évolution architecture v1/v2/... :
 - stockage durable S3 pour la collecte
@@ -41,6 +41,26 @@ Possibilité évolution architecture v1/v2/... :
 - possibilité load balancing / HA de la partie collecte
 - serveurs stateless
 
+
+![](proxy-archi-v2-3.png)
+
+- Utiliser aux max les briques existantes
+- brique11 normalement inutile ... qui pourrait plutôt faire le backoffice (gestion utilisateurs, décompte, ...)
+- Appels API via brique01 (API) qui fonctionne en synchrone: elle poste sur brique02 et attends la réponse avant de répondre au **membre**
+  - authentification de l'appel ...
+- Transfert vers brique09 (cycle de vie) qui *transmets* à brique07 (routage)
+- Traitement par la brique07
+  - appele le PA cible (mode proxy) et dépose la réponse dans la brique02
+- brique09 transfert le message vers brique01
+- brique01 réponds à la requête initial du **membre**
+
+Plus tard (chaque mois):
+- Appel à fréquence fixe (tous les mopis) à la brique11 pour *facturer*
+  - interroger une fois par mois la brique02
+  - actualiser le décompte (utile à la facturation)
+  - stocker dans une base *locale* à la brique le décompte 
+  - webhook pour informer le système amont de facturation de l'**assos* (Dolibarr par exemple)
+  
 ## Authentification amont
 
 **Cible v0:** appels non authentifiés en substitution
@@ -249,7 +269,9 @@ Prévoir aussi un rate limit par **membre**.
 
 ## Webhook
 
-à supporter en v2, s'il ne passent pas par le proxy, ils peuvent fonctionner dès la v1 ?
+**Cible v0:** Non supporté
+
+**Cible v2:** si le weebhook ne passent pas par le proxy, ils peuvent fonctionner sans modification du proxy ?
 
 # Déploiement
 
