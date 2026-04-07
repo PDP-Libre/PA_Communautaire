@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Configuration file for PAC0 Proxy
+# Place this file as `pac0_proxy.conf.yaml` in the local directory
+
+$schema: https://pdplibre.org/schema/conf/0
+
+proxy:
+  enabled: true
+  port: 8080
+  upstream:
+    endpoint: https://api.pdplibre.fr
+    # Set via environment variable: PAC0_PROXY__UPSTREAM__API_KEY
+    # api_key: XXXXXX
+  store:
+    backend: file
+    path: /var/pac0/proxy/store/

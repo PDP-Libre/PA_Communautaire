@@ -188,15 +188,17 @@ Fichier de configuration du **proxy**:
 Cible: v0
 ```yaml
 # Fichier `pac0_proxy.conf.yaml` dans le répertoire local
-$schema: https://pdplibre.org/schema/proxy/0
-port: 8080
-upstream:
-  endpoint: https://api.pdplibre.fr
-  # secret envar à fixer PAC0_PROXY__UPSTREAM__API_KEY  
-  # api_key: XXXXXX
-store:
-  backend: file
-  path: /var/pac0/proxy/store/
+$schema: https://pdplibre.org/schema/conf/0
+proxy:
+  enabled: true
+  port: 8080
+  upstream:
+    endpoint: https://api.pdplibre.fr
+    # secret envar à fixer PAC0_PROXY__UPSTREAM__API_KEY  
+    # api_key: XXXXXX
+  store:
+    backend: file
+    path: /var/pac0/proxy/store/
   
 ```
 

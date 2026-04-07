@@ -1,0 +1,5 @@
+proxy:
+  enabled: false
+  port: 8080
+  upstream:
+    endpoint: https://yaml-default.com

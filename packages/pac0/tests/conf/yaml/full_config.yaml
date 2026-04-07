@@ -1,0 +1,9 @@
+proxy:
+  enabled: true
+  port: 8888
+  upstream:
+    endpoint: https://yaml-config.com
+    api_key: yaml_api_key
+  store:
+    backend: memory
+    path: /yaml/store
