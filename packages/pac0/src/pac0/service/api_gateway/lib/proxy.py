@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import os
+import re
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -15,7 +16,6 @@ import anyio
 import niquests
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from jose import jwt as jwt_lib
-from pydantic import BaseModel
 
 from pac0.service.api_gateway.config import Settings
 
@@ -45,28 +45,6 @@ _______________________________________
     if conf.proxy.store.backend == "file":
         path = Path(conf.proxy.store.path)
         path.mkdir(parents=True, exist_ok=True)
-
-
-class CapturedRequest(BaseModel):
-    """Model for storing captured request data."""
-
-    id: str
-    timestamp: str
-    method: str
-    path: str
-    headers: dict
-    body: Optional[str]
-    upstream_forwarded: bool = False
-
-
-class CapturedResponse(BaseModel):
-    """Model for storing captured response data."""
-
-    request_id: str
-    timestamp: str
-    status_code: int
-    headers: dict
-    body: Optional[str]
 
 
 def get_jwt_token(x_auth_token: Optional[str] = None) -> Optional[str]:
@@ -102,8 +80,11 @@ def verify_jwt(token: str, api_key: Optional[str] = None) -> bool:
 
 
 async def capture_request_to_file(
-    request: Request, token: Optional[str]
-) -> CapturedRequest:
+    request: Request,
+    response,
+    token: Optional[str],
+    start_time: datetime,
+):
     """Capture request details and store them to file."""
     conf = request.app.state.conf
     # Read request body
@@ -114,66 +95,40 @@ async def capture_request_to_file(
     except Exception:
         body_str = ""
 
-    # Get all headers
-    headers = dict(request.headers)
     now = datetime.now()
-
-    captured = CapturedRequest(
-        id=str(uuid.uuid4()),
-        timestamp=datetime.now().isoformat(),
-        method=request.method,
-        path=request.url.path,
-        headers=headers,
-        body=body_str,
-    )
+    row_id = str(uuid.uuid4())
 
     # Store to file
     if conf.proxy.store.backend == "file":
         # month prefix as 202603 (YYYYMM)
         month_date_prefix = f"{now.year}{now.month:02d}"
-        filepath = (
-            Path(conf.proxy.store.path) / f"{month_date_prefix}-{captured.id}.pac0"
-        )
+        filepath = Path(conf.proxy.store.path) / f"{month_date_prefix}-{row_id}.pac0"
         with open(filepath, "w") as f:
-            json.dump(captured.model_dump(), f, indent=2)
-
-    logger.debug(f"Proxy request captured to {filepath}")
-    return captured
-
-
-# async def _stream_request_body(request: Request) -> AsyncGenerator[bytes, None]:
-#    """Stream request body in chunks.
-#
-#    Yields chunks from the ASGI receive channel to avoid loading
-#    the entire request body into memory.
-#    """
-#    receive = request._receive
-#    while True:
-#        event = await receive()
-#        if event.get("type") == "http.request":
-#            body = event.get("body", b"")
-#            if body:
-#                yield body
-#            if not event.get("more_body", False):
-#                break
-#        elif event.get("type") == "http.disconnect":
-#            break
-
-
-async def yield_request_body(request):
-    # for i in range(10):
-    #    yield b"some fake video bytes"
-    #    await anyio.sleep(0)
-    for chunk in await request.iter_content():
-        # body += chunk
-        yield chunk
-        await anyio.sleep(0)
-
-
-async def generate(response):
-    """Synchronous generator that yields chunks from the response."""
-    for chunk in await response.iter_content(chunk_size=8192):
-        yield chunk
+            json.dump(
+                {
+                    "id": row_id,
+                    "m": "N/A",
+                    "t": start_time,
+                    "v": request.method,
+                    "e": conf.proxy.upstream.endpoint,
+                    "p": request.url.path,
+                    "s": response.status_code,
+                    #'d': int((datetime.now() - start_time).total_seconds() * 1000),
+                    "req": {
+                        # TODO: calculate sha256 and length while proxying
+                        "size": len(await request.body()),
+                        "sha256": "N/A",
+                    },
+                    "res": {
+                        # TODO: calculate sha256 and length while proxying
+                        "size": "N/A",
+                        "sha256": "N/A",
+                    },
+                },
+                f,
+                indent=2,
+            )
+        logger.debug(f"Proxy request captured to {filepath}")
 
 
 async def async_iter_content(response):
@@ -187,7 +142,6 @@ async def async_iter_content(response):
 def forward_to_upstream(
     body: bytes,
     request: Request,
-    # captured_req: CapturedRequest,
     api_key: Optional[str] = None,
 ) -> Response:
     """Forward request to upstream endpoint with full streaming.
@@ -197,6 +151,8 @@ def forward_to_upstream(
     conf = request.app.state.conf
     # Prepare upstream URL
     upstream_url = conf.proxy.upstream.endpoint + "/" + request.url.path.lstrip("/")
+
+    logger.debug(f"Preparing upstream query {request.method} {upstream_url} ...")
 
     # Prepare headers
     headers = dict(request.headers)
@@ -228,21 +184,10 @@ def forward_to_upstream(
                 f"Proxy upstream response received: {request.method} {request.url.path}"
             )
 
-            # Stream response body in chunks
-            # chunks = []
-            # async for chunk in response.aiter_bytes():
-            #    chunks.append(chunk)
-            # content = b"".join(chunks)
-            #
             # TODO: cleanup headers, remove some, add some
             headers: Mapping[str, str] = response.headers
 
             return Response(
-                # content=content,
-                # content=response.iter_content(),
-                # content=yield_request_body(response),
-                # content=response.aiter_bytes(chunk_size=8192),  # Stream in 8KB chunks
-                # content=async_iter_content(response),
                 content=response.content,
                 status_code=response.status_code or 400,
                 headers=headers,
@@ -285,20 +230,12 @@ def proxy_all(
     3. Forwards requests to upstream endpoint
     """
     conf = request.app.state.conf
-    if not conf.proxy.enabled:
-        # Proxy not enabled, let other routes handle this
-        logger.critical(
-            "Proxy not enabled, but request was made to %s", request.url.path
-        )
-        raise HTTPException(status_code=404, detail="Proxy not enabled")
+    start_time = datetime.now()
 
     # Verify JWT token
     token = ""
     # if not verify_jwt(x_auth_token, config.proxy.upstream.api_key):
     #    raise HTTPException(status_code=401, detail="Invalid or missing JWT token")
-
-    # Capture request
-    # captured_req = capture_request_to_file(request, token)
 
     # logger.debug("Helmllo !!!!")
     # return {"hello": "world"}
@@ -311,5 +248,8 @@ def proxy_all(
         conf.proxy.upstream.api_key,
     )
 
+    # Capture request
+    captured_req = capture_request_to_file(request, response, token, start_time)
+    #
     logger.info(f"Request handled by proxy: {request.method} {request.url.path}")
     return response

@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
+
 from fastapi import FastAPI
 
 from pac0.service.api_gateway.config import Settings
@@ -9,6 +11,8 @@ from pac0.service.api_gateway.lib import api, proxy
 from pac0.service.api_gateway.lib.api import router as router_api
 from pac0.service.api_gateway.lib.bus import router as router_bus
 from pac0.service.api_gateway.lib.proxy import router as router_proxy
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = FastAPI()
 # Load configuration from YAML file

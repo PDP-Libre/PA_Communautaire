@@ -14,7 +14,8 @@ proxy:
   port: 8080
   upstream:
     #endpoint: https://api.pdplibre.fr
-    endpoint: https://httpbin.org/post
+    #endpoint: https://httpbin.org/post
+    endpoint: https://eol9xkqfh8jij6c.m.pipedream.net
     # https://pipedream.com/requestbin
     # Set via environment variable: PAC0_PROXY__UPSTREAM__API_KEY
     # api_key: XXXXXX
