@@ -9,12 +9,11 @@ import os
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import AsyncGenerator, Mapping, Optional
+from typing import Mapping, Optional
 
 import anyio
 import niquests
-from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from jose import jwt as jwt_lib
 from pydantic import BaseModel
 
@@ -24,11 +23,8 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Configuration
-config: Optional[Settings] = None
 
-
-def print_banner():
+def print_banner(conf: Settings):
     print(rf"""
 _______________________________________
 __________________ ________/ __ \
@@ -39,18 +35,16 @@ ____/_/       ░░░█▀█░█▀▄░█▀█░█░█░█░█
               ░░░█▀▀░█▀▄░█░█░▄▀▄░░█░░░░
               ░░░▀░░░▀░▀░▀▀▀░▀░▀░░▀░░░░
 
-  PA: {config.proxy.upstream.endpoint}
+  PA: {conf.proxy.upstream.endpoint}
 
   🇫🇷 🇪🇺 facturation électronique
   plateforme agréée communautaire
 _______________________________________
 """)
 
-
-def init_config(settings: Settings):
-    """Initialize the proxy router configuration."""
-    global config
-    config = settings
+    if conf.proxy.store.backend == "file":
+        path = Path(conf.proxy.store.path)
+        path.mkdir(parents=True, exist_ok=True)
 
 
 class CapturedRequest(BaseModel):
@@ -73,13 +67,6 @@ class CapturedResponse(BaseModel):
     status_code: int
     headers: dict
     body: Optional[str]
-
-
-def ensure_storage_dir():
-    """Ensure the storage directory exists."""
-    if config and config.proxy.store.path:
-        path = Path(config.proxy.store.path)
-        path.mkdir(parents=True, exist_ok=True)
 
 
 def get_jwt_token(x_auth_token: Optional[str] = None) -> Optional[str]:
@@ -118,6 +105,7 @@ async def capture_request_to_file(
     request: Request, token: Optional[str]
 ) -> CapturedRequest:
     """Capture request details and store them to file."""
+    conf = request.app.state.conf
     # Read request body
     body = None
     try:
@@ -128,10 +116,11 @@ async def capture_request_to_file(
 
     # Get all headers
     headers = dict(request.headers)
+    now = datetime.now()
 
     captured = CapturedRequest(
         id=str(uuid.uuid4()),
-        timestamp=datetime.utcnow().isoformat(),
+        timestamp=datetime.now().isoformat(),
         method=request.method,
         path=request.url.path,
         headers=headers,
@@ -139,9 +128,12 @@ async def capture_request_to_file(
     )
 
     # Store to file
-    if config and config.proxy.store.backend == "file":
-        ensure_storage_dir()
-        filepath = Path(config.proxy.store.path) / f"{captured.id}.json"
+    if conf.proxy.store.backend == "file":
+        # month prefix as 202603 (YYYYMM)
+        month_date_prefix = f"{now.year}{now.month:02d}"
+        filepath = (
+            Path(conf.proxy.store.path) / f"{month_date_prefix}-{captured.id}.pac0"
+        )
         with open(filepath, "w") as f:
             json.dump(captured.model_dump(), f, indent=2)
 
@@ -202,9 +194,9 @@ def forward_to_upstream(
 
     Uses niquests async client to stream both request body and response.
     """
+    conf = request.app.state.conf
     # Prepare upstream URL
-    upstream_url = config.proxy.upstream.endpoint + request.url.path
-    upstream_url = upstream_url.rstrip("/") + "/" + request.url.path.lstrip("/")
+    upstream_url = conf.proxy.upstream.endpoint + "/" + request.url.path.lstrip("/")
 
     # Prepare headers
     headers = dict(request.headers)
@@ -267,7 +259,16 @@ async def get_body(request: Request):
     return await request.body()
 
 
+@router.get("/health")
+async def proxy_health():
+    """Health check for proxy endpoint."""
+    return {
+        "status": "alive",
+    }
+
+
 # keep it synchronous so fastapi will use the thread pool executor
+# keep in last position so it doesn't override other routes
 @router.api_route(
     "/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]
 )
@@ -283,8 +284,8 @@ def proxy_all(
     2. Captures all requests to files
     3. Forwards requests to upstream endpoint
     """
-
-    if not config or not config.proxy.enabled:
+    conf = request.app.state.conf
+    if not conf.proxy.enabled:
         # Proxy not enabled, let other routes handle this
         logger.critical(
             "Proxy not enabled, but request was made to %s", request.url.path
@@ -299,26 +300,16 @@ def proxy_all(
     # Capture request
     # captured_req = capture_request_to_file(request, token)
 
+    # logger.debug("Helmllo !!!!")
+    # return {"hello": "world"}
+
     # Forward to upstream
     response = forward_to_upstream(
         # request, captured_req, config.proxy.upstream.api_key
         body,
         request,
-        config.proxy.upstream.api_key,
+        conf.proxy.upstream.api_key,
     )
 
     logger.info(f"Request handled by proxy: {request.method} {request.url.path}")
     return response
-
-
-@router.get("/health")
-async def proxy_health():
-    """Health check for proxy endpoint."""
-    if not config or not config.proxy.enabled:
-        return {"status": "disabled"}
-
-    return {
-        "status": "enabled",
-        "upstream": config.proxy.upstream.endpoint,
-        "store_path": config.proxy.store.path,
-    }

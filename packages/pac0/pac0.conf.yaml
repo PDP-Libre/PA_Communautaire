@@ -7,12 +7,15 @@
 
 $schema: https://pdplibre.org/schema/conf/0
 
+log_level: debug
+
 proxy:
   enabled: true
   port: 8080
   upstream:
     #endpoint: https://api.pdplibre.fr
     endpoint: https://httpbin.org/post
+    # https://pipedream.com/requestbin
     # Set via environment variable: PAC0_PROXY__UPSTREAM__API_KEY
     # api_key: XXXXXX
   store:

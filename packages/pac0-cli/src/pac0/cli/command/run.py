@@ -2,9 +2,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import os
+import subprocess
+
 import typer
 from pydantic import BaseModel
 
+from .. import utils
 from ..lib.conf import DEFAULT_BRANCH, DEFAULT_REPO, SERVICES, Brique
 from ..lib.process import install_run
 from ..lib.settings import settings
@@ -34,7 +38,7 @@ BRIQUE_RUN_DEF: dict[Brique, BriqueRunDef] = {
             "fastapi",
             "dev",
             "--host=0.0.0.0",
-            "src/pac0/service/01-api-gateway/main.py",
+            "src/pac0/service/api_gateway/main.py",
         ],
     ),
     # TODO: ajouter les autres services

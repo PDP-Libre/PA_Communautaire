@@ -9,13 +9,14 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
 from faststream.nats import NatsBroker
 
+from pac0.service.api_gateway.config import Settings
 from pac0.service.api_gateway.lib import trace
 from pac0.service.api_gateway.lib.common import broker, global_state
 
 router = APIRouter()
 
 
-def print_banner():
+def print_banner(conf: Settings):
     print(r"""
 _______________________________________
 __________________ ________/ __ \

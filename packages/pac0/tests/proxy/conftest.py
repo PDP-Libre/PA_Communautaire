@@ -13,9 +13,9 @@ from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from httpx import Request, Response
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from httpx import Request, Response
 
 
 # Mock the jose module before importing proxy
@@ -37,8 +37,13 @@ def temp_storage_dir():
 @pytest.fixture
 def mock_settings(temp_storage_dir):
     """Create mock settings with proxy enabled."""
-    from pac0.service.api_gateway.config import Settings, ProxyConfig, UpstreamConfig, StoreConfig
-    
+    from pac0.service.api_gateway.config import (
+        ProxyConfig,
+        Settings,
+        StoreConfig,
+        UpstreamConfig,
+    )
+
     settings = Settings(
         proxy=ProxyConfig(
             enabled=True,
@@ -59,14 +64,15 @@ def mock_settings(temp_storage_dir):
 @pytest.fixture
 def app(mock_settings):
     """Create a FastAPI app with the proxy router."""
-    from pac0.service.api_gateway.lib.proxy import router, init_config
-    
-    init_config(mock_settings)
+    from pac0.service.api_gateway.lib.proxy import router
+
     app = FastAPI()
+    app.state.conf = mock_settings
     app.include_router(router, prefix="/proxy")
     yield app
     # Cleanup
     import pac0.service.api_gateway.lib.proxy as proxy_module
+
     proxy_module.config = None
 
 
@@ -83,10 +89,10 @@ def create_mock_request():
     mock.url = MagicMock()
     mock.url.path = "/test/path"
     mock.headers = {"content-type": "application/json", "host": "example.com"}
-    
+
     async def mock_body():
         return b'{"key": "value"}'
-    
+
     # Return the async function itself so it can be awaited
     mock.body = mock_body
     return mock
@@ -95,15 +101,16 @@ def create_mock_request():
 async def get_mock_request():
     """Get a mock HTTP request for testing, returning a resolved body."""
     mock = create_mock_request()
-    
+
     # Pre-resolve the body so httpx can use it directly
     mock._body = await mock.body()
-    
+
     # Override the body call to return pre-resolved data
     original_body = mock.body
+
     async def fixed_body():
         return mock._body
-    
+
     mock.body = fixed_body
     return mock
 
@@ -117,26 +124,28 @@ async def mock_request():
 @pytest.fixture
 def mock_httpx_client():
     """Mock httpx.AsyncClient for testing upstream requests."""
-    with patch("pac0.service.api_gateway.lib.proxy.httpx.AsyncClient") as mock_client_class:
+    with patch(
+        "pac0.service.api_gateway.lib.proxy.httpx.AsyncClient"
+    ) as mock_client_class:
         mock_instance = MagicMock()
-        
+
         async def mock_request(*args, **kwargs):
             return Response(
                 status_code=200,
                 content=b'{"success": true}',
                 headers={"content-type": "application/json"},
             )
-        
+
         async def mock_aenter(*args, **kwargs):
             return mock_instance
-        
+
         async def mock_aexit(*args, **kwargs):
             return None
-        
+
         mock_instance.request = mock_request
         mock_instance.__aenter__ = mock_aenter
         mock_instance.__aexit__ = mock_aexit
-        
+
         mock_client_class.return_value = mock_instance
         yield mock_instance
 
@@ -144,8 +153,13 @@ def mock_httpx_client():
 @pytest.fixture
 def settings_with_disabled_proxy(temp_storage_dir):
     """Create settings with proxy disabled."""
-    from pac0.service.api_gateway.config import Settings, ProxyConfig, UpstreamConfig, StoreConfig
-    
+    from pac0.service.api_gateway.config import (
+        ProxyConfig,
+        Settings,
+        StoreConfig,
+        UpstreamConfig,
+    )
+
     settings = Settings(
         proxy=ProxyConfig(
             enabled=False,

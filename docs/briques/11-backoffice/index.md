@@ -1,4 +1,4 @@
-# Brique 11 proxy
+# Brique 11 proxy / backoffice
 
 Vocabulaire:
 - **proxy** : nom du projet courant visant à regrouper et décompter les flux de plusieurs **membres** vers un seul **PA**
@@ -6,6 +6,7 @@ Vocabulaire:
 - **association** : association PDP Libre (ou tout autre entité souhaitant aggréger l'usage d'un **PA** unique)
 - **PA** : Plateforme Agréé qui va recevoir les appels API du **proxy**
 
+Cette brique proxy sera plus tard la brique backoffice chargée de la gestion des utilisateurs. Les fonctionnalités de proxy seront alors intégrées directement à la brique API.
 
 ## Swagger / OpenAPI
 
@@ -153,10 +154,10 @@ Il s'agit normalement du mois calendaire passé.
 **Cible v0:** Disposer d'une interface en ligne de commande pour gérer le proxy:
 
 ```shell
-# lance le proxy localement avec la configuration dans `pac0_proxy.conf.yaml`
-pac0 proxy run
+# lance le service API (brique 1) avec la configuration proxy dans `pac0.conf.yaml`
+pac0 run 1
 # génère les stats pour le mois en cours
-pac0 proxy report
+pac0 backoffice report
 ```
 
 **Cible v2:**

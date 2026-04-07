@@ -133,7 +133,7 @@ tools: list[SetupTool] = [
         install="""
             wget https://github.com/nats-io/natscli/releases/download/v{version}/nats-{version}-linux-amd64.zip
             unzip nats-*-linux-amd64.zip
-            mv nats-*-linux-amd64/nats /usr/local/bin/
+            sudo mv nats-*-linux-amd64/nats /usr/local/bin/
             rm -Rf nats-*-linux-amd64*
         """,
         version_get="nats --version",
