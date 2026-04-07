@@ -24,7 +24,9 @@ Caractéristiques principales de la version CLI:
 - commande `pac-cli run pac0` qui lance `uv run fastapi dev src/pac0/service/api_gateway/main.py` du dépôt cloné
 - commande `pac-cli run pac0 --svc 01-api-gateway` qui lance `uv run fastapi dev src/pac0/service/api_gateway/main.py` du dépôt cloné ou un autre service selon la valeur de `--svc`
 - commande `pac-cli test all` qui lance une commande via subprocess
+- commande `pac-cli test proxy-client` qui génère des requêtes API aléatoires pour tester un endpoint proxy
 
+---
 
 Caractéristiques principales de la version console:
 - commande `pac-cli` ou `pac-cli console` qui lance la version console

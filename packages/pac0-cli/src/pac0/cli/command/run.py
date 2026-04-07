@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -63,38 +64,68 @@ def _call(
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("01-api-gateway", repo, branch, ["git"])
 
-@app.command(name='2', help='lance le service 02-esb-central ...')
+
+@app.command(name="2", help="lance le service 02-esb-central ...")
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("02-esb-central", repo, branch, ["git", "nats- branch,server"])
 
-@app.command(name='3', help='lance le service 03-controle-formats ...')
+
+@app.command(name="3", help="lance le service 03-controle-formats ...")
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("03-controle-formats", repo, branch, ["git"])
 
-@app.command(name='4', help='lance le service 04-validation-metier ...')
+
+@app.command(name="4", help="lance le service 04-validation-metier ...")
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("04-validation-metier", repo, branch, ["git"])
 
-@app.command(name='5', help='lance le service 05-conversion-formats ...')
+
+@app.command(name="5", help="lance le service 05-conversion-formats ...")
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("05-conversion-formats", repo, branch, ["git"])
 
-@app.command(name='6', help='lance le service 06-annuaire-local ...')
+
+@app.command(name="6", help="lance le service 06-annuaire-local ...")
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("06-annuaire-local", repo, branch, ["git"])
 
-@app.command(name='7', help='lance le service 07-routage") ...')
+
+@app.command(name="7", help='lance le service 07-routage") ...')
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("07-routage", repo, branch, ["git"])
 
-@app.command(name='8', help='lance le service 08-transmission-fiscale ...')
+
+@app.command(name="8", help="lance le service 08-transmission-fiscale ...")
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("08-transmission-fiscale", repo, branch, ["git"])
 
-@app.command(name='9', help='lance le service 09-gestion-cycle ...')
+
+@app.command(name="9", help="lance le service 09-gestion-cycle ...")
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("09-gestion-cycle-vie", repo, branch, ["git"])
+
 
 @app.command(name="10", help="lance le service 09-stockage ...")
 def _(ctx: typer.Context, repo: str = DEFAULT_REPO, branch: str = DEFAULT_BRANCH):
     _run_service("10-stockage", repo, branch, ["git", "seeseaweedfs"])
+
+
+@app.command(name="proxy", help="lance le proxy 01-api-gateway ...")
+def _():
+    # service folder: "05-conversion-formats" -> "conversion_formats"
+    base_folder = utils.get_app_base_folder()
+    pac0_package_base_folder = base_folder / "packages" / "pac0"
+    full_path = "src/pac0/service/api_gateway/main.py"
+    cmd = ["uv", "run", "fastapi", "dev", "--host=0.0.0.0", str(full_path)]
+    typer.echo("Lancement du proxy...")
+    typer.echo(f"Commande: {' '.join(cmd)}")
+    typer.echo(f"pac0_package_base_folder: {pac0_package_base_folder}")
+
+    subprocess.call(
+        cmd,
+        cwd=pac0_package_base_folder,
+        env={
+            **os.environ,
+            "PAC0_PROXY_PROXY__ENABLED": "true",
+        },
+    )

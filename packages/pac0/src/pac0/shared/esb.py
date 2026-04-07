@@ -2,13 +2,16 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
+import os
 from dataclasses import dataclass
 from typing import Any
-from pydantic_settings import BaseSettings
-from faststream import FastStream, ContextRepo
-import os
-from faststream.nats import NatsBroker, NatsRouter
 
+from faststream import ContextRepo, FastStream
+from faststream.nats import NatsBroker, NatsRouter
+from pydantic_settings import BaseSettings
+
+logger = logging.getLogger(__name__)
 
 # TODO: we will use NATS queue to have pool of instances
 QUEUE = "q"
@@ -71,7 +74,7 @@ def init_esb_app(prefix):
 
 def get_nats_url():
     url = os.environ.get("NATS_URL", "nats://localhost:4222")
-    print(f"Connecting to NATS {url} ...")
+    logger.debug(f"Using NATS {url} ...")
     return url
 
 

@@ -87,14 +87,31 @@ def create_mock_request():
     async def mock_body():
         return b'{"key": "value"}'
     
+    # Return the async function itself so it can be awaited
     mock.body = mock_body
     return mock
 
 
+async def get_mock_request():
+    """Get a mock HTTP request for testing, returning a resolved body."""
+    mock = create_mock_request()
+    
+    # Pre-resolve the body so httpx can use it directly
+    mock._body = await mock.body()
+    
+    # Override the body call to return pre-resolved data
+    original_body = mock.body
+    async def fixed_body():
+        return mock._body
+    
+    mock.body = fixed_body
+    return mock
+
+
 @pytest.fixture
-def mock_request():
+async def mock_request():
     """Create a mock HTTP request for testing."""
-    return create_mock_request()
+    return await get_mock_request()
 
 
 @pytest.fixture

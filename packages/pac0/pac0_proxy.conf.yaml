@@ -11,9 +11,11 @@ proxy:
   enabled: true
   port: 8080
   upstream:
-    endpoint: https://api.pdplibre.fr
+    #endpoint: https://api.pdplibre.fr
+    endpoint: https://httpbin.org/post
     # Set via environment variable: PAC0_PROXY__UPSTREAM__API_KEY
     # api_key: XXXXXX
   store:
     backend: file
-    path: /var/pac0/proxy/store/
+    #path: /var/pac0/proxy/store/
+    path: /tmp/pac0/proxy/store/
