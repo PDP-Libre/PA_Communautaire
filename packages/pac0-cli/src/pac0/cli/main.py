@@ -2,15 +2,18 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import logging
+
 import typer
+
+from pac0.cli import utils
+from pac0.cli.command.console.app import ConsoleApp
+from pac0.cli.command.proxy_client import app as proxy_client_app
+from pac0.cli.command.run import app as run_app
 
 # from pa0c.cli.cli.app import app as cli_app
 from pac0.cli.command.setup import app as setup_app
-from pac0.cli.command.run import app as run_app
 from pac0.cli.command.test import app as test_app
-from pac0.cli.command.proxy_client import app as proxy_client_app
-from pac0.cli.command.console.app import ConsoleApp
-from pac0.cli import utils
 
 app = typer.Typer()
 
@@ -19,6 +22,15 @@ app = typer.Typer()
 app.add_typer(setup_app, name="setup")
 app.add_typer(run_app, name="run")
 app.add_typer(proxy_client_app, name="test")
+
+
+@app.callback()
+def main(verbose: bool = typer.Option(False, "--verbose", "-v")):
+    lvl = logging.INFO
+    fmt = "%(message)s"
+    if verbose:
+        lvl = logging.DEBUG
+    logging.basicConfig(level=lvl, format=fmt)
 
 
 @app.command()
@@ -34,7 +46,7 @@ def version(
 ):
     """Affiche la version de l'application"""
     try:
-        from importlib.metadata import version, metadata
+        from importlib.metadata import metadata, version
 
         package_version = version("pac0-cli")
         package_name = metadata("pac0-cli")["Name"]
@@ -44,6 +56,7 @@ def version(
 
     if full:
         print(f"app_base_folder = {utils.get_app_base_folder()}")
+
 
 if __name__ == "__main__":
     app()

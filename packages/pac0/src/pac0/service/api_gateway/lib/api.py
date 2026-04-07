@@ -8,16 +8,32 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
 from faststream.nats import NatsBroker
+
 from pac0.service.api_gateway.lib import trace
 from pac0.service.api_gateway.lib.common import broker, global_state
 
 router = APIRouter()
 
 
+def print_banner():
+    print(r"""
+_______________________________________
+__________________ ________/ __ \
+_______/ __ \/ __ `// ___// / / /
+______/ /_/ / /_/ // /__ / /_/ /
+_____/ .___/\__,_/ \___/ \____/
+____/_/
+
+    🇫🇷 🇪🇺 facturation électronique
+    plateforme agréée communautaire
+_______________________________________
+""")
+
+
 @router.get("/")
 async def read_root(request: Request):
     if "text/html" in request.headers.get("Accept", ""):
-        return RedirectResponse(url='/docs')
+        return RedirectResponse(url="/docs")
 
     return {"Hello": "World"}
 
@@ -40,6 +56,7 @@ async def healthcheck(
         "status": "OK",
         "rank": request.app.state.rank,
     }
+
 
 if trace.TESTING:
 
@@ -73,4 +90,3 @@ async def healthcheck_deep(
         "rank": request.app.state.rank,
         "healthcheck_resp": global_state["healthcheck_resp"],
     }
-
