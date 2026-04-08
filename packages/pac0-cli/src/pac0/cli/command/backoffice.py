@@ -2,12 +2,14 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import os
-import subprocess
+import json
+import sqlite3
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 import dateutil
+import polars as pl
 import typer
 from pac0.service.api_gateway.config import Settings
 from pydantic import BaseModel
@@ -26,11 +28,12 @@ def _(
     dest: str = "/tmp/pac0/proxy/report/",
     year_month: str | None = None,
     rebuild: bool = False,
-    # AI: let multiple filter_member args
+    # let multiple filter_member args
     filter_member: list[str] | None = None,
 ):
-    res = report(source, dest, year_month, rebuild)
-    # AI: pretty print the result as a table
+    res = report(source, dest, year_month, rebuild, filter_member)
+    # pretty print the result as a table
+    print(res.to_pandas().to_string(index=False))
 
 
 # TODO: move to dedicated module
@@ -65,30 +68,121 @@ def report(
     # source_mounth_filter = Path(source) / one_month_ago.year f"{month_date_prefix}*.pac0"
     #
 
+    dest_path = Path(dest)
+    db_path = dest_path / f"{year_month}.pac0.db"
+
     if rebuild:
-        # AI: remove/create a monthly sqlite database at `dest`
+        # remove/create a monthly sqlite database at `dest`
+        dest_path.mkdir(parents=True, exist_ok=True)
+        if db_path.exists():
+            db_path.unlink()
+
+        # load file as json payload
+        # write to a monthly sqlite database
+        conn = sqlite3.connect(str(db_path))
+        cursor = conn.cursor()
+
+        # Create table schema
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS requests (
+                id INTEGER PRIMARY KEY,
+                m TEXT,
+                t TEXT,
+                v TEXT,
+                e TEXT,
+                p TEXT,
+                s INTEGER,
+                d INTEGER,
+                req_size INTEGER,
+                res_size INTEGER,
+                req_sha256 TEXT,
+                res_sha256 TEXT
+            )
+        """)
+
         for f in Path(source).glob(f"{year_month}*.pac0"):
-            ...
-            # AI: load file as json payload
-            # AI: write to a monthly sqlite database
+            # load file as json payload
+            with open(f, "r") as fp:
+                data = json.load(fp)
 
-    # AI: sql query, group by `m` (memberid), filter by `filter_member`, with colums:
-    # - memberid
-    # - nb of requests
-    # - avg duration
-    # - max duration
-    # - P90 duration
-    # - P99 duration
-    # - total duration
-    # - nb of error request (not 200)
-    # - avg req size
-    # - avg res size
-    # - total req size
-    # - total res size
-    # - total size
-    # - P90 req size
-    # - P99 req size
-    # - P90 res size
-    # - P99 res size
+            # write to a monthly sqlite database
+            if isinstance(data, list):
+                cursor.executemany(
+                    """
+                    INSERT INTO requests (id, m, t, v, e, p, s, d, req_size, res_size, req_sha256, res_sha256)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    [
+                        (
+                            r.get("id"),
+                            r.get("m"),
+                            r.get("t"),
+                            r.get("v"),
+                            r.get("e"),
+                            r.get("p"),
+                            r.get("s"),
+                            r.get("d"),
+                            r.get("req.size"),
+                            r.get("res.size"),
+                            r.get("req.sha256"),
+                            r.get("res.sha256"),
+                        )
+                        for r in data
+                    ],
+                )
 
-    # AI: return as a polars dataframe
+        conn.commit()
+        conn.close()
+
+    # sql query, group by `m` (memberid), filter by `filter_member`, fetch raw data
+    # Then calculate aggregates with polars including percentiles
+
+    conn = sqlite3.connect(str(db_path))
+
+    query = """
+        SELECT
+            m as memberid,
+            d as duration,
+            req_size,
+            res_size,
+            s as status
+        FROM requests
+        WHERE 1=1
+    """
+
+    if filter_member:
+        placeholders = ",".join(["?" for _ in filter_member])
+        query += f" AND m IN ({placeholders})"
+
+    params = filter_member if filter_member else []
+
+    # Fetch raw data
+    df = pl.read_database(query, conn, params=params)
+    conn.close()
+
+    # Calculate aggregates and percentiles with polars
+    result = (
+        df.group_by("memberid")
+        .agg(
+            pl.col("duration").count().alias("nb_requests"),
+            pl.col("duration").mean().alias("avg_duration"),
+            pl.col("duration").max().alias("max_duration"),
+            pl.col("duration").quantile(0.90, "nearest").alias("p90_duration"),
+            pl.col("duration").quantile(0.99, "nearest").alias("p99_duration"),
+            pl.col("duration").sum().alias("total_duration"),
+            pl.col("status").ne(200).sum().alias("nb_errors"),
+            pl.col("req_size").mean().alias("avg_req_size"),
+            pl.col("res_size").mean().alias("avg_res_size"),
+            pl.col("req_size").sum().alias("total_req_size"),
+            pl.col("res_size").sum().alias("total_res_size"),
+            (pl.col("req_size") + pl.col("res_size")).sum().alias("total_size"),
+            pl.col("req_size").quantile(0.90, "nearest").alias("p90_req_size"),
+            pl.col("req_size").quantile(0.99, "nearest").alias("p99_req_size"),
+            pl.col("res_size").quantile(0.90, "nearest").alias("p90_res_size"),
+            pl.col("res_size").quantile(0.99, "nearest").alias("p99_res_size"),
+        )
+        .sort("nb_requests", descending=True)
+    )
+
+    # return as a polars dataframe
+    return result
