@@ -24,8 +24,22 @@ app = typer.Typer()
 def _(
     source: str = "/tmp/pac0/proxy/store/",
     dest: str = "/tmp/pac0/proxy/report/",
-    date_start: str | None = None,
-    date_end: str | None = None,
+    year_month: str | None = None,
+    rebuild: bool = False,
+    # AI: let multiple filter_member args
+    filter_member: list[str] | None = None,
+):
+    res = report(source, dest, year_month, rebuild)
+    # AI: pretty print the result as a table
+
+
+# TODO: move to dedicated module
+def report(
+    source: str,
+    dest: str,
+    year_month: str | None = None,
+    rebuild: bool = False,
+    filter_member: list[str] | None = None,
 ):
     """
     Colonnes:
@@ -42,11 +56,39 @@ def _(
         - `req.sha256`: SHA256 hash of the request
         - `res.sha256`: SHA256 hash of the response
     """
-    # d = datetime.strptime("2013-03-31", "%Y-%m-%d")
-    one_month_ago = datetime.now() - dateutil.relativedelta.relativedelta(months=1)
-    # month prefix as 202603 (YYYYMM)
-    month_date_prefix = f"{one_month_ago.year}{one_month_ago.month:02d}"
+    if year_month is None:
+        # d = datetime.strptime("2013-03-31", "%Y-%m-%d")
+        one_month_ago = datetime.now() - dateutil.relativedelta.relativedelta(months=1)
+        # month prefix as 202603 (YYYYMM)
+        year_month = f"{one_month_ago.year}{one_month_ago.month:02d}"
     # TODO: in v2 adapt for s3
     # source_mounth_filter = Path(source) / one_month_ago.year f"{month_date_prefix}*.pac0"
-    for f in Path(source).glob(f"{month_date_prefix}*.pac0"):
-        print(f)
+    #
+
+    if rebuild:
+        # AI: remove/create a monthly sqlite database at `dest`
+        for f in Path(source).glob(f"{year_month}*.pac0"):
+            ...
+            # AI: load file as json payload
+            # AI: write to a monthly sqlite database
+
+    # AI: sql query, group by `m` (memberid), filter by `filter_member`, with colums:
+    # - memberid
+    # - nb of requests
+    # - avg duration
+    # - max duration
+    # - P90 duration
+    # - P99 duration
+    # - total duration
+    # - nb of error request (not 200)
+    # - avg req size
+    # - avg res size
+    # - total req size
+    # - total res size
+    # - total size
+    # - P90 req size
+    # - P99 req size
+    # - P90 res size
+    # - P99 res size
+
+    # AI: return as a polars dataframe

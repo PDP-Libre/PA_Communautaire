@@ -12,7 +12,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Mapping, Optional
 
-import anyio
 import niquests
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from jose import jwt as jwt_lib
