@@ -1,25 +1,21 @@
-# SPDX-FileCopyrightText: 2026 Philippe ENTZMANN <philippe@entzmann.name>
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-
 # Configuration file for PAC0 Proxy
-# Place this file as `pac0_proxy.conf.yaml` in the local directory
+# Place this file as `pac0_proxy.conf.yaml` in the current directory
 
 $schema: https://pdplibre.org/schema/conf/0
 
-log_level: debug
+log_level: info
 
 proxy:
   enabled: true
-  port: 8080
   upstream:
     #endpoint: https://api.pdplibre.fr
-    #endpoint: https://httpbin.org/post
-    endpoint: https://eol9xkqfh8jij6c.m.pipedream.net
+    #endpoint: https://eol9xkqfh8jij6c.m.pipedream.net
+    endpoint: https://httpbin.org/post
     # https://pipedream.com/requestbin
     # Set via environment variable: PAC0_PROXY__UPSTREAM__API_KEY
     # api_key: XXXXXX
   store:
+    # support for s3 backend later
     backend: file
     #path: /var/pac0/proxy/store/
     path: /tmp/pac0/proxy/store/

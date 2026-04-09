@@ -8,6 +8,52 @@ Vocabulaire:
 
 Cette brique proxy sera plus tard la brique backoffice chargée de la gestion des utilisateurs. Les fonctionnalités de proxy seront alors intégrées directement à la brique API.
 
+## Situation à date
+
+étape `v0`
+
+### demo
+
+Fichier de configuration `pac0_proxy.conf.yaml`:
+```yaml
+$schema: https://pdplibre.org/schema/conf/0
+proxy:
+  enabled: true
+  upstream:
+    #endpoint: https://api.pdplibre.fr
+    endpoint: https://httpbin.org/post
+    # Set via environment variable: PAC0_PROXY__UPSTREAM__API_KEY
+    # api_key: XXXXXX
+  store:
+    backend: file
+    path: /tmp/pac0/proxy/store/
+```
+
+Lancement du proxy (brique 01 API)
+```shell
+pac0 run 1
+```
+
+Simulation des clients:
+```shell
+pac0 test proxy-client
+```
+
+Génération du rapport:
+```shell
+pac0 backoffice report
+```
+
+### Questions/arbitrage
+
+* Les requêtes des membres seront authentifiées par un jeton JWT. Confirmation ?
+* Ce jeton sera généré par le CLI (définir durée, member_id)
+* Inutile de communiquer la liste des membres au proxy pour authentification car il *suffit* d'utiliser les infos du token JWT. Confirmation ?
+* Format des rapports mensuels ? sqlite ? excel ? JSON ?
+* Colonnes du rapport ?
+* avec qui travailler de l'assos pour passer en v1 ?
+* ou déployer ?
+
 ## Swagger / OpenAPI
 
 L’API du proxy doit respecter le SWAGGER décrit dans l’Annexe A de la norme XP_Z12-013.pdf.

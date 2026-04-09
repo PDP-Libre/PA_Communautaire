@@ -190,8 +190,9 @@ async def send_request(
     endpoint: str,
     verb: str,
     path: str,
-    payload: str,
-    jwt_token: str,
+    payload: bytes,
+    jwt_token: str | None,
+    member: str | None,
     stats: TestStats,
     pbar,
 ):
@@ -203,6 +204,10 @@ async def send_request(
     # Only add JWT token if provided
     if jwt_token:
         headers["Authorization"] = f"Bearer {jwt_token}"
+    else:
+        if member is None:
+            member = random.choice(["alice", "bob", "charlie"])
+        headers["X-Member"] = member
 
     start_time = time.time()
     success = False
@@ -211,7 +216,6 @@ async def send_request(
     bytes_received = 0
 
     url = f"{endpoint}{path}"
-    print(f"{url=}")
     try:
         response = await session.post(url, data=payload, headers=headers)
         status_code = response.status_code
@@ -228,7 +232,7 @@ async def send_request(
 @app.command()
 def proxy_client(
     endpoint: str = typer.Argument(
-        default="https://httpbin.org/post", help="URL de l'endpoint à tester"
+        default="http://0.0.0.0:8000", help="URL de l'endpoint à tester"
     ),
     num_requests: int = typer.Option(
         default=10, help="Nombre total de requêtes à envoyer"
@@ -242,6 +246,9 @@ def proxy_client(
     ),
     jwt_token: str = typer.Option(
         default="", help="Token JWT pour l'authentification (optionnel)"
+    ),
+    member: str = typer.Option(
+        default="", help="ID membre si jeton JWT non renseigné (optionnel)"
     ),
     config: Optional[str] = typer.Option(
         None, "--config", "-c", help="Chemin vers un fichier YAML de configuration"
@@ -284,11 +291,12 @@ def proxy_client(
 
     stats = TestStats()
 
-    async def run_tests():
+    async def gen_requests():
         async with httpx.AsyncClient() as session:
-            # Créer la file de tâches
-            tasks = []  # Liste au lieu de set
+            # progression
             pbar = tqdm(total=num_requests, desc="Requêtes")
+            # file de tâches
+            tasks = []
 
             for i in range(num_requests):
                 payload = generate_random_payload(avg_size, stdev_size)
@@ -296,7 +304,15 @@ def proxy_client(
                 verb = "POST"
                 task = asyncio.create_task(
                     send_request(
-                        session, endpoint, verb, path, payload, jwt_token, stats, pbar
+                        session,
+                        endpoint,
+                        verb,
+                        path,
+                        payload,
+                        jwt_token,
+                        member,
+                        stats,
+                        pbar,
                     )
                 )
                 tasks.append(task)
@@ -316,7 +332,7 @@ def proxy_client(
 
     # Exécuter le test
     try:
-        asyncio.run(run_tests())
+        asyncio.run(gen_requests())
     except KeyboardInterrupt:
         print("\n⚠️  Test interrompu par l'utilisateur")
 

@@ -155,24 +155,3 @@ def _(
         cmd=BRIQUE_RUN_DEF[service].cmd,
         cwd=BRIQUE_RUN_DEF[service].cwd,
     )
-
-
-@app.command(name="proxy", help="lance le proxy 01-api-gateway ...")
-def _():
-    # service folder: "05-conversion-formats" -> "conversion_formats"
-    base_folder = utils.get_app_base_folder()
-    pac0_package_base_folder = base_folder / "packages" / "pac0"
-    full_path = "src/pac0/service/api_gateway/main.py"
-    cmd = ["uv", "run", "fastapi", "dev", "--host=0.0.0.0", str(full_path)]
-    typer.echo("Lancement du proxy...")
-    typer.echo(f"Commande: {' '.join(cmd)}")
-    typer.echo(f"pac0_package_base_folder: {pac0_package_base_folder}")
-
-    subprocess.call(
-        cmd,
-        cwd=pac0_package_base_folder,
-        env={
-            **os.environ,
-            "PAC0_PROXY_PROXY__ENABLED": "true",
-        },
-    )

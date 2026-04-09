@@ -11,6 +11,8 @@ dependencies = [
     "packaging>=25.0",
     "tqdm>=4.0.0",
     "httpx>=0.27.0",
+    "python-dateutil>=2.9.0.post0",
+    "polars>=1.39.3",
 ]
 [[project.authors]]
 name = "Philippe ENTZMANN"

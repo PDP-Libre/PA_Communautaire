@@ -78,21 +78,18 @@ def verify_jwt(token: str, api_key: Optional[str] = None) -> bool:
     return True
 
 
-async def capture_request_to_file(
+def capture_request_to_file(
+    conf,
     request: Request,
     response,
     token: Optional[str],
     start_time: datetime,
+    req_size: int,
+    res_size: int,
+    req_sha256: str,
+    res_sha256: str,
 ):
     """Capture request details and store them to file."""
-    conf = request.app.state.conf
-    # Read request body
-    body = None
-    try:
-        body = await request.body()
-        body_str = body.decode("utf-8")
-    except Exception:
-        body_str = ""
 
     now = datetime.now()
     row_id = str(uuid.uuid4())
@@ -106,22 +103,22 @@ async def capture_request_to_file(
             json.dump(
                 {
                     "id": row_id,
-                    "m": "N/A",
-                    "t": start_time,
+                    "m": request.headers.get("X-Member", "N/A"),
+                    "t": start_time.isoformat(),
                     "v": request.method,
                     "e": conf.proxy.upstream.endpoint,
                     "p": request.url.path,
                     "s": response.status_code,
-                    #'d': int((datetime.now() - start_time).total_seconds() * 1000),
+                    "d": int((datetime.now() - start_time).total_seconds() * 1000),
                     "req": {
                         # TODO: calculate sha256 and length while proxying
-                        "size": len(await request.body()),
-                        "sha256": "N/A",
+                        "size": req_size,
+                        "sha256": req_sha256,
                     },
                     "res": {
                         # TODO: calculate sha256 and length while proxying
-                        "size": "N/A",
-                        "sha256": "N/A",
+                        "size": res_size,
+                        "sha256": res_sha256,
                     },
                 },
                 f,
@@ -248,7 +245,17 @@ def proxy_all(
     )
 
     # Capture request
-    captured_req = capture_request_to_file(request, response, token, start_time)
+    capture_request_to_file(
+        conf,
+        request,
+        response,
+        token,
+        start_time,
+        req_size=len(body),
+        res_size=len(response.body),
+        req_sha256="N/A",
+        res_sha256="N/A",
+    )
     #
     logger.info(f"Request handled by proxy: {request.method} {request.url.path}")
     return response

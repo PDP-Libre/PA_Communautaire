@@ -7,6 +7,7 @@ import logging
 import typer
 
 from pac0.cli import utils
+from pac0.cli.command.backoffice import app as run_backoffice_app
 from pac0.cli.command.console.app import ConsoleApp
 from pac0.cli.command.proxy_client import app as proxy_client_app
 from pac0.cli.command.run import app as run_app
@@ -22,6 +23,7 @@ app = typer.Typer()
 app.add_typer(setup_app, name="setup")
 app.add_typer(run_app, name="run")
 app.add_typer(proxy_client_app, name="test")
+app.add_typer(run_backoffice_app, name="backoffice")
 
 
 @app.callback()
