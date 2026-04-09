@@ -14,7 +14,7 @@ Cette brique proxy sera plus tard la brique backoffice chargée de la gestion de
 
 ### demo
 
-Fichier de configuration `pac0_proxy.conf.yaml`:
+Fichier de configuration `pac0.conf.yaml`:
 ```yaml
 $schema: https://pdplibre.org/schema/conf/0
 proxy:
@@ -47,9 +47,15 @@ pac0 backoffice report
 ### Questions/arbitrage
 
 * Les requêtes des membres seront authentifiées par un jeton JWT. Confirmation ?
+  Le membre de l'asso va avoir des credentials pdplibre ... et aussi une clé API
+  veuillez utiliser les infos suivantes pour configurer votre PA dans votre ERP:
+  - url de votre PA: https://pa.pdplibre.fr
+  - clé API de votre PA: 6767868GHGUUYYtytyt56565656
+* il faut préciser quel token utiliser pour esalink/superdpd
 * Ce jeton sera généré par le CLI (définir durée, member_id)
 * Inutile de communiquer la liste des membres au proxy pour authentification car il *suffit* d'utiliser les infos du token JWT. Confirmation ?
 * Format des rapports mensuels ? sqlite ? excel ? JSON ?
+* identifiants esalink pout tests ?
 * Colonnes du rapport ?
 * avec qui travailler de l'assos pour passer en v1 ?
 * ou déployer ?
