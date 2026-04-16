@@ -2,14 +2,16 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from dataclasses import dataclass
-import subprocess
-from packaging.version import Version
-from packaging.specifiers import SpecifierSet
 import re
+import subprocess
+from dataclasses import dataclass
+
+from packaging.specifiers import SpecifierSet
+from packaging.version import Version
 
 # cf https://peps.python.org/pep-0440/#version-specifiers
 SPEC_SPECIAL_CHARS = "~=!<>"
+
 
 # ~=: Compatible release clause
 # ==: Version matching clause
@@ -45,8 +47,8 @@ class SetupTool:
                 # cwd=cwd,
                 executable="/bin/bash",
                 check=True,
-                #on_error="print_ignore",
-                #extra_envvars=extra_envvars,
+                # on_error="print_ignore",
+                # extra_envvars=extra_envvars,
             )
             version_current = query.stdout.decode().strip()
         except subprocess.CalledProcessError:
@@ -86,7 +88,7 @@ class SetupTool:
                     {self.install.format(version=_version_strip(self.version))}
                     popd
                 """.strip()
-            #print(cmd)
+            # print(cmd)
             subprocess.run(
                 cmd,
                 shell=True,
@@ -102,9 +104,7 @@ class SetupTool:
         if valid:
             print(f"{self.name}{self.version} ok (found {version_current})")
         else:
-            print(
-                f"{self.name}{self.version} not found ! (found {version_current})"
-                )
+            print(f"{self.name}{self.version} not found ! (found {version_current})")
         return valid
 
 
@@ -123,7 +123,7 @@ tools: list[SetupTool] = [
         version=">=2.39.5",
         install="""
             apt update
-            apt install --yes git unzip wget  
+            apt install --yes git unzip wget
         """,
         version_get="""git -v""",
     ),
