@@ -1,0 +1,10 @@
+# Cibles de décompression de init.sh (source api/ocr + dist web) — JAMAIS
+# re-committées : régénérées localement à partir des archives versionnées
+# web-dist.tar.gz / sources.tar.gz.
+runtime/
+
+# Secrets locaux du développeur PA (ADR-008 — jamais versionnés).
+.env.staging.local
+
+# NB : web-dist.tar.gz et sources.tar.gz NE SONT PAS ignorés — ce sont les
+# artefacts livrés, ils doivent partir dans la PR Forgejo.

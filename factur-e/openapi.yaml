@@ -1,0 +1,411 @@
+openapi: 3.1.0
+info:
+  title: Factur-E — API (instance de test PDP libre)
+  version: "1.0-staging"
+  description: |
+    API de l'instance Factur-E autoportée publiée pour `PA_Communautaire`.
+    Permet de piloter émission / réception de factures électroniques
+    EN 16931 + EXTENDED-CTC-FR **sans passer par le front**, pour intégration
+    dans des tests automatisés de PA.
+
+    **Auth** : JWT Bearer. Pour les comptes de test seedés, récupérer un
+    `access_token` via `GET /__dev/quick-login?email=...` (réservé aux
+    instances `NODE_ENV=development`, ce qui est le cas de ce staging), puis
+    l'envoyer en `Authorization: Bearer <token>`.
+
+    **Contrat complet du corps d'émission** : ce document décrit la structure
+    principale ; la source de vérité est le schéma Zod `InvoiceFormSchema`
+    (`packages/shared-schemas/src/invoice-form.ts`, livré dans `sources.tar.gz`).
+    Le plus fiable pour un payload exact = émettre une facture via l'UI et
+    copier le corps de `POST /api/invoices` depuis l'onglet réseau du navigateur.
+
+servers:
+  - url: http://localhost:47281
+    description: API directe (port hôte du tool — ajuster si STAGING_API_PORT modifié)
+  - url: http://localhost:47280
+    description: Via le proxy nginx same-origin (mêmes chemins)
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: dev
+    description: Helpers de test (présents uniquement si NODE_ENV=development)
+  - name: emission
+    description: Émission de factures
+  - name: reception
+    description: Factures reçues
+  - name: pa
+    description: Connexion Plateforme Agréée
+
+paths:
+  /__dev/quick-login:
+    get:
+      tags: [dev]
+      summary: Connexion instantanée d'un compte de test → access_token
+      security: []
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema: { type: string, example: bq@dev.factur-e.local }
+        - name: ui_mode
+          in: query
+          schema: { type: string, enum: [basic, advanced] }
+      responses:
+        "302":
+          description: Redirige vers le SPA ; le corps JSON porte l'access_token.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/QuickLoginResponse" }
+
+  /__dev/last-email:
+    get:
+      tags: [dev]
+      summary: Dernier email capturé pour un destinataire (EMAIL_ADAPTER=mock)
+      security: []
+      parameters:
+        - name: to
+          in: query
+          required: true
+          schema: { type: string, example: bq@dev.factur-e.local }
+      responses:
+        "200": { description: Email capturé }
+        "404": { description: Aucun email pour ce destinataire, ou adapter non-mock }
+
+  /pa/status:
+    get:
+      tags: [pa]
+      summary: Statut de la connexion Plateforme Agréée du compte courant
+      responses:
+        "200": { description: Statut de connexion PA }
+        "401": { description: Non authentifié }
+
+  /api/invoices:
+    post:
+      tags: [emission]
+      summary: Émettre une facture (build Factur-X + soumission PA)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/InvoiceForm" }
+      responses:
+        "201":
+          description: Facture créée + soumise
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InvoiceCreateResponse" }
+        "401": { description: Token expiré (reconnexion PA requise) }
+        "422": { description: Rejet PA (validation XSD) }
+        "503": { description: PA momentanément indisponible (ex. numéro déjà soumis au sandbox) }
+    get:
+      tags: [emission]
+      summary: Lister les factures émises
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 50 }
+      responses:
+        "200": { description: Liste paginée des factures }
+
+  /api/invoices/preview:
+    post:
+      tags: [emission]
+      summary: Prévisualiser (PDF + XML) sans soumettre
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/InvoiceForm" }
+      responses:
+        "200":
+          description: PDF (base64) + aperçu XML + warnings
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InvoicePreview" }
+
+  /api/invoices/check-number-unique:
+    post:
+      tags: [emission]
+      summary: Vérifier l'unicité d'un numéro de facture
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                number: { type: string, example: F-2026-0001 }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/NumberCheckResponse" }
+
+  /api/invoices/{id}:
+    get:
+      tags: [emission]
+      summary: Détail d'une facture émise (form reconstruit + statut)
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: Facture }
+        "404": { description: Introuvable }
+
+  /api/invoices/{id}/events:
+    get:
+      tags: [emission]
+      summary: Événements CDAR (cycle de vie) d'une facture
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: Timeline CDAR
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/CdarEvent" }
+
+  /api/invoices/{id}/pdf:
+    get:
+      tags: [emission]
+      summary: PDF Factur-X (PDF/A-3) de la facture
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          {
+            description: application/pdf,
+            content: { application/pdf: { schema: { type: string, format: binary } } },
+          }
+
+  /api/invoices/{id}/xml:
+    get:
+      tags: [emission]
+      summary: XML CII embarqué de la facture
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: application/xml }
+
+  /api/invoices/{id}/credit-note:
+    post:
+      tags: [emission]
+      summary: Créer un avoir (type 381) lié à une facture
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "201": { description: Avoir créé }
+
+  /api/invoices/{id}/mark-paid:
+    post:
+      tags: [emission]
+      summary: Marquer une facture comme payée
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: Statut mis à jour }
+        "503": { description: PA indisponible }
+
+  /api/received-invoices:
+    get:
+      tags: [reception]
+      summary: Lister les factures reçues (alimentées par polling)
+      responses:
+        "200":
+          description: Liste des factures reçues
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ReceivedInvoice" }
+
+  /api/received-invoices/{id}:
+    get:
+      tags: [reception]
+      summary: Détail d'une facture reçue
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: Facture reçue }
+
+  /api/received-invoices/{id}/cdar:
+    post:
+      tags: [reception]
+      summary: Émettre un statut CDAR (acceptation / refus) sur une facture reçue
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: CDAR émis }
+        "503": { description: PA indisponible }
+
+  /api/received-invoices/{id}/pdf:
+    get:
+      tags: [reception]
+      summary: PDF de la facture reçue
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: application/pdf }
+
+  /api/received-invoices/{id}/xml:
+    get:
+      tags: [reception]
+      summary: XML de la facture reçue
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: application/xml }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        message: { type: string }
+
+    QuickLoginResponse:
+      type: object
+      properties:
+        email: { type: string }
+        password: { type: string, example: TestPassword12! }
+        access_token: { type: string, description: "JWT à utiliser en Authorization: Bearer" }
+        user_id: { type: string, format: uuid }
+        customer_id: { type: string, format: uuid }
+
+    PostalAddress:
+      type: object
+      properties:
+        line_one: { type: string, example: 1 RUE DE LA GASTRONOMIE }
+        postcode: { type: string, example: "75001" }
+        city: { type: string, example: PARIS }
+        country_code: { type: string, example: FR }
+
+    InvoiceForm:
+      description: |
+        Corps d'émission. Union discriminée par `ui_mode` (base | advanced).
+        Le vendeur est implicite (compte authentifié). Contrat complet et
+        exhaustif : `InvoiceFormSchema` (packages/shared-schemas). L'exemple
+        ci-dessous est un cas `base` minimal valide.
+      type: object
+      required: [ui_mode, document, lines]
+      properties:
+        ui_mode: { type: string, enum: [base, advanced], default: base }
+        document:
+          type: object
+          required: [number, issueDate, buyer]
+          properties:
+            number: { type: string, description: BT-1, example: F-2026-0001 }
+            issueDate: { type: string, format: date, description: BT-2 }
+            buyer:
+              type: object
+              required: [siren, legalName, address]
+              properties:
+                siren: { type: string, pattern: '^\d{9}$', example: "000000001" }
+                legalName: { type: string, example: TRICATEL }
+                address: { $ref: "#/components/schemas/PostalAddress" }
+        lines:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [label, quantity, unitPriceHt]
+            properties:
+              label: { type: string, example: Prestation de test }
+              quantity: { type: string, example: "1" }
+              unitPriceHt: { type: string, example: "100.00" }
+              vatRate: { type: string, nullable: true, example: "20.00" }
+        payment:
+          type: object
+          properties:
+            paymentMethodKind: { type: string, example: transfer }
+      example:
+        ui_mode: base
+        document:
+          number: F-2026-0001
+          issueDate: "2026-05-30"
+          buyer:
+            siren: "000000001"
+            legalName: TRICATEL
+            address:
+              {
+                line_one: 1 RUE DE LA GASTRONOMIE,
+                postcode: "75001",
+                city: PARIS,
+                country_code: FR,
+              }
+        lines:
+          - { label: Prestation de test, quantity: "1", unitPriceHt: "100.00", vatRate: "20.00" }
+        payment: { paymentMethodKind: transfer }
+
+    Invoice:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        number: { type: string }
+        issue_date: { type: string, format: date }
+        total_ht: { type: string }
+        total_vat: { type: string }
+        total_ttc: { type: string }
+        currency: { type: string }
+        processing_rule: { type: string, enum: [B2B, B2BInt] }
+        type_code: { type: string }
+        pa_invoice_id: { type: string, nullable: true }
+        pa_provider: { type: string }
+        status_current: { type: string, nullable: true }
+
+    InvoiceCreateResponse:
+      type: object
+      properties:
+        invoice: { $ref: "#/components/schemas/Invoice" }
+        lines: { type: array, items: { type: object } }
+        cdar_events: { type: array, items: { $ref: "#/components/schemas/CdarEvent" } }
+        pa_invoice_id: { type: string, nullable: true }
+
+    InvoicePreview:
+      type: object
+      properties:
+        pdfBytes: { type: string, description: PDF encodé base64 }
+        xmlPreview: { type: string, nullable: true }
+        warnings:
+          type: array
+          items:
+            type: object
+            properties:
+              code: { type: string }
+              message: { type: string }
+              field: { type: string, nullable: true }
+
+    NumberCheckResponse:
+      type: object
+      properties:
+        available: { type: boolean }
+        suggestion: { type: string }
+        existingInvoiceId: { type: string, format: uuid, nullable: true }
+
+    CdarEvent:
+      type: object
+      properties:
+        code: { type: string, example: "fr:200" }
+        label: { type: string, example: Validée }
+        occurred_at: { type: string, format: date-time }
+        payload: { type: object }
+
+    ReceivedInvoice:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        pa_invoice_id_in: { type: string }
+        seller_siren: { type: string }
+        seller_name_cached: { type: string, nullable: true }
+        invoice_number_extracted: { type: string, nullable: true }
+        issue_date: { type: string, format: date, nullable: true }
+        total_ttc_cents: { type: integer, nullable: true }
+        currency: { type: string }
+        status_current: { type: string, example: in_process }
+        received_at: { type: string, format: date-time }

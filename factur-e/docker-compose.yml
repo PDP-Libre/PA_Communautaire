@@ -1,0 +1,199 @@
+# Factur-E — staging autoporté pour développeurs PDP libre (PA_Communautaire).
+#
+# Outil de TEST : monte une instance Factur-E locale qui émet / reçoit des
+# factures électroniques EN 16931 + EXTENDED-CTC-FR cohérentes contre la
+# sandbox SuperPDP, pour valider un PA en cours de développement.
+#
+# Publié depuis le repo Factur-E (pdp/facture-e) — sprint-07
+# T-CL-FORGEJO-PUBLISH-PDP-LIBRE. NE PAS lancer `docker compose` à la main :
+# utiliser `./init.sh` (décompresse les archives runtime/ + seed + démarre).
+#
+# Conventions héritées du staging Factur-E (sprint-05) :
+#   - ADR-002 D2 : polling-only (WEBHOOK_ENABLED=false + POLLING_INTERVAL_SEC=900).
+#   - ADR-014    : same-origin via le proxy nginx du service `web` (le SPA
+#                  appelle /api, /oauth, /__dev en chemin relatif → api:3001).
+#   - ADR-008    : aucun secret ici — injectés depuis .env.staging.local.
+#
+# Stratégie sources (ZG-C1, Forgejo login-gaté) :
+#   - web : servi en dist Vite PRÉ-BUILDÉ (artefact protégé, minifié) via
+#           image nginx statique — aucun build web, aucun source web.
+#   - api / ocr : `build:` depuis le source décompressé (runtime/src), avec
+#           les Dockerfiles d'origine (api = tsx, ocr = Python).
+#
+# Ports originaux (bloc 472xx) choisis pour un faible risque de collision
+# avec les outils usuels du poste (3000/5173/5432/8080/9000/...).
+
+name: factur-e-pdplibre
+
+services:
+  api:
+    build:
+      context: ./runtime/src
+      dockerfile: apps/api/Dockerfile
+    image: factur-e-pdplibre-api:local
+    container_name: factur-e-pdplibre-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      # NODE_ENV=development (jamais production) : active les routes /__dev/*
+      # (dont /__dev/last-email + /__dev/quick-login), autorise
+      # SECRETS_ADAPTER=memory + EMAIL_ADAPTER=mock. Cf. staging.md §1.bis.
+      NODE_ENV: development
+      # MemorySecretStore : pas de Keychain (macOS-only), bundles OAuth en RAM
+      # (perdus au restart — acceptable pour un staging de test).
+      SECRETS_ADAPTER: memory
+      # EMAIL_ADAPTER=mock : les emails (OTP login, notifications) sont
+      # capturés en mémoire et relus via /__dev/last-email — AUCUN compte
+      # Scaleway TEM requis côté développeur PA. (tem nécessiterait des creds
+      # + des adresses réelles ; les comptes de test sont en *.local fictif.)
+      EMAIL_ADAPTER: mock
+      # PA_ADAPTER non défini → vrai driver SuperPDP (OAuth réel sandbox).
+      # NE PAS mettre `mock` ici : on veut un vrai canal OAuth + émission.
+      API_PORT: "3001"
+      # URL same-origin du SPA (1ʳᵉ entrée = base des magic links). Port web
+      # ci-dessous. Override .env.staging.local pour un accès LAN multi-poste.
+      WEB_BASE_URL: ${WEB_BASE_URL:-http://localhost:${STAGING_WEB_PORT:-47280}}
+      # Redirection du /__dev/quick-login vers le SPA (même origine = web).
+      DEV_QUICK_LOGIN_REDIRECT_URL: ${DEV_QUICK_LOGIN_REDIRECT_URL:-http://localhost:${STAGING_WEB_PORT:-47280}/dashboard}
+      # --- ADR-002 D2 : polling-only (pas de webhook entrant) ---
+      WEBHOOK_ENABLED: "false"
+      POLLING_INTERVAL_SEC: "900"
+      # Cadence RÉELLE des polls réception + statuts CDAR (cron node-schedule).
+      # Défaut 1 min ici (outil de test → retour rapide) ; en prod ce serait
+      # */15. Override possible via .env.staging.local.
+      RECV_POLLING_CRON: ${RECV_POLLING_CRON:-* * * * *}
+      CDAR_POLLING_CRON: ${CDAR_POLLING_CRON:-* * * * *}
+      # --- Postgres (réseau compose) ---
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB:-factur_e_staging}
+      POSTGRES_USER: ${POSTGRES_USER:-factur_e_staging}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-factur_e_staging_password}
+      POSTGRES_URL: "postgresql://${POSTGRES_USER:-factur_e_staging}:${POSTGRES_PASSWORD:-factur_e_staging_password}@postgres:5432/${POSTGRES_DB:-factur_e_staging}"
+      # --- Object storage S3 (MinIO) ---
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: fr-par
+      S3_BUCKET: factur-e-logos
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-factur_e_staging}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-factur_e_staging_password}
+      S3_PUBLIC_PATH_PREFIX: ${S3_PUBLIC_PATH_PREFIX:-/storage}
+      # --- OCR (réseau compose) ---
+      OCR_BASE_URL: http://ocr:8000
+      # --- Secrets / clés (depuis .env.staging.local — JAMAIS commités) ---
+      # SuperPDP sandbox : OBLIGATOIRES (saisie manuelle développeur PA).
+      SUPERPDP_CLIENT_ID: ${SUPERPDP_CLIENT_ID:-}
+      SUPERPDP_CLIENT_SECRET: ${SUPERPDP_CLIENT_SECRET:-}
+      SUPERPDP_BASE_URL: ${SUPERPDP_BASE_URL:-https://api.superpdp.tech}
+      # Callback OAuth same-origin via le proxy web (à enregistrer côté
+      # SuperPDP sandbox). Port web ci-dessous.
+      SUPERPDP_REDIRECT_URI: ${SUPERPDP_REDIRECT_URI:-http://localhost:${STAGING_WEB_PORT:-47280}/oauth/superpdp/callback}
+      # JWT_SIGNING_KEY (>=32 chars) + ENCRYPTION_KEY_HEX (64 hex) : générés
+      # automatiquement par init.sh si absents (clés locales par instance).
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY:-}
+      ENCRYPTION_KEY_HEX: ${ENCRYPTION_KEY_HEX:-}
+      # INSEE optionnel (les SIREN sandbox sont pré-seedés en cache).
+      INSEE_API_KEY: ${INSEE_API_KEY:-}
+    # api accessible via le proxy nginx du web (port web → /api, /oauth,
+    # /__dev → api:3001). Le port direct ci-dessous est exposé en plus, par
+    # commodité de debug (curl /health + /__dev/last-email depuis l'hôte).
+    ports:
+      - "${STAGING_API_PORT:-47281}:3001"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  web:
+    # Pas de build : image nginx statique + dist Vite pré-buildé monté en
+    # lecture seule (décompressé par init.sh depuis web-dist.tar.gz). nginx.conf
+    # = même proxy same-origin que le staging Factur-E (ADR-014).
+    image: nginx:alpine
+    container_name: factur-e-pdplibre-web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - ./runtime/web/dist:/usr/share/nginx/html:ro
+      - ./runtime/web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "${STAGING_WEB_PORT:-47280}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  ocr:
+    build:
+      context: ./runtime/src/services/ocr
+      dockerfile: Dockerfile
+    image: factur-e-pdplibre-ocr:local
+    container_name: factur-e-pdplibre-ocr
+    restart: unless-stopped
+    environment:
+      PYTHONUNBUFFERED: "1"
+    ports:
+      - "${STAGING_OCR_PORT:-47282}:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=2).status==200 else 1)"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: factur-e-pdplibre-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-factur_e_staging}
+      POSTGRES_USER: ${POSTGRES_USER:-factur_e_staging}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-factur_e_staging_password}
+    ports:
+      - "${STAGING_POSTGRES_PORT:-47254}:5432"
+    volumes:
+      - staging-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "pg_isready -U ${POSTGRES_USER:-factur_e_staging} -d ${POSTGRES_DB:-factur_e_staging}"
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
+    container_name: factur-e-pdplibre-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-factur_e_staging}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-factur_e_staging_password}
+    ports:
+      - "${STAGING_MINIO_PORT:-47290}:9000" # S3 API
+      - "${STAGING_MINIO_CONSOLE_PORT:-47291}:9001" # Web console
+    volumes:
+      - staging-minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  staging-postgres-data:
+    name: factur-e-pdplibre-postgres-data
+  staging-minio-data:
+    name: factur-e-pdplibre-minio-data

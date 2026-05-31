@@ -32,3 +32,20 @@ path = [
 ]
 SPDX-FileCopyrightText = "Various public contributors"
 SPDX-License-Identifier = "any-OSI"
+
+# Factur-E — instance de test publiee (sous-ensemble sous licence GPL-3.0
+# accordee par BD2DB, titulaire ; cf. factur-e/README.md). Les tarballs
+# (web-dist = bundle Vite, sources = source api/ocr) sont des binaires :
+# annotation REUSE plutot qu'en-tete inline.
+[[annotations]]
+path = [
+    "factur-e/docker-compose.yml",
+    "factur-e/init.sh",
+    "factur-e/.env.example",
+    "factur-e/README.md",
+    "factur-e/openapi.yaml",
+    "factur-e/web-dist.tar.gz",
+    "factur-e/sources.tar.gz",
+]
+SPDX-FileCopyrightText = "2026 BD2DB — Factur-E"
+SPDX-License-Identifier = "GPL-3.0-or-later"
