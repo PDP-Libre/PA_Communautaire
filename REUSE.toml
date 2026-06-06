@@ -47,5 +47,5 @@ path = [
     "factur-e/web-dist.tar.gz",
     "factur-e/sources.tar.gz",
 ]
-SPDX-FileCopyrightText = "2026 BD2DB — Factur-E"
+    -FileCopyrightText = "2026 BD2DB — Factur-E"
 SPDX-License-Identifier = "GPL-3.0-or-later"
