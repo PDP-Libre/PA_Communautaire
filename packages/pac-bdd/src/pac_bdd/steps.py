@@ -7,5 +7,6 @@ from .demo import *
 from .esb import *
 from .peppol import *
 from .service import *
+from .solution_compatible import *
 from .tobeimplemented import *
 from .user import *
