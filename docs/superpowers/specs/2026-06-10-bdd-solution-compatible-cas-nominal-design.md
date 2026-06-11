@@ -79,7 +79,7 @@ Le runner `packages/pac-bdd/test_scenario.py` collecte **tout `.feature` du dép
 packages/LogicielSolutionCompatible/
 ├── README.md
 └── features/
-    └── echange_nominal.feature
+    └── 01-echange_nominal.feature           # préfixe numérique = chronologie des cas d'usage
 packages/pac-bdd/src/pac_bdd/solution_compatible.py
 packages/pac-bdd/src/pac_bdd/steps.py            (modifié : + import)
 docs/developpement/BDD_Guide_SolutionCompatible.md

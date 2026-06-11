@@ -32,8 +32,11 @@ le backend du SC. Les steps actuels restent **agnostiques de ce canal**.
 
 ```
 features/
-└── echange_nominal.feature   # Cas nominal émission → réception (XP Z12-014 §4.2)
+└── 01-echange_nominal.feature   # Cas nominal émission → réception (XP Z12-014 §4.2)
 ```
+
+Les fichiers `.feature` sont **préfixés d'un numéro d'ordre** (`01-`, `02-`…) afin de conserver la
+chronologie des cas d'usage.
 
 Les **step definitions** vivent dans `packages/pac-bdd/src/pac_bdd/solution_compatible.py`
 (importées par `pac_bdd/steps.py`), conformément à l'architecture BDD du dépôt.

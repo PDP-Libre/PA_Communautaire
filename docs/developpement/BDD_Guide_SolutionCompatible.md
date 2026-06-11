@@ -69,7 +69,7 @@ pilotent le SC du VENDEUR pour envoyer la facture, puis le SC de l'ACHETEUR pour
 packages/LogicielSolutionCompatible/
 ├── README.md
 └── features/
-    └── echange_nominal.feature              # Cas nominal émission → réception
+    └── 01-echange_nominal.feature           # Cas nominal émission → réception
 
 packages/pac-bdd/src/pac_bdd/
 ├── solution_compatible.py                   # Step definitions des scénarios SC
@@ -136,7 +136,7 @@ uv run pytest -m "solution-compatible" -v    # tous les scénarios SC
 
 | Cas d'usage | Norme | Fichier | État |
 |---|---|---|---|
-| Échange nominal émission → réception | §4.2 (étapes 1-3) | `packages/LogicielSolutionCompatible/features/echange_nominal.feature` | ✅ Rédigé, `@wip` (pending) |
+| Échange nominal émission → réception | §4.2 (étapes 1-3) | `packages/LogicielSolutionCompatible/features/01-echange_nominal.feature` | ✅ Rédigé, `@wip` (pending) |
 
 Statuts couverts : **Déposée → Émise → Reçue → Mise à disposition**.
 
@@ -160,7 +160,9 @@ pending jusqu'à disponibilité de la PA) :
 
 1. Lire la sous-section correspondante de `docs/norme/XP Z12-014-v1.3.pdf`.
 2. Identifier les acteurs, les statuts et l'étape responsable (tableaux de la norme).
-3. Créer `packages/LogicielSolutionCompatible/features/<nom_du_cas>.feature` (`# language: fr`, tag `@wip`).
+3. Créer `packages/LogicielSolutionCompatible/features/<NN>-<nom_du_cas>.feature` (`# language: fr`, tag `@wip`).
+   Les features sont **préfixées d'un numéro d'ordre** (`01-`, `02-`…) pour conserver la chronologie
+   des cas d'usage (le cas nominal d'abord, puis les déboulements).
 4. Ajouter les step definitions manquantes dans `packages/pac-bdd/src/pac_bdd/solution_compatible.py`
    (corps `pytest.skip(_EN_ATTENTE)` tant que la PA / le SC ne sont pas branchés).
 5. Vérifier la collecte : `cd packages/pac-bdd && uv run pytest -k <nom_du_cas> -v` (attendu : SKIPPED).
