@@ -31,6 +31,11 @@ build-backend = "uv_build"
 [tool.pytest.ini_options]
 #asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
+markers = [
+    "solution-compatible: scénarios pilotés depuis un Logiciel Solution Compatible (VENDEUR/ACHETEUR)",
+    "cas-nominal: cas nominal d'échange de facture (XP Z12-014 §4.2)",
+    "wip: spécification exécutable en attente d'implémentation (steps skippés)",
+]
 
 
 [tool.uv.workspace]
