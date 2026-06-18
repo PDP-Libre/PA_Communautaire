@@ -274,6 +274,54 @@ endpoints + l'auth + les schémas. Pour la visualiser :
   ```
 - ou import direct dans Postman / Insomnia (génération de client incluse).
 
+### 4.6 Générer et déposer une facture de test (générateur in-container)
+
+Plutôt que de fabriquer un corps `POST /api/invoices` à la main (§4.5), un
+**générateur de factures** (le *harness*) est livré avec l'instance. Il déroule
+un **cycle complet** en pilotant l'API en Bearer : récupère un token via
+`/__dev/quick-login`, charge une facture du corpus via `/__dev/emission-fixtures`,
+l'**émet** (`POST /api/invoices` → dépôt PA réel), puis **poll** la fiche
+jusqu'à observer ≥ 1 statut **CDAR réel** renvoyé par la PA (ou timeout). Idéal
+pour produire un dépôt vers votre PA en développement **en une commande**.
+
+Le générateur est un script **Node 22** (`fetch` natif, aucune dépendance). Pas
+besoin de Node sur votre poste : on l'exécute **dans le conteneur `api`** (qui
+embarque Node 22). Le harness est extrait sur l'hôte dans `runtime/src/scripts/`
+par `init.sh` ; on le copie dans le conteneur puis on le lance :
+
+```bash
+# 1. Copier le générateur dans le conteneur api (à refaire après un restart du
+#    conteneur : /tmp y est éphémère).
+docker compose -f docker-compose.yml cp runtime/src/scripts api:/tmp/harness
+
+# 2. Le lancer (base-url = API interne au conteneur sur le port 3001, PAS 47281).
+docker compose -f docker-compose.yml exec api \
+  node /tmp/harness/dev/harness-pa.mjs \
+  --base-url=http://localhost:3001 --email=bq@dev.factur-e.local
+```
+
+**Pré-requis (sinon faux négatif) :**
+- La stack tourne (`./init.sh`) et le compte émetteur **Burger Queen**
+  (`bq@dev.factur-e.local`) est **connecté à SuperPDP en OAuth réel** (§4.2 →
+  *Connexion Plateforme Agréée*). Sans cette connexion, `POST /api/invoices`
+  renvoie **503** et le harness sort un verdict clair « connecter la PA d'abord ».
+- La récupération des CDAR dépend du **polling serveur** (défaut **1 min** dans
+  cet outil, cf. §4.4) — le round-trip prend donc jusqu'à ~1 min.
+
+**Options utiles :**
+- `--fixture=<id>` choisit la facture du corpus (défaut `fx-380-base-iban`). La
+  liste des ids disponibles :
+  ```bash
+  curl -s http://localhost:47281/__dev/emission-fixtures | jq
+  ```
+- `--email=<compte>` cible un autre compte seedé (`tricatel@dev.factur-e.local`).
+- `--timeout=<s>` (défaut 300) / `--tick=<s>` (défaut 5) bornent le poll CDAR.
+
+Le numéro de facture est **rendu unique à chaque run** (anti-collision sandbox
+SuperPDP partagée). **Code de sortie** : `0` si le round-trip est complet (dépôt
+accepté + ≥ 1 CDAR réel), `1` sinon — directement exploitable en script/CI côté
+PA.
+
 ---
 
 ## 5. Troubleshooting
@@ -302,6 +350,16 @@ l'URI de callback enregistrée dans l'application sandbox SuperPDP.
 
 **`/__dev/last-email` renvoie 404 "adapter is not Mock"**
 `EMAIL_ADAPTER` doit valoir `mock` (défaut). Ne pas le passer à `tem`.
+
+**Un destinataire (Burger Queen / Tricatel) affiche « Ce SIREN n'est pas inscrit
+sur les Plateformes Agréées »**
+Les SIREN sandbox sont pré-seedés dans l'annuaire local au démarrage (`init.sh`
+étape 5, avec leurs **vraies** adresses Peppol). Si « Non inscrit » apparaît,
+relancer `./init.sh` (idempotent — il re-seede). **Ne jamais** insérer une
+entrée d'annuaire à la main avec un `party_id` inventé : ça passe le contrôle de
+l'UI mais l'envoi est ensuite **rejeté** par SuperPDP (`pre-check: receiver
+address does not exist in peppol directory`), car la transmission est validée
+contre le **vrai** annuaire Peppol, pas le cache local.
 
 **`503 — Votre Plateforme Agréée est momentanément indisponible` alors que tout
 est connecté**
@@ -348,6 +406,9 @@ interne BD2DB, non public) au fil des évolutions, via une mise à jour des arch
   mainteneurs Factur-E.
 - **Ne jamais committer** le contenu de `runtime/` (source décompressé) ni
   `.env.staging.local` — déjà couverts par le `.gitignore`.
+- Le **générateur de factures de test** (§4.6) est embarqué dans
+  `sources.tar.gz` (`scripts/dev/harness*`) — il suit donc les archives, pas de
+  fichier à synchroniser séparément.
 
 ---
 
